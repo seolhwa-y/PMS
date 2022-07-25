@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:mybatis-spring="http://mybatis.org/schema/mybatis-spring"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring-1.2.xsd
+		http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
+	
+	<!-- DBCP : HikariCP >> 프로젝트 시작과 동시에 특정 DB와의 Connection을 생성 후 대여 -->
+	<bean id="DBCP" class="com.zaxxer.hikari.HikariConfig" >
+		<property name="driverClassName"
+			value="oracle.jdbc.OracleDriver"></property>
+		<property name="jdbcUrl"
+			value="jdbc:oracle:thin:@DB20220715232613_high?TNS_ADMIN=/Users/shy/Downloads/Wallet_DB20220715232613"></property>
+		<property name="username" value="ADMIN"></property>
+		<property name="password" value="OracleCloud2022"></property>
+	</bean>
+	
+	<!-- DBCP Using >> DataSource -->
+	<bean id="ds" class="com.zaxxer.hikari.HikariDataSource" destroy-method="close">
+		<constructor-arg ref="DBCP"></constructor-arg>
+	</bean>
+	
+	<!-- mybatis-spring SessionFactory -->
+	<bean id="sessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="ds"></property>
+	</bean>
+	
+	<!-- SqlSessionTemplate  -->
+	<bean id="dbcpSession" class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg name="sqlSessionFactory" ref="sessionFactory"></constructor-arg>
+	</bean>
+	
+	<!-- Transaction (DataSource를 쳐다봐야 함)--> 
+	<bean id="pmsTran" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="ds"></property>
+	</bean>
+	<!-- Javax.mail -->
+	<!-- <bean id="jisooMail" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+		<property name="host" value="smtp.naver.com" ></property>
+		<property name="port" value="587" ></property>
+		<property name="username" value="" ></property>
+		<property name="password" value="" ></property>
+		<property name="defaultEncoding" value="utf-8" ></property>	
+		<property name="javaMailProperties">
+			<props>
+				<prop key="mail.debug">true</prop>
+				<prop key="mail.transport.protocol">smtp</prop>
+				<prop key="mail.smtp.starttls.enable">true</prop>
+				<prop key="mail.smtp.ssl.checkserveridentity">true</prop>
+				<prop key="mail.smtp.ssl.trust">*</prop>
+				<prop key="mail.smtp.auth">true</prop>
+				<prop key="mail.smtp.socketFactory">javax.net.ssl.SSLSocketFactory</prop>
+			</props>
+		</property>
+	</bean> -->
+</beans>
