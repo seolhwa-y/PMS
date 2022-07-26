@@ -184,7 +184,11 @@ function sendMailResult(ajaxData){
 				<div id="notice-icon"></div>
 				<div id="notice-article">공지사항</div>
 			</div>
-			<div id="my-info">로그인 정보</div>
+				<div id="my-info">회원코드 : ${accessInfo.pmbCode} /
+		회원성명 : ${accessInfo.pmbName} /
+		회원등급 : ${accessInfo.pmbLevelName}
+		<input id="accessOutBtn" value="로그아웃" type="button" onclick="accessOut()" /></div>
+		</div>
 		</div>
 		<div id="menues">
 			<div class="menu" onClick="moveDashBoard()">DB</div>
@@ -209,7 +213,7 @@ function sendMailResult(ajaxData){
 				<div id="send" style="display:none;"><input type="button" class="btn" value="SEND EMAIL" onClick="sendEmail2()"/></div>
 			</div>
 		</div>
-	</div>
+	
 	
 	<form name="clientData"></form>
 </body>

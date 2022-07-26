@@ -102,6 +102,7 @@ function pmsMemberJoin(){
 	
 	form.submit();	  
 }
+
 </script>
 <style>
 	@import url("/resources/css/common.css");

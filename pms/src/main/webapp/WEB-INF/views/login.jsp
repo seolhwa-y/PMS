@@ -15,7 +15,7 @@ function init(){
 	let box = [];
 	box.push(createInput("text", "pmbCode", "회원코드", "box"));
 	box.push(createInput("password", "pmbPassword", "패스워드", "box"));
-	box.push(createInput("button", "", "패스워드", "btn"));
+	box.push(createInput("button", "", "", "btn"));
 	box[2].setAttribute("value","로 그 인");
 	box[2].addEventListener("click", access);
 	

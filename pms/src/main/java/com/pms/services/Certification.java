@@ -95,6 +95,7 @@ public class Certification implements ServicesRule {
 	// 셀렉트로 보내줄 Class :: Level 스트링으로 만들어서 넣어주기
 	private String makeSelectHtml(List<CerB> list, boolean type, String objName) {
 
+		
 		StringBuffer sb = new StringBuffer();
 		sb.append("<select name='" + objName + "' class='box'>");
 		sb.append("<option disabled selected>" + objName.substring(3) + " Code 선택</option>");

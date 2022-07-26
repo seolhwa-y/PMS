@@ -190,3 +190,10 @@ function moveDashBoard(){
 	form.submit();
 	
 }
+function accessOut(){
+	let form = document.getElementsByName("clientData")[0];
+	
+	form.action = "Logout";
+	form.method = "post";
+	form.submit();
+}

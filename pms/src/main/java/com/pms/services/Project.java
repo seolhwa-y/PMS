@@ -127,7 +127,7 @@ public class Project implements ServicesRule {
 			((ProBean) mav.getModel().get("proBean")).getProMembers().add(proB);
 			int result = this.session.insert("insProjectMembers", (ProBean) mav.getModel().get("proBean"));
 			String subject = "[초대장] 프로젝트 참여 초대";
-			String sender = "tax140853@naver.com";
+			String sender = "younpal0327@naver.com";
 			MimeMessage javaMail = mail.createMimeMessage();
 			MimeMessageHelper mailHelper = new MimeMessageHelper(javaMail, "UTF-8");
 			CerLogB log = null;
