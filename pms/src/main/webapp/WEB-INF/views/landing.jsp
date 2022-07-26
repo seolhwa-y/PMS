@@ -5,7 +5,7 @@
 <head>
 <meta charset="UTF-8">
 <title>:: PMS Landing ::</title>
-<script src="/res/js/common.js"></script>
+<script src="/resources/js/common.js"></script>
 <script>
 function init(){
 	getAjaxJson("https://api.ipify.org", "format=json", "callServer");
@@ -14,7 +14,7 @@ function init(){
 function callServer(ajaxData){
 	jsonData = JSON.parse(ajaxData);
 	const publicIp = ("aslPublicIp=" + jsonData.ip);
-	location.href = "http://192.168.0.54/First?" + publicIp;
+	location.href = "http://192.168.0.123/First?" + publicIp;
 } 
 </script>
 </head>

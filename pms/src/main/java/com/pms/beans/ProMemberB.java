@@ -1,9 +1,12 @@
 package com.pms.beans;
 
+import lombok.Data;
+
+@Data
 public class ProMemberB {
-
-	public ProMemberB() {
-		// TODO Auto-generated constructor stub
-	}
-
+		private String pmbCode;
+		private String spmbCode;
+		private String proPosition;
+		private String proAccept;
+		private String proEmail;
 }

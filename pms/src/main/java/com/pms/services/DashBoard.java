@@ -1,5 +1,7 @@
 package com.pms.services;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import org.mybatis.spring.SqlSessionTemplate;
@@ -9,91 +11,221 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.pms.utils.Encryption;
-import com.pms.utils.ProjectUtils;
-import com.pms.beans.CerLogB;
-import com.pms.beans.ProjectInfoB;
-import com.pms.inter.ServicesRule;
+import com.pms.utils.*;
+import com.pms.beans.*;
+import com.pms.inter.*;
 
 @Service
-public class DashBoard implements ServicesRule{
+public class DashBoard implements ServicesRule {
 
 	@Autowired
-	private SqlSessionTemplate session; // db 접근 
+	private SqlSessionTemplate session; // db 접근
 	@Autowired
-	private Encryption enc;	// 암호화 복호화 
+	private Encryption enc; // 암호화 복호화
 	@Autowired
-	private ProjectUtils pu; // 세션 
-	@Autowired 
-	private DashBoard dBoard; // 대쉬보드 
-	
+	private ProjectUtils pu; // 세션
+	@Autowired
+	private DashBoard dBoard; // 대쉬보드
+
 	public DashBoard() {
 	}
-	
-	/* FORM 방식 Controller */
-	public void backController(int serviceCode, ModelAndView mav) { 
 
+	/* FORM 방식 Controller */
+	public void backController(int serviceCode, ModelAndView mav) {
 		try {
-			if(this.pu.getAttribute("accessInfo") != null) {
-				switch(serviceCode) {
-				case 0 : 
+			if (this.pu.getAttribute("accessInfo") != null) {
+				switch (serviceCode) {
+				case 0:
 					this.entrance(mav);
 					break;
-				case 1 : 
-					this.EmailCodeAuth(mav);
+				case 1:
+					this.EmailCodeCer(mav);
 					break;
 				default:
 				}
-			}else {
+			} else {
 				mav.setViewName("login");
 			}
-		} catch (Exception e) {e.printStackTrace();}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	/* AJAX 방식 Controller */
 	public void backController(int serviceCode, Model model) {
 		try {
-			if(this.pu.getAttribute("accessInfo") != null) {
-				switch(serviceCode) {
-				case 0 : 
+			if (this.pu.getAttribute("accessInfo") != null) {
+				switch (serviceCode) {
+				case 0:
 					break;
 				default:
 				}
-			}else {
+			} else {
 
 			}
-		}catch (Exception e) {e.printStackTrace();}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
-	
-	// 대쉬보드 화면 이동 
+
+	// 대쉬보드 화면 이동
 	private void entrance(ModelAndView mav) {
-		mav.setViewName("dashBoard");
+		try {
+			mav.addObject("RInvitation", this.receivedInvitationInfo(
+					this.session.selectList("receivedInvitationInfo", (CerB) this.pu.getAttribute("accessInfo"))));
+			mav.addObject("SInvitation", this.sendInvitationInfo(
+					this.session.selectList("sendInvitationInfo", (CerB) this.pu.getAttribute("accessInfo"))));
+			mav.addObject("ProjectInfo", this
+					.projectInfo(this.session.selectList("getProjectInfo", (CerB) this.pu.getAttribute("accessInfo"))));
+			mav.setViewName("dashBoard");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	// 메일로 보낸 인증코드 복호화하여 UPDATE -> PMB, AUL
 	@Transactional
-	private void EmailCodeAuth(ModelAndView mav) {
+	private void EmailCodeCer(ModelAndView mav) {
+		EmailCerB ecb = ((EmailCerB) mav.getModel().get("emailCerB"));
+		CerB cb = null;
+		try {
+			cb = ((CerB) this.pu.getAttribute("accessInfo"));
+			if (cb != null) {
+				ecb.setEmailCode(this.enc.aesDecode(ecb.getEmailCode(), cb.getPmbEmail()));
+				if (!this.convertToBoolean(this.session.update("updProjectMembers", ecb))) {
+					ecb.setAulResultCode("NN");
+				}
+				this.session.update("updAuthLog", ecb);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			mav.addObject("RInvitation",
+					this.receivedInvitationInfo(this.session.selectList("receivedInvitationInfo", cb)));
+			mav.addObject("SInvitation", this.sendInvitationInfo(this.session.selectList("sendInvitationInfo", cb)));
+			mav.addObject("ProjectInfo", this.projectInfo(this.session.selectList("getProjectInfo", cb)));
+			mav.setViewName("dashBoard");
+		}
+		this.entrance(mav);
+	}
 
+	// 받은 초청장 정보 HTML
+	private String receivedInvitationInfo(List<CerLogB> list) {
+		StringBuffer sb = new StringBuffer();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+		try {
+			if (list.size() > 0) {
+				int idx = -1;
+				sb.append("<div id=\"invitationReceive\" class=\"invitation receive\">");
+				sb.append("<div class=\"notice title\"> 내가 받은 초대장 </div>");
+				sb.append("<div id=\"receiveItems\">");
+				sb.append(
+						"<div class=\"items name\">발송인</div><div class=\"items invite\">초대일자</div><div class=\"items expire\">만료일자</div><div class=\"items accept\">회신</div>");
+				sb.append("</div>");
+				sb.append("<div class=\"invitationList\">");
+				for (CerLogB cl : list) {
+					idx++;
+					if (cl.getAuthResult().equals("NA")) {
+						boolean expired = Long.parseLong(cl.getExpireDate().substring(0))
+								- Long.parseLong(sdf.format(new Date())) >= 0 ? true : false;
+								sb.append("<div id=\"member" + idx + "\" class=\"member\">");
+								sb.append("<div class=\"items name\">"
+										+ this.enc.aesDecode(cl.getSenderName(), cl.getSpmbCode()) + "</div>");
+								sb.append("<div class=\"items invite\">" + cl.getInviteDate() + "</div>");
+								sb.append("<div class=\"items expire\">" + cl.getExpireDate() + "</div>");
+								sb.append("<div class=\"items accept\">");
+								sb.append("<input type='button' onClick=\"window.invitationReplay(\'" + cl.getInviteDate()
+								+ "\',\'" + cl.getSpmbCode() + "\',\'" + cl.getRpmbCode()
+								+ "\', \'AC\', \'AU\')\" class=\"mini\" value=\"수락\" " + (expired ? "" : "disabled")
+								+ " \\/>");
+								sb.append("<input type='button' onClick=\"window.invitationReplay(\'" + cl.getInviteDate()
+								+ "\',\'" + cl.getSpmbCode() + "\',\'" + cl.getRpmbCode()
+								+ "\', \'RF\', \'AU\')\" class=\"mini\" value=\"거절\" " + (expired ? "" : "disabled")
+								+ " \\/>");
+								sb.append("</div>");
+								sb.append("</div>");
+					}
+				}
+				sb.append("</div>");
+				sb.append("</div>");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return sb.toString();
+	}
+
+	// 보낸 초청장 정보 HTML
+	private String sendInvitationInfo(List<CerLogB> list) {
+		StringBuffer sb = new StringBuffer();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+		try {
+			if (list.size() > 0) {
+				int idx = -1;
+				sb.append("<div id=\"invitationSend\" class=\"invitation send\">");
+				sb.append("<div class=\"notice title\"> 내가 보낸 초대장 </div>");
+				sb.append("<div id=\"senderItems\">");
+				sb.append(
+						"<div class=\"items name\">수취인</div><div class=\"items invite\">초대일자</div><div class=\"items expire\">만료일자</div><div class=\"items accept\">회신</div>");
+				sb.append("</div>");
+				sb.append("<div class=\"invitationList\">");
+				for (CerLogB cl : list) {
+					idx++;
+					boolean expired = Long.parseLong(cl.getExpireDate().substring(0))
+							- Long.parseLong(sdf.format(new Date())) >= 0 ? true : false;
+							sb.append("<div id=\"receiver" + idx + "\" class=\"member\">");
+							sb.append("<div class=\"items name\">" + this.enc.aesDecode(cl.getReceiverName(), cl.getRpmbCode())
+							+ "</div>");
+							sb.append("<div class=\"items invite\">" + cl.getInviteDate() + "</div>");
+							sb.append("<div class=\"items expire\">" + cl.getExpireDate() + "</div>");
+							sb.append(
+									"<div class=\"items accept\">" + ((expired) ? cl.getAuthResultName() : "인증만료") + "</div>");
+							sb.append("</div>");
+
+				}
+				sb.append("</div>");
+				sb.append("</div>");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return sb.toString();
 	}
 
 	// 내가 참여한 프로젝트 정보 HTML
 	private String projectInfo(List<ProjectInfoB> list) {
-		return null;
+		StringBuffer sb = new StringBuffer();
+		try {
+			if (list.size() > 0) {
+				int idx = -1;
+				for (ProjectInfoB pib : list) {
+					idx++;
+					sb.append("<div class=\"DP\">");
+					sb.append("<div class=\"DProject\">");
+					sb.append("<input type = 'hidden' class = 'proCode' value = '" + pib.getProCode()
+					+ "' onClick = '' />");
+					sb.append("<div class = 'proName'> 프로젝트명 : " + pib.getProName() + "</div>");
+					sb.append("<div class = 'period'> 프로젝트기간 :" + pib.getPeriod() + "</div>");
+					sb.append("<input type = 'hidden' class = 'dirCode' value = '" + pib.getDirCode()
+					+ "' onClick = '' />");
+					sb.append("<div class = 'director'> 매니저이름 : "
+							+ this.enc.aesDecode(pib.getDirector(), pib.getDirCode()) + "</div>");
+					sb.append("<input type = 'button' class = 'proBtns' value = 'MEMBER' onClick = '' />");
+					sb.append("<input type = 'button' class = 'proBtns' value = 'JOB' onClick = '' />");
+					sb.append("<input type = 'button' class = 'proBtns' value = 'PROGRAM' onClick = '' />");
+					sb.append("</div>");
+					sb.append("</div>");
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return sb.toString();
 	}
 
-	// 받은 초청장 정보 HTML
-	private String receivedInvitationInfo(List<CerLogB> list){
-		return null;
-	}
-
-	// 보낸 초청장 정보 HTML
-	private String sendInvitationInfo(List<CerLogB> list){
-		return null;
-	}
-	
-	// INSERT OR UPDATE 되었는지 확인 
-	private boolean convertToBoolean(int number) {		
-		return number == 0?false:true;
+	// INSERT OR UPDATE 되었는지 확인
+	private boolean convertToBoolean(int number) {
+		return number == 0 ? false : true;
 	}
 
 }

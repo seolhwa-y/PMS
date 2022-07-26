@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.pms.inter.MapperInter">
-	<select id="isMember" parameterType="com.hoonzzang.beans.AuthB"
+	<select id="isMember" parameterType="com.pms.beans.CerB"
 		resultType="string">
 		SELECT PMB_PASSWORD FROM PMB WHERE PMB_CODE= #{pmbCode}
 	</select>
@@ -12,34 +12,33 @@
 		AS PMBCODE FROM PMB WHERE SUBSTR(PMB_CODE,1,6) =
 		TO_CHAR(SYSDATE,'YYYYMM')
 	</select>
-	<select id="getClassList" resultType="com.hoonzzang.beans.AuthB">
+	<select id="getClassList" resultType="com.pms.beans.CerB">
 		SELECT CLA_CODE AS
 		PMBCLASS,CLA_NAME ||'['|| CLA_NUM || ']' AS PMBCLASSNAME
 		FROM CLA
 	</select>
-	<select id="getLevelList" resultType="com.hoonzzang.beans.AuthB">
+	<select id="getLevelList" resultType="com.pms.beans.CerB">
 
 		SELECT MLV_CODE AS
 		PMBLEVEL, MLV_NAME AS PMBLEVELNAME FROM MLV
 	</select>
-	<insert id="insPmb" parameterType="com.hoonzzang.beans.AuthB">
+	<insert id="insPmb" parameterType="com.pms.beans.CerB">
 		INSERT INTO PMB(PMB_CODE,
 		PMB_PASSWORD, PMB_NAME, PMB_MLVCODE, PMB_CLACODE, PMB_EMAIL)
 		VALUES(#{pmbCode}, #{pmbPassword}, #{pmbName}, #{pmbLevel},
 		#{pmbClass}, #{pmbEmail})
 	</insert>
-	<insert id="insAsl" parameterType="com.hoonzzang.beans.AuthB">
+	<insert id="insAsl" parameterType="com.pms.beans.CerB">
 		INSERT INTO ASL(ASL_PMBCODE,
 		ASL_DATE, ASL_PUBLICIP, ASL_PRIVATEIP, ASL_ACTION)
 		VALUES(#{pmbCode},
 		DEFAULT, #{aslPublicIp}, #{aslPrivateIp}, #{aslAction})
 	</insert>
-	<select id="getAccessInfo"
-		parameterType="com.hoonzzang.beans.AuthB"
-		resultType="com.hoonzzang.beans.AuthB">
+	<select id="getAccessInfo" parameterType="com.pms.beans.CerB"
+		resultType="com.pms.beans.CerB">
 		SELECT * FROM ACCESSINFO WHERE PMBCODE = #{pmbCode}
 	</select>
-	<select id="isAccess" parameterType="com.hoonzzang.beans.AuthB"
+	<select id="isAccess" parameterType="com.pms.beans.CerB"
 		resultType="string">
 		SELECT ASL_PUBLICIP || ':' || ASL_PRIVATEIP as ASLPUBLICIP
 		FROM ASL
@@ -50,20 +49,18 @@
 		ASL_PRIVATEIP
 		HAVING SUM(ASL_ACTION) = 1
 	</select>
-	<insert id="insProject"
-		parameterType="com.hoonzzang.beans.ProBean">
+	<insert id="insProject" parameterType="com.pms.beans.ProBean">
 		INSERT INTO
 		PRO(PRO_CODE,PRO_NAME,PRO_COMMENTS,PRO_START,PRO_END,PRO_VISIBLE)
 		VALUES(#{proCode},#{proName},#{proComment},TO_DATE(#{proStart},
 		'YYYY-MM-DD'),TO_DATE(#{proEnd},'YYYY-MM-DD'),#{proVisible})
 	</insert>
-	<select id="getMembers"
-		parameterType="com.hoonzzang.beans.AuthB"
-		resultType="com.hoonzzang.beans.AuthB">
+	<select id="getMembers" parameterType="com.pms.beans.CerB"
+		resultType="com.pms.beans.CerB">
 		SELECT * FROM PMBMEMBERS WHERE PMBCODE != #{pmbCode}
 	</select>
 	<update id="insProjectMembers"
-		parameterType="com.hoonzzang.beans.ProBean">
+		parameterType="com.pms.beans.ProBean">
 		<foreach item="memberInfo" collection="proMembers"
 			separator=" " open="INSERT ALL" close="SELECT * FROM DUAL">
 			INTO
@@ -71,14 +68,13 @@
 			VALUES(#{proCode},#{memberInfo.pmbCode},null,default)
 		</foreach>
 	</update>
-	<insert id="insAuthLog" parameterType="com.hoonzzang.beans.AulB">
+	<insert id="insAuthLog" parameterType="com.pms.beans.CerLogB">
 		INSERT INTO
 		AUL(AUL_SPMBCODE,AUL_RPMBCODE,AUL_INVITEDATE,AUL_EXPIRE,AUL_AUTHRESULT)
 		VALUES(#{spmbCode}, #{rpmbCode}, default, default, #{authResult})
 	</insert>
-	<select id="checkInvite"
-		parameterType="com.hoonzzang.beans.AulB"
-		resultType="com.hoonzzang.beans.AulB">
+	<select id="checkInvite" parameterType="com.pms.beans.CerLogB"
+		resultType="com.pms.beans.CerLogB">
 	<![CDATA[
 		SELECT AUL.AUL_SPMBCODE AS SPMBCODE, PMB.PMB_NAME AS SENDERNAME,
 			   AUL.AUL_RPMBCODE AS RPMBCODE, TO_CHAR(AUL.AUL_INVITEDATE,'YYMMDDHH24MISS') AS INVITEDATE
@@ -89,8 +85,7 @@
 	]]>
 	</select>
 	<select id="receivedInvitationInfo"
-		parameterType="com.hoonzzang.beans.AuthB"
-		resultType="com.hoonzzang.beans.AulB">
+		parameterType="com.pms.beans.CerB" resultType="com.pms.beans.CerLogB">
 		<![CDATA[
 		SELECT 	SPMBCODE, SENDERNAME, RPMBCODE, TO_CHAR(INVITEDATE,'YYYYMMDDHH24MISS') AS INVITEDATE, 
 				TO_CHAR(EXPIREDATE, 'YYYYMMDDHH24MISS') AS EXPIREDATE, AUTHRESULT
@@ -98,16 +93,14 @@
 		WHERE RPMBCODE = #{pmbCode} AND INVITEDATE >= (SYSDATE - 1)
 		]]>
 	</select>
-	<update id="updAulState"
-		parameterType="com.hoonzzang.beans.AulB">
+	<update id="updAulState" parameterType="com.pms.beans.CerLogB">
 		<![CDATA[
 		UPDATE AUL SET AUL_AUTHRESULT=#{authResult} 
 		WHERE AUL_SPMBCODE =#{spmbCode} AND AUL_RPMBCODE=#{rpmbCode} AND AUL_INVITEDATE = TO_DATE(#{inviteDate},'YYMMDDHH24MISS')
 		]]>
 	</update>
 	<select id="sendInvitationInfo"
-		parameterType="com.hoonzzang.beans.AuthB"
-		resultType="com.hoonzzang.beans.AulB">
+		parameterType="com.pms.beans.CerB" resultType="com.pms.beans.CerLogB">
 	<![CDATA[
 		SELECT 	SPMBCODE, RPMBCODE, RECEIVERNAME, TO_CHAR(INVITEDATE,'YYYYMMDDHH24MISS') AS INVITEDATE, 
 				TO_CHAR(EXPIREDATE, 'YYYYMMDDHH24MISS') AS EXPIREDATE, AUTHRESULT, AUTHRESULTNAME
@@ -115,8 +108,7 @@
 		WHERE SPMBCODE = #{pmbCode} AND INVITEDATE >= (SYSDATE - 2)
 		]]>
 	</select>
-	<update id="updPrmState"
-		parameterType="com.hoonzzang.beans.ProBean">
+	<update id="updPrmState" parameterType="com.pms.beans.ProBean">
 		<foreach item="memberInfo" collection="proMembers"
 			separator=" ">
 		<![CDATA[
@@ -126,18 +118,35 @@
 		</foreach>
 	</update>
 	<update id="updProjectMembers"
-		parameterType="com.hoonzzang.beans.EmailAuthB">
+		parameterType="com.pms.beans.EmailCerB">
 		UPDATE PRM
 		SET PRM_ACCEPT = #{proAcceptCode}
 		WHERE
 		PRM_PROCODE = #{emailCode} AND PRM_PMBCODE = #{receiver}
 	</update>
-	<update id="updAuthLog"
-		parameterType="com.hoonzzang.beans.EmailAuthB">
+	<update id="updAuthLog" parameterType="com.pms.beans.EmailCerB">
 		UPDATE AUL
-		SET AUL_AUTHRESULT = #{aulResultCode}
+		SET
+		AUL_AUTHRESULT = #{aulResultCode}
 		WHERE
-		AUL_SPMBCODE = #{sander} AND AUL_RPMBCODE = #{receiver} AND
-		AUL_INVITEDATE = TO_DATE(#{inviteDate}, 'YYYYMMDDHH24MISS')
+		AUL_SPMBCODE = #{sander} AND
+		AUL_RPMBCODE = #{receiver} AND
+		AUL_INVITEDATE = TO_DATE(#{inviteDate},
+		'YYYYMMDDHH24MISS')
 	</update>
+	<select id="getProjectInfo"
+		parameterType="com.pms.beans.CerB"
+		resultType="com.pms.beans.ProjectInfoB">
+		SELECT PROCODE, PRONAME, "PERIOD",
+		PRM.PRM_PMBCODE AS
+		DIRCODE,
+		PMB.PMB_NAME AS DIRECTOR
+		FROM MYPROJECT MP INNER JOIN PRM ON
+		MP.PROCODE = PRM.PRM_PROCODE
+		INNER JOIN PMB ON PRM.PRM_PMBCODE =
+		PMB.PMB_CODE
+		WHERE MP.PMBCODE = #{pmbCode} AND MP.PRMACCEPT = 'AC' AND
+		PRM.PRM_POSITION
+		= 'MG'
+	</select>
 </mapper>

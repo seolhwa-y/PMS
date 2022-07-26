@@ -5,12 +5,12 @@
 <head>
 <meta charset="UTF-8">
 <title>::PMS Template::</title>
-<script src="res/js/common.js" type=""></script>
+<script src="resources/js/common.js" type=""></script>
 <script>
 
 </script>
 <style>
-@import url("res/css/common.css");
+@import url("resources/css/common.css");
 </style>
 </head>
 <body>

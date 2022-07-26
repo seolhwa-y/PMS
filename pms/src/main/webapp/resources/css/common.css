@@ -54,7 +54,7 @@ span	{ width:40%}
 	
 #notice-icon	{float:left; 
 	width:7%;height:100%;
-	background-image: url('/res/images/megaphone.png');
+/* 	background-image: url('/res/images/megaphone.png'); */
 	background-size:contain; background-repeat:no-repeat;}
 
 #notice-article	{float:right;
@@ -100,7 +100,7 @@ span	{ width:40%}
 .lightbox{float:left;}
 .lightbox.image{
 	width:30%;height:100%; border-radius:10px 0px 0px 10px;
-	background-image: url('/res/images/hoonzzang.jpg'); background-size:contain;
+	/* background-image: url('/res/images/hoonzzang.jpg'); background-size:contain; */
 	background-repeat:no-repeat;}
 .lightbox.content{ width:70%;height:100%; border-radius:0px 10px 10px 0px;}
 

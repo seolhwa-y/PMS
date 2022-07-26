@@ -5,7 +5,7 @@
 <head>
 <meta charset="UTF-8">
 <title>::PMS New Project::</title>
-<script src="res/js/common.js" type=""></script>
+<script src="resources/js/common.js" type=""></script>
 <script>
 function initNewPlzec(){
 	document.getElementById("content").style.display="none";
@@ -15,7 +15,7 @@ function initNewPlzec(){
 	const lightBox = makeLightBox("New Project", "regProject", "cancelProject");
 	document.body.appendChild(lightBox);
 	let image = document.querySelector("#image");
-	image.style.backgroundImage = "url('/res/images/project.jpg')";
+/* 	image.style.backgroundImage = "url('/res/images/project.jpg')"; */
 	image.style.backgroundSize = "cover";
 	
 	let box = document.querySelector(".light-box");
@@ -49,7 +49,7 @@ function initNewPlzec(){
  	lightBox.style.display = "block";
 }
 function regProject(){
-	const dataName = ["proName", "proComments", "proStart", "proEnd", "proVisible"];
+	const dataName = ["proName", "proComment", "proStart", "proEnd", "proVisible"];
 	const formData = document.getElementsByName("proInfo");
 	let clientData = "";
 	
@@ -139,7 +139,7 @@ function sendEmail(){
 function sendEmail2(){
 	let form = document.getElementsByName("clientData")[0];
 	form.action="InviteMemberV";
-	form.method="post"
+	form.method="post";
 	
 	/* PROJECT CODE 가져오기 */
 	form.appendChild(createHidden("proCode", document.getElementById("projectInfo").childNodes[3].innerText.substr(7,20)));
@@ -149,7 +149,7 @@ function sendEmail2(){
 		const info = inviteMembers[idx].getAttribute("value").split(":");
 		form.appendChild(createHidden("proMembers["+ idx +"].pmbCode", info[0]));
 		form.appendChild(createHidden("proMembers["+ idx +"].proEmail", info[1]));
-		form.appendChild(createHidden("proMembers["+ idx +"].proAccept", "ST"));
+		form.appendChild(createHidden("proMembers["+ idx +"].proPosition", 'MB'/* info[2] */)); // 선택된 아가들꺼
 	}
 	
 	form.submit();
@@ -161,7 +161,7 @@ function sendMailResult(ajaxData){
 }
 </script>
 <style>
-@import url("res/css/common.css");
+@import url("resources/css/common.css");
 .pro		{position:relative; float:left;
 	width:30%; height:90%;margin-top:2%; margin-left:2.5%;
 	border:1px solid rgba(255, 187, 0, 1);

@@ -5,17 +5,17 @@
 <head>
 <meta charset="UTF-8">
 <title>::PMS Template::</title>
-<script src="res/js/common.js" type=""></script>
+<script src="/resources/js/common.js" type=""></script>
 <script>
 let info = [];
 
-function invitationReply(inviteDate, sender, receiver, prmCode, aulCode){
+function invitationReplay(inviteDate, sander, receiver, prmCode, aulCode){
 	const lightBox = makeLightBox("인증 등록", "sendServer", "cancelSend");
 	const codeInput = createInput("text", "emailCode", "인증 코드 입력", "box");
 	
 	document.body.appendChild(lightBox);
 	let image = document.querySelector("#image");
-	image.style.backgroundImage = "url('/res/images/project.jpg')";
+/* 	image.style.backgroundImage = "url('/res/images/project.jpg')"; */
 	image.style.backgroundSize = "cover";
 	
 	let box = document.querySelector(".light-box");
@@ -26,7 +26,7 @@ function invitationReply(inviteDate, sender, receiver, prmCode, aulCode){
 	cBody.appendChild(codeInput);
 		
 	info.push(inviteDate);
-	info.push(sender);
+	info.push(sander);
 	info.push(receiver);
 	info.push(prmCode);
 	info.push(aulCode);
@@ -35,12 +35,12 @@ function invitationReply(inviteDate, sender, receiver, prmCode, aulCode){
 }
 
 function sendServer(){
-	const objName = ["inviteDate", "sender", "receiver", "proAcceptCode", "aulResultCode", "emailCode"];
+	const objName = ["inviteDate", "sander", "receiver", "proAcceptCode", "aulResultCode", "emailCode"];
 	const form = document.getElementsByName("clientData")[0];
 	const emailCode = document.getElementsByName("emailCode")[0].value;
 	if( emailCode == "") return;
 	
-	form.action = "EmailAuth";
+	form.action = "EmailCodeCer";
 	form.method = "post";
 	
 	info.push(emailCode);
@@ -57,8 +57,8 @@ function cancelSend(){
 }
 </script>
 <style>
-@import url("res/css/common.css");
-@import url("res/css/slide.css");
+@import url("resources/css/common.css");
+@import url("resources/css/slide.css");
 </style>
 </head>
 <body>
@@ -164,6 +164,6 @@ function cancelSend(){
 	</div>
 	
 	<form name="clientData"></form>
-	<script src="res/js/slide.js" ></script>
+	<script src="resources/js/slide.js" ></script>
 </body>
 </html>

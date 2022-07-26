@@ -5,7 +5,7 @@
 <head>
 <meta charset="UTF-8">
 <title>:: PMS Main ::</title>
-<script src="/res/js/common.js"></script>
+<script src="/resources/js/common.js"></script>
 <script>
 function accessOut(){
 	let form = document.getElementsByName("clientData")[0];

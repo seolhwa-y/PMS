@@ -81,9 +81,11 @@ public class HomeController {
 	}
 
 	// 프로젝트 생성 후 멤버 초대 
-	@RequestMapping(value="/InviteMemberv", method= RequestMethod.POST)
+	@RequestMapping(value="/InviteMemberV", method= RequestMethod.POST)
 	public ModelAndView inviteMember(HttpServletRequest req, ModelAndView mav, @ModelAttribute ProBean pro) {
+		mav.addObject(pro);
 		this.project.backController(1, mav);
+		System.out.println("hi");
 		return mav;
 	}
 
@@ -96,7 +98,8 @@ public class HomeController {
 
 	// 메일로 받은 인증코드 확인 후 UPDATE
 	@RequestMapping(value="/EmailCodeCer", method= RequestMethod.POST)
-	public ModelAndView acceptMember(HttpServletRequest req, ModelAndView mav, @ModelAttribute EmailCerB eab) {
+	public ModelAndView acceptMember(HttpServletRequest req, ModelAndView mav, @ModelAttribute EmailCerB ecb) {
+		mav.addObject(ecb);
 		this.dBoard.backController(1, mav);
 		return mav;
 	}

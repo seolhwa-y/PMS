@@ -5,7 +5,7 @@
 <head>
 <meta charset="UTF-8">
 <title>::PMS JOIN::</title>
-<script src="/res/js/common.js"></script>
+<script src="/resources/js/common.js"></script>
 <script>
 function init(){
 	getAjaxJson("https://api.ipify.org", "format=json", "setPublicIp");
@@ -104,7 +104,7 @@ function pmsMemberJoin(){
 }
 </script>
 <style>
-	@import url("/res/css/common.css");
+	@import url("/resources/css/common.css");
 	
 </style>
 </head>

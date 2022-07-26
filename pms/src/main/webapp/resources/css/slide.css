@@ -33,7 +33,7 @@
 
 .plzec		{
 	width:90%;height:100%;padding-top:0.5vh;
-	background-image:url('/res/images/plzec.png');
+/* 	background-image:url('/res/images/plzec.png'); */
 	background-size:cover;
 }
 .slide.now .plzec	{
