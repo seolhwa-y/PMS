@@ -22,6 +22,7 @@ public class APIController {
 	@SuppressWarnings("unchecked")
 	@PostMapping("/RegProject")
 	public List<CerB> regProject(Model model, @ModelAttribute ProBean pro){
+		/* Developer : 지수 */
 		model.addAttribute(pro);
 		project.backController(0, model);
 		return (List<CerB>)model.getAttribute("MemberList");
