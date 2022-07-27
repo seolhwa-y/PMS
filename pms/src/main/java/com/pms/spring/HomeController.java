@@ -112,4 +112,13 @@ public class HomeController {
 		this.dBoard.backController(1, mav);
 		return mav;
 	}
+	
+	// 
+		@RequestMapping(value = "/MoveJobs", method = RequestMethod.POST)
+		public ModelAndView moveJobs(HttpServletRequest req, ModelAndView mav,@ModelAttribute ProBean pro) {
+	
+			mav.addObject(pro);
+			this.project.backController(2, mav);
+			return mav;
+		}
 }
