@@ -55,6 +55,9 @@ function cancelSend(){
 	// lightBox  Remove
 	cancelProject();
 }
+function jobCtl(){
+	alert("jobCtl");
+}
 </script>
 <style>
 @import url("resources/css/common.css");
@@ -89,82 +92,15 @@ function cancelSend(){
 			</div>
 			<div class="frame">
 				<div class="myProjects">
-					<div class="slide">
-						<div class="plzec">
-							<div class="header title">First Project</div>
-							<div class="header director">HoonZzang</div>
-							<div class="header person">5</div>
-							<div class="header period">-2</div>
-							<div class="shortcut">
-								<button class="exec progress">프로젝트진행현황</button>
-								<button class="exec member">멤버관리</button>
-								<button class="exec job">업무관리</button>
-								<button class="exec result">결과관리</button>
-							</div>
-						</div>
-					</div>
-					<div class="slide">
-						<div class="plzec">
-							<div class="header title">Second Project</div>
-							<div class="header director">HoonZzang</div>
-							<div class="header person">5</div>
-							<div class="header period">-1</div>
-							<div class="shortcut">
-								<button class="exec progress">프로젝트진행현황</button>
-								<button class="exec member">멤버관리</button>
-								<button class="exec job">업무관리</button>
-								<button class="exec result">결과관리</button>
-							</div>
-						</div>
-					</div>
-					<div class="slide">
-						<div class="plzec">
-							<div class="header title">Third Project</div>
-							<div class="header director">HoonZzang</div>
-							<div class="header person">5</div>
-							<div class="header period">0</div>
-							<div class="shortcut">
-								<button class="exec progress">프로젝트진행현황</button>
-								<button class="exec member">멤버관리</button>
-								<button class="exec job">업무관리</button>
-								<button class="exec result">결과관리</button>
-							</div>
-						</div>
-					</div>
-					<div class="slide">
-						<div class="plzec">
-							<div class="header title">Fourth Project</div>
-							<div class="header director">HoonZzang</div>
-							<div class="header person">5</div>
-							<div class="header period">1</div>
-							<div class="shortcut">
-								<button class="exec progress">프로젝트진행현황</button>
-								<button class="exec member">멤버관리</button>
-								<button class="exec job">업무관리</button>
-								<button class="exec result">결과관리</button>
-							</div>
-						</div>
-					</div>
-					<div class="slide">
-						<div class="plzec">
-							<div class="header title">Fifth Project</div>
-							<div class="header director">HoonZzang</div>
-							<div class="header person">5</div>
-							<div class="header period">2</div>
-							<div class="shortcut">
-								<button class="exec progress">프로젝트진행현황</button>
-								<button class="exec member">멤버관리</button>
-								<button class="exec job">업무관리</button>
-								<button class="exec result">결과관리</button>
-							</div>
-						</div>
-					</div>
+					${ProjectInfo }
 				</div>
-				<button id="prev">P</button>
-				<button id="next">N</button>				
+			<button id="prev">P</button>
+			<button id="next">N</button>
 			</div>
+				
 		</div>
 	</div>
+	
 	
 	<form name="clientData"></form>
 	<script src="resources/js/slide.js" ></script>

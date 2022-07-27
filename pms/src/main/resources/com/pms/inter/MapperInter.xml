@@ -2,6 +2,16 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.pms.inter.MapperInter">
+<!-- 연관 테이블의 Collection 개체 가져오기  
+	<resultMap id="getProjectInfo" type="com.pms.beans.ProBean">
+		<id column="PRO_CODE" property="proCode" />
+		<result column="PRO_NAME" property="proName" />
+		<result column="PRO_COMMENTS" property="proComment" />
+		<result column="PRO_START" property="proStart" />
+		<result column="PRO_END" property="proEnd" />
+		<result column="PRO_VISIBLE" property="proVisible" />
+		<collection property="proMembers" javaType="java.util.ArrayList" column="PRO_CODE" ofType="com.pms.beans.ProMemberB" select="getProjectMembers"></collection>
+	</resultMap>-->
 	<select id="isMember" parameterType="com.pms.beans.CerB"
 		resultType="string">
 		SELECT PMB_PASSWORD FROM PMB WHERE PMB_CODE= #{pmbCode}
@@ -65,7 +75,7 @@
 			separator=" " open="INSERT ALL" close="SELECT * FROM DUAL">
 			INTO
 			PRM(PRM_PROCODE,PRM_PMBCODE,PRM_POSITION,PRM_ACCEPT)
-			VALUES(#{proCode},#{memberInfo.pmbCode},null,default)
+			VALUES(#{proCode},#{memberInfo.pmbCode},#{memberInfo.proPosition},#{memberInfo.proAccept})
 		</foreach>
 	</update>
 	<insert id="insAuthLog" parameterType="com.pms.beans.CerLogB">
@@ -149,4 +159,23 @@
 		PRM.PRM_POSITION
 		= 'MG'
 	</select>
+	<select id="getMemberNum" parameterType = "com.pms.beans.ProjectInfoB" resultType="string">
+		<![CDATA[
+		SELECT COUNT(*) AS PEOPLE FROM PRM WHERE PRM_PROCODE = #{proCode} AND PRM_ACCEPT = 'AC'
+		]]>
+	</select>
+	
+		<!-- 연관 테이블의 Collection 개체 가져오기  
+	<select id="getProject" parameterType="com.pms.beans.CerB" resultMap="getProjectInfo">
+		SELECT * 
+		FROM PRO 
+		WHERE PRO_CODE IN(SELECT PRM_PROCODE FROM PRM WHERE PRM_PMBCODE = #{pmbCode})
+	</select>
+	<select id="getProjectMembers" resultType="com.pms.beans.ProMemberB">
+		SELECT 	PRM_PMBCODE AS PMBCODE, 
+				PRM_POSITION AS PROPOSITION, 
+				PRM_ACCEPT AS PROACCEPT 
+		FROM PRM 
+		WHERE PRM_PROCODE = #{proCode}
+	</select>-->
 </mapper>

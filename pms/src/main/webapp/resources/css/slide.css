@@ -20,15 +20,16 @@
 	width: 20%; height:60%; 
 	flex: 1 0 auto;
 	margin-top:10%;
-	cursor:pointer;
+	/* cursor:pointer; */
 }
 
 .slide.now {
 	width: 50%; height:100%; margin:0 5% 0 4%;
-	transition: all 3s ease-in-out;
+	/* transition: all 3s ease-in-out; */
 }
 .slide.now .header	{
 	line-height:8vh; font-weight:900; font-size:1.5rem;margin:2% auto;
+	/* width:auto; */
 }
 
 .plzec		{
@@ -53,7 +54,11 @@
 .exec	{float:left;
 	height:31%;margin:1% auto;
 	background-color:rgba(0,80,0,0.7); color:rgba(255,187,0,1);
+	font-size:0.8rem;
 	font-weight:600;
+}
+.exec.progress :hover	{
+	background-color:rgba(255,187,0,1);color:rgba(255,255,255,0);cursor:pointer;
 }
 .slide.now .exec	{
 	height:21%;
@@ -74,10 +79,19 @@
 }
 #next, #prev {
 	position:absolute;
-	width:3vw; height:20vh;
+	width:3vw; height:60%;
 	background-color : rgba(255,187,0,0.5);
 	z-index:1;
-	bottom: 50%;
+	bottom: 20%;
+}
+
+#next:hover	{
+	cursor:pointer;
+	background-color : rgba(255,0,127,0.5);
+}
+#prev:hover	{
+	cursor:pointer;
+	background-color : rgba(255,0,127,0.5);
 }
 
 #prev {

@@ -77,6 +77,9 @@ public class DashBoard implements ServicesRule {
 					this.session.selectList("sendInvitationInfo", (CerB) this.pu.getAttribute("accessInfo"))));
 			mav.addObject("ProjectInfo", this
 					.projectInfo(this.session.selectList("getProjectInfo", (CerB) this.pu.getAttribute("accessInfo"))));
+			/* 교수님ver
+			 * mav.addObject("ProjectInfo", this.makeProjectSlide(this.session.selectList("getProject", (AuthB)this.pu.getAttribute("accessInfo"))));
+			 * */
 			mav.setViewName("dashBoard");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -195,24 +198,30 @@ public class DashBoard implements ServicesRule {
 	// 내가 참여한 프로젝트 정보 HTML
 	private String projectInfo(List<ProjectInfoB> list) {
 		StringBuffer sb = new StringBuffer();
+		
 		try {
 			if (list.size() > 0) {
 				int idx = -1;
 				for (ProjectInfoB pib : list) {
 					idx++;
-					sb.append("<div class=\"DP\">");
-					sb.append("<div class=\"DProject\">");
+					sb.append("<div class = 'slide'>");
+					sb.append("<div class = 'plzec'>");
 					sb.append("<input type = 'hidden' class = 'proCode' value = '" + pib.getProCode()
 					+ "' onClick = '' />");
-					sb.append("<div class = 'proName'> 프로젝트명 : " + pib.getProName() + "</div>");
-					sb.append("<div class = 'period'> 프로젝트기간 :" + pib.getPeriod() + "</div>");
+					sb.append("<div class = 'header title'> 프로젝트명 : " + pib.getProName() + "</div>");
 					sb.append("<input type = 'hidden' class = 'dirCode' value = '" + pib.getDirCode()
 					+ "' onClick = '' />");
-					sb.append("<div class = 'director'> 매니저이름 : "
+					sb.append("<div class = 'header person'> 매니저이름 : "
 							+ this.enc.aesDecode(pib.getDirector(), pib.getDirCode()) + "</div>");
-					sb.append("<input type = 'button' class = 'proBtns' value = 'MEMBER' onClick = '' />");
-					sb.append("<input type = 'button' class = 'proBtns' value = 'JOB' onClick = '' />");
-					sb.append("<input type = 'button' class = 'proBtns' value = 'PROGRAM' onClick = '' />");
+					sb.append("<div class = 'header person'> 프로젝트인원 : " + this.session.selectOne("getMemberNum", pib)  + "</div>");
+					sb.append("<div class = 'header period'> 프로젝트기간 :" + pib.getPeriod() + "</div>");
+					
+					sb.append("<div class = 'shortcut'>");
+					sb.append("<input type = 'button' class = 'exec progress' value = '프로젝트진행현황' onClick = '' />");
+					sb.append("<input type = 'button' class = 'exec member' value = '멤버관리' onClick = '' />");
+					sb.append("<input type = 'button' class = 'exec job' value = '업무관리' onClick = 'window.jobCtl()' />");
+					sb.append("<input type = 'button' class = 'exec result' value = '결과관리' onClick = '' />");
+					sb.append("</div>");
 					sb.append("</div>");
 					sb.append("</div>");
 				}
@@ -222,7 +231,38 @@ public class DashBoard implements ServicesRule {
 		}
 		return sb.toString();
 	}
+	/* 프로젝트 슬라이드 */
+/*	private String makeProjectSlide(List<ProBean> project) {
+		StringBuffer sb = new StringBuffer();
 
+		if(project != null && project.size() > 0) {
+			for(ProBean pb : project) {
+				sb.append("<div class=\"slide\">");
+				sb.append("<div class=\"plzec\">");
+				sb.append("<div class=\"header title\">" + pb.getProName() + "</div>");
+				int count = 0;
+				for(ProMembersB pm : pb.getProMembers()) {
+					if(pm.getProAccept().equals("AC")) count++; 
+					if(pm.getProPosition() != null && pm.getProPosition().equals("MG")) {
+						try{
+							sb.append("<div class=\"header director\">" + this.enc.aesDecode(pm.getPmbName(), pm.getPmbCode()) + "("+ pm.getPmbCode() +")</div>");
+						}catch(Exception e) {e.printStackTrace();}
+					}
+				}
+				
+				sb.append("<div class=\"header person\">" + count + " Members</div>");
+				sb.append("<div class=\"header period\">" + pb.getProStart() + " ~ " + pb.getProEnd() + "</div>");
+				sb.append("<div class=\"shortcut\">");
+				sb.append("<button class=\"exec progress\">프로젝트진행현황</button>");
+				sb.append("<button class=\"exec member\">멤버관리</button>");
+				sb.append("<button class=\"exec job\" onClick=\"mgrJob(\'" + pb.getProCode() + "\')\">업무관리</button>");
+				sb.append("<button class=\"exec result\">결과관리</button>");
+				sb.append("</div></div></div>");
+			}
+		}
+
+		return sb.toString();
+	}*/
 	// INSERT OR UPDATE 되었는지 확인
 	private boolean convertToBoolean(int number) {
 		return number == 0 ? false : true;

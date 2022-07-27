@@ -25,4 +25,9 @@ public interface MapperInter {
 	
 	public int updProjectMembers(EmailCerB ecb);
 	public int updAuthLog(EmailCerB ecb);
+	
+	public String getMemberNum(ProjectInfoB proInfo);
+	/* 내가 속한 프로젝트 정보 */
+	public List<ProBean> getProject(ProBean pro);
+	
 }

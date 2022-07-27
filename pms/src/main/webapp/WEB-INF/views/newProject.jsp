@@ -149,7 +149,8 @@ function sendEmail2(){
 		const info = inviteMembers[idx].getAttribute("value").split(":");
 		form.appendChild(createHidden("proMembers["+ idx +"].pmbCode", info[0]));
 		form.appendChild(createHidden("proMembers["+ idx +"].proEmail", info[1]));
-		form.appendChild(createHidden("proMembers["+ idx +"].proPosition", 'MB'/* info[2] */)); // 선택된 아가들꺼
+		form.appendChild(createHidden("proMembers["+ idx +"].proPosition", ""/* info[2] */)); // 선택된 아가들꺼
+		form.appendChild(createHidden("proMembers["+ idx +"].proAccept", 'ST'));
 	}
 	
 	form.submit();
