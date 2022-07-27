@@ -50,6 +50,9 @@ public class Project implements ServicesRule {
 				case 1:
 					this.regProjectMembersCtl(mav);
 					break;
+				case 2:
+					this.moveJobs(mav);
+					break;
 				default:
 				}
 			} else {
@@ -77,6 +80,12 @@ public class Project implements ServicesRule {
 		}
 	}
 
+	// jobs 화면 이동
+	private void moveJobs(ModelAndView mav) {
+		System.out.println(((ProBean)mav.getModel().get("proBean")).getProCode());
+		mav.setViewName("jobs");
+	}
+	
 	// 프로젝트 화면 이동
 	private void entrance(ModelAndView mav) {
 		mav.setViewName("newProject");

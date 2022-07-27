@@ -110,6 +110,14 @@ public class HomeController {
 		/* Developer : 채이 */
 		mav.addObject(ecb);
 		this.dBoard.backController(1, mav);
+		return mav;    
+	}
+	// Job 페이지 이동
+	@RequestMapping(value="/MoveJobs", method= RequestMethod.POST)
+	public ModelAndView moveJobs(ModelAndView mav, @ModelAttribute ProBean pro) {
+		mav.addObject(pro);
+		
+		this.project.backController(2, mav);
 		return mav;
 	}
 }

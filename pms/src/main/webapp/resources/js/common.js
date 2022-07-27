@@ -5,6 +5,7 @@ function lightBoxCtl(title, disp){
 	let header = document.getElementById("cheader");
 	header.innerText = title;
 	canvas.style.display = disp? "block":"none";
+	
 }
 
 function createDiv(id, className, value, text){

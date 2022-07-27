@@ -56,7 +56,14 @@ function cancelSend(){
 	cancelProject();
 }
 function jobCtl(){
-	alert("jobCtl");
+	const form = document.getElementsByName("clientData")[0];
+	form.action = "MoveJobs";
+	form.method = "post";
+	let proCode = document.getElementsByClassName("proCode")[0].value;
+	form.appendChild(createHidden("proCode", proCode));
+	
+	form.submit();
+	
 }
 </script>
 <style>
