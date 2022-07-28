@@ -53,6 +53,9 @@ public class Project implements ServicesRule {
 				case 2:
 					this.moveJobs(mav);
 					break;
+				case 3:
+					this.moveMemberMgr(mav);
+					break;
 				default:
 				}
 			} else {
@@ -78,12 +81,6 @@ public class Project implements ServicesRule {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
-
-	// jobs 화면 이동
-	private void moveJobs(ModelAndView mav) {
-		System.out.println(((ProBean)mav.getModel().get("proBean")).getProCode());
-		mav.setViewName("jobs");
 	}
 	
 	// 프로젝트 화면 이동
@@ -136,7 +133,7 @@ public class Project implements ServicesRule {
 			((ProBean) mav.getModel().get("proBean")).getProMembers().add(proB);
 			int result = this.session.insert("insProjectMembers", (ProBean) mav.getModel().get("proBean"));
 			String subject = "[초대장] 프로젝트 참여 초대";
-			String sender = "zzanggirlji@naver.com";
+			String sender = "tax140853@naver.com";
 			MimeMessage javaMail = mail.createMimeMessage();
 			MimeMessageHelper mailHelper = new MimeMessageHelper(javaMail, "UTF-8");
 			CerLogB log = null;
@@ -165,6 +162,65 @@ public class Project implements ServicesRule {
 			e.printStackTrace();
 		}
 		this.dBoard.backController(0, mav);
+	}
+	
+	// jobs 화면 이동
+	private void moveJobs(ModelAndView mav) {
+		System.out.println(((ProBean)mav.getModel().get("proBean")).getProCode());
+		mav.setViewName("jobs");
+	}
+	
+	// memberMgr 화면 이동
+	private void moveMemberMgr(ModelAndView mav) { //mav proBean 도착
+		System.out.println(((ProBean)mav.getModel().get("proBean")).getProCode());
+		ProBean pro = ((ProBean)mav.getModel().get("proBean"));
+		
+		// 1번박스 초대보냈던 리스트
+
+	    mav.addObject("sendlist",this.sendListInfo(this.session.selectList("getSendEmailList", pro)));
+		// 2번박스 그외 초대가능한 새로운 멤버리스트
+
+		// 3번박스 -> newProject.jsp에서 moveDiv참조 여기선x
+		mav.setViewName("memberMgr");
+	}
+	
+	// 1번박스 초대보냈던 리스트 생성
+	private String sendListInfo(List<MemberMgrB> list) {
+		StringBuffer sb = new StringBuffer();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+		//"<div class=\"items name\">발송인</div><div class=\"items invite\">초대일자</div><div class=\"items expire\">만료일자</div><div class=\"items accept\">회신</div>");
+		
+		System.out.println(list.size());
+		for(MemberMgrB mb: list) {
+				try {
+					if(!((CerB) this.pu.getAttribute("accessInfo")).getPmbCode().equals(mb.getPmbCode())) {
+					boolean expired = Long.parseLong(mb.getExpireDate().substring(0))
+							- Long.parseLong(sdf.format(new Date())) >= 0 ? true : false;
+					mb.setPmbName(this.enc.aesDecode(mb.getPmbName(), mb.getPmbCode()));
+					mb.setPmbEmail(this.enc.aesDecode(mb.getPmbEmail(), mb.getPmbCode()));
+					int idx = 0;
+					sb.append("<div name='seList' className='box multi' value='"+ mb.getPmbCode() +":"+mb.getPmbEmail()+"'>");
+					sb.append("<span class='small' name='smailList'>"+ mb.getPmbClassName() +"</span><br/>");
+					sb.append("<span class='general'>"+ mb.getPmbName() +"["+mb.getPmbLevelName() +"]</span>");
+					sb.append("<input type='button' value='메일 재전송' onClick='window.resendEmail("+mb.getPmbCode() +")'" + (expired ? "disabled" : "")+"/>");
+					// if~~ ac상태면 놔두고 st상태에서 인증만료가되면 메일재전송 버튼 만들어서 메일보내기 인증만료 전이면 그냥 st로 보이게
+					sb.append("</div>");
+					idx ++;
+					}
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+						//sb.append("<div name='seList' className='box multi' value='"+ list.get(idx).getPmbCode() +":"+list.get(idx).getPmbEmail()+"'>");
+				//sb.append("<span class='small' name='smailList'>"+ list.get(idx).getPmbClassName() +"</span><br/>");
+				//sb.append("<span class='general'>"+ list.get(idx).getPmbName() +"["+list.get(idx).getPmbLevelName() +"]</span>");
+			
+			//여기에서 2번리스트 만들어서 보낼수 있지않을까
+			//아니면 전체 멤버리스트하고 흠,,.,.거르는걸모르겠네
+		}
+		
+		System.out.println(sb);
+		return sb.toString();
 	}
 
 	// INSERT OR UPDATE 되었는지 확인

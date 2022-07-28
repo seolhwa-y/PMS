@@ -165,6 +165,21 @@
 		]]>
 	</select>
 	
+	<select id="getSendEmailList" parameterType = "com.pms.beans.ProBean" resultType = "com.pms.beans.MemberMgrB">
+		SELECT 	PMBCODE,
+        PMBNAME,
+        PMBEMAIL,
+        PMBACCEPT,
+        PMBCLASSNAME,
+        PMBLEVELNAME,
+        PROCODE,
+        TO_CHAR(INVITEDATE,'YYYYMMDDHH24MISS') AS INVITEDATE,
+        TO_CHAR(EXPIREDATE, 'YYYYMMDDHH24MISS') AS EXPIREDATE
+		FROM SENDEMAILLIST 
+		WHERE PROCODE= #{proCode}
+	</select>
+	
+	
 		<!-- 연관 테이블의 Collection 개체 가져오기  
 	<select id="getProject" parameterType="com.pms.beans.CerB" resultMap="getProjectInfo">
 		SELECT * 

@@ -51,10 +51,12 @@ function sendServer(){
 	
 	form.submit();
 }
+
 function cancelSend(){
 	// lightBox  Remove
 	cancelProject();
 }
+
 function jobCtl(){
 	const form = document.getElementsByName("clientData")[0];
 	form.action = "MoveJobs";
@@ -64,6 +66,16 @@ function jobCtl(){
 	
 	form.submit();
 	
+}
+
+function memberCtl(idx){
+	const form = document.getElementsByName("clientData")[0];
+	form.action = "MoveMemberMgr";
+	form.method = "post";
+	let proCode = document.getElementsByClassName("proCode")[idx].value;
+	form.appendChild(createHidden("proCode", proCode));
+	
+	form.submit();
 }
 </script>
 <style>
