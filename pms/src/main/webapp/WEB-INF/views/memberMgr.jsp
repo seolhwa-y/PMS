@@ -5,10 +5,10 @@
 <head>
 <meta charset="UTF-8">
 <title>::PMS MemeberMgr::</title>
-<script src="resources/js/common.js" type=""></script>
+<script src="/resources/js/common.js" type=""></script>
 <script>
 function initMemeberMgr() {
-	alert(document.getElementsByClassName("proCode")[0].value);
+	//alert(document.getElementsByClassName("proCode")[0].value);
 	
 	/* 이미 초대장을 보낸 멤버리스트 출력 */
 	let list = document.getElementById("sendlist");
@@ -54,12 +54,43 @@ function initMemeberMgr() {
 		}
 		sendBtn.style.display = (proMembers.childNodes.length>0)? "block" : "none";
 	}
-	function resendEmail(pmbCode){
-		alert(pmbCode);
+	
+	//apiController 메일재전송~~
+	function resendEmail(num){
+		let clientData = "";
+		const info = document.getElementsByName("seList")[num].getAttribute("value").split(":");
+		clientData += "&pmbCode=" + info[0] + "&pmbEmail=" + info[1] + "&proCode=" + info[2];
+		alert(clientData);
+
+		postAjaxJson("ReSendEmail",clientData,"sendMailResult("+num+")");
+
+	}
+	
+	function sendEmail2(){
+		let form = document.getElementsByName("clientData")[0];
+		form.action="newInviteMember";
+		form.method="post";
+		
+		/* PROJECT CODE 가져오기 */
+		const inviteMembers = document.getElementById("invite").childNodes;
+		for(let idx=0; idx<inviteMembers.length; idx++){
+			const info = inviteMembers[idx].getAttribute("value").split(":");
+			form.appendChild(createHidden("proMembers["+ idx +"].pmbCode", info[0]));
+			form.appendChild(createHidden("proMembers["+ idx +"].proEmail", info[1]));
+			form.appendChild(createHidden("proCode", info[2]));
+			form.appendChild(createHidden("proMembers["+ idx +"].proAccept", "ST"));
+			form.appendChild(createHidden("proMembers["+ idx +"].proPosition", ""));
+		}
+		form.submit();
+	}
+	function sendMailResult(num){
+		alert(num);
+		
+		
 	}
 </script>
 <style>
-@import url("resources/css/common.css");
+@import url("/resources/css/common.css");
 .pro {
 	position: relative;
 	float: left;
@@ -116,16 +147,21 @@ function initMemeberMgr() {
 		<div id="projectInfo" class="pro">
 			<div class="box item title">메일 보낸 멤버</div>
 			<div id="sendlist" class="pro list items">
-				${sendlist}
+				${acList}
+				${stList}
 			</div>
 		</div>
 		<div id="pmbMembers" class="pro list">
 			<div class="box item title">추가로 초대 가능한 멤버</div>
-			<div id="list" class="pro list items"></div>
+			<div id="list" class="pro list items">
+				${newList}
+			</div>
 		</div>
 		<div id="proMembers" class="pro list">
 			<div class="box item title">추가로 초대 예정 멤버</div>
-			<div id="invite" class="pro invite items"></div>
+			<div id="invite" class="pro invite items">
+			
+			</div>
 			<div id="send" style="display: none;">
 				<input type="button" class="btn" value="SEND EMAIL"
 					onClick="sendEmail2()" />

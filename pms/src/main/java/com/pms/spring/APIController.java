@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.pms.beans.CerB;
+import com.pms.beans.MemberMgrB;
 import com.pms.beans.ProBean;
 import com.pms.services.Project;
 
@@ -26,6 +27,16 @@ public class APIController {
 		model.addAttribute(pro);
 		project.backController(0, model);
 		return (List<CerB>)model.getAttribute("MemberList");
+	}
+	
+	@SuppressWarnings("unchecked")
+	@PostMapping("/ReSendEmail")
+	public MemberMgrB reSendEmail(Model model, @ModelAttribute MemberMgrB mb){
+		/* Developer : 지수 */
+		System.out.println(mb);
+		model.addAttribute(mb);
+		project.backController(1, model);
+		return (MemberMgrB)model.getAttribute("memberMgrB");
 	}
 }
 

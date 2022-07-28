@@ -12,6 +12,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.pms.beans.CerB;
 import com.pms.beans.EmailCerB;
+import com.pms.beans.MemberMgrB;
 import com.pms.beans.ProBean;
 import com.pms.services.Certification;
 import com.pms.services.DashBoard;
@@ -93,6 +94,16 @@ public class HomeController {
 		mav.addObject(pro);
 		this.project.backController(1, mav);
 		System.out.println("hi");
+		return mav;
+	}
+	
+	// 프로젝트에 새로운 멤버 초대 
+	@RequestMapping(value="/newInviteMember", method= RequestMethod.POST)
+	public ModelAndView newInviteMember(HttpServletRequest req, ModelAndView mav, @ModelAttribute ProBean pro) {
+		/* Developer : 지수 */
+		mav.addObject(pro);
+		this.project.backController(4, mav);
+
 		return mav;
 	}
 

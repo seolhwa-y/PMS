@@ -8,9 +8,6 @@ public class MemberMgrB {
 	private String pmbName;
 	private String pmbEmail;
 	private String proCode;
-	private String pmbAccept;
-	private String pmbLevelName;
-	private String pmbClassName;
-	private String inviteDate; // 인증보낸 날짜
+	private String proAccept;
 	private String expireDate; // 인증만료 날짜
 }

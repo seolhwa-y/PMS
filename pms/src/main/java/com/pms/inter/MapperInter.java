@@ -31,4 +31,6 @@ public interface MapperInter {
 	public List<ProBean> getProject(ProBean pro);
 	public List<MemberMgrB> getSendEmailList(ProBean pro);
 	
+	public List<MemberMgrB> isAcceptMember(ProBean pro);
+	public List<MemberMgrB> notInviteMember();
 }
