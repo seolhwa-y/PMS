@@ -100,6 +100,7 @@ public class Project implements ServicesRule {
 					mailHelper.setSubject(subject);
 					mailHelper.setText(content, true);
 					mail.send(javaMail);
+					log.setProCode(pro.getProCode());
 					log.setAuthResult("NA");
 					log.setSpmbCode(((CerB) this.pu.getAttribute("accessInfo")).getPmbCode());
 					log.setRpmbCode(((ProBean) mav.getModel().get("proBean")).getProMembers().get(idx).getPmbCode());
@@ -155,6 +156,7 @@ public class Project implements ServicesRule {
 					mailHelper.setSubject(subject);
 					mailHelper.setText(content, true);
 					mail.send(javaMail);
+					log.setProCode(mb.getProCode());
 					log.setAuthResult("NA");
 					log.setSpmbCode(((CerB) this.pu.getAttribute("accessInfo")).getPmbCode());
 					log.setRpmbCode(mb.getPmbCode());
@@ -208,6 +210,7 @@ public class Project implements ServicesRule {
 	// 프로젝트 등록 후 멤버초대 메일
 	private void regProjectMembersCtl(ModelAndView mav) {
 		try {
+			ProBean pro = (ProBean)mav.getModel().get("proBean");
 			CerB auth = ((CerB) this.pu.getAttribute("accessInfo"));
 			ProMemberB proB = new ProMemberB();
 			proB.setPmbCode(auth.getPmbCode());
@@ -234,6 +237,7 @@ public class Project implements ServicesRule {
 					mailHelper.setSubject(subject);
 					mailHelper.setText(content, true);
 					mail.send(javaMail);
+					log.setProCode(pro.getProCode());
 					log.setAuthResult("NA");
 					log.setSpmbCode(((CerB) this.pu.getAttribute("accessInfo")).getPmbCode());
 					log.setRpmbCode(((ProBean) mav.getModel().get("proBean")).getProMembers().get(idx).getPmbCode());
@@ -286,7 +290,7 @@ public class Project implements ServicesRule {
 						mb.setPmbName(this.enc.aesDecode(mb.getPmbName(), mb.getPmbCode()));
 						mb.setPmbEmail(this.enc.aesDecode(mb.getPmbEmail(), mb.getPmbCode()));
 
-						sb.append("<div name='seList' className='box multi' value='"+ mb.getPmbCode() +":"+mb.getPmbEmail()+"'>");
+						sb.append("<div name='acList' class='box multi' value='"+ mb.getPmbCode() +":"+mb.getPmbEmail()+"'>");
 						sb.append("<span class='small' name='smailList'>"+ mb.getPmbCode() +"</span><br/>");
 						sb.append("<span class='general'>"+ mb.getPmbName()+"</span>");
 						sb.append("</div>");
@@ -315,11 +319,11 @@ public class Project implements ServicesRule {
 					mb.setPmbName(this.enc.aesDecode(mb.getPmbName(), mb.getPmbCode()));
 					mb.setPmbEmail(this.enc.aesDecode(mb.getPmbEmail(), mb.getPmbCode()));
 
-					sb.append("<div name='seList' className='box multi' value='"+ mb.getPmbCode() +":"+mb.getPmbEmail()+":"+ mb.getProCode() +"'>");
+					sb.append("<div name='seList' class='box multi seList' value='"+ mb.getPmbCode() +":"+mb.getPmbEmail()+":"+ mb.getProCode() +"'>");
 					sb.append("<span class='small' name='smailList'>"+ mb.getPmbCode() +"</span><br/>");
 					sb.append("<span class='general'>"+ mb.getPmbName()+"</span>");
 					//sb.append("<input type='hidden' value=" "/>")
-					sb.append("<input type='button' value='메일 재전송' onClick='window.resendEmail("+idx +")'" + (expired ? "disabled" : "")+"/>");
+					sb.append("<input name='resend' type='button' value='메일 재전송' onClick='window.resendEmail("+idx +")'" + (expired ? "disabled" : "")+"/>");
 					// if~~ ac상태면 놔두고 st상태에서 인증만료가되면 메일재전송 버튼 만들어서 메일보내기 인증만료 전이면 그냥 st로 보이게
 					sb.append("</div>");
 
@@ -338,7 +342,7 @@ public class Project implements ServicesRule {
 					mb.setPmbName(this.enc.aesDecode(mb.getPmbName(), mb.getPmbCode()));
 					mb.setPmbEmail(this.enc.aesDecode(mb.getPmbEmail(), mb.getPmbCode()));
 
-					sb.append("<div name='seList' ondblclick='window.moveDiv(this)' className='box multi' value='"+ mb.getPmbCode() +":"+mb.getPmbEmail()+"'>");
+					sb.append("<div ondblclick='window.moveDiv(this)' class='box multi' value='"+ mb.getPmbCode() +":"+mb.getPmbEmail()+"'>");
 					sb.append("<span class='small' name='smailList'>"+ mb.getPmbCode() +"</span><br/>");
 					sb.append("<span class='general'>"+ mb.getPmbName()+"</span>");
 					sb.append("</div>");

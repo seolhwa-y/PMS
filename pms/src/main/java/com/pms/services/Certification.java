@@ -67,7 +67,7 @@ public class Certification implements ServicesRule {
 
 	}
 
-	// 첫페이지 : 세션 확인하여 로그인 :: 대쉬보드 결
+	// 첫페이지 : 세션 확인하여 로그인 :: 대쉬보드 결정
 	private void isFirstPage(ModelAndView mav) {
 		try {
 			if ((CerB) this.pu.getAttribute("accessInfo") != null) {
@@ -75,12 +75,14 @@ public class Certification implements ServicesRule {
 				ce.setPmbName(this.enc.aesDecode(ce.getPmbName(), ce.getPmbCode()));
 				ce.setPmbEmail(this.enc.aesDecode(ce.getPmbEmail(), ce.getPmbCode()));
 				this.pu.setAttribute("accessInfo", ce);
+				
 				this.dBoard.backController(0, mav);
+			}else {
+				mav.setViewName("login");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		mav.setViewName("login");
 	}
 
 	// 회원가입 페이지로 이동하면서 셀렉트를 폼에 넣어주기
@@ -172,9 +174,11 @@ public class Certification implements ServicesRule {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
+			}else {
+				mav.setViewName(page);
 			}
 		}
-		mav.setViewName(page);
+
 	}
 
 	// 로그아웃 제어

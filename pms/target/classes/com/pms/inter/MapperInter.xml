@@ -80,8 +80,8 @@
 	</update>
 	<insert id="insAuthLog" parameterType="com.pms.beans.CerLogB">
 		INSERT INTO
-		AUL(AUL_SPMBCODE,AUL_RPMBCODE,AUL_INVITEDATE,AUL_EXPIRE,AUL_AUTHRESULT)
-		VALUES(#{spmbCode}, #{rpmbCode}, default, default, #{authResult})
+		AUL(AUL_PROCODE,AUL_SPMBCODE,AUL_RPMBCODE,AUL_INVITEDATE,AUL_EXPIRE,AUL_AUTHRESULT)
+		VALUES(#{proCode},#{spmbCode}, #{rpmbCode}, default, default, #{authResult})
 	</insert>
 	<select id="checkInvite" parameterType="com.pms.beans.CerLogB"
 		resultType="com.pms.beans.CerLogB">
@@ -103,12 +103,6 @@
 		WHERE RPMBCODE = #{pmbCode} AND INVITEDATE >= (SYSDATE - 1)
 		]]>
 	</select>
-	<update id="updAulState" parameterType="com.pms.beans.CerLogB">
-		<![CDATA[
-		UPDATE AUL SET AUL_AUTHRESULT=#{authResult} 
-		WHERE AUL_SPMBCODE =#{spmbCode} AND AUL_RPMBCODE=#{rpmbCode} AND AUL_INVITEDATE = TO_DATE(#{inviteDate},'YYMMDDHH24MISS')
-		]]>
-	</update>
 	<select id="sendInvitationInfo"
 		parameterType="com.pms.beans.CerB" resultType="com.pms.beans.CerLogB">
 	<![CDATA[

@@ -43,10 +43,11 @@
 		let pmbMembers = document.getElementById("list");
 		let proMembers = document.getElementById("invite");
 		let sendBtn = document.getElementById("send");
-		if(obj.className=="box multi"){
+
+		if(obj.className == "box multi"){
 			proMembers.appendChild(obj);
 			obj.className="box multi invite";
-		}else{
+		}else if(obj.className.indexOf("invite")){
 			pmbMembers.appendChild(obj);
 			obj.className="box multi";
 		}
@@ -85,8 +86,8 @@
 		form.submit();
 	}
 	function sendMailResult(num){
-		alert(num);
-		
+		let resend = document.getElementsByName("resend")[num];
+		resend.setAttribute("disabled","");
 		
 	}
 </script>

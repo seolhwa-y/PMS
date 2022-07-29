@@ -53,7 +53,6 @@ function access(){
 	dataDiv.appendChild(publicIp);
 	form.appendChild(dataDiv);
 	
-	
 	form.submit();
 }
 
