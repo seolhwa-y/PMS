@@ -38,6 +38,17 @@ public class APIController {
 		project.backController(1, model);
 		return (MemberMgrB)model.getAttribute("memberMgrB");
 	}
+	
+	/*
+	 * 	
+	@PostMapping("/ReSendEmail")
+	public String reSendEmail(Model model, @ModelAttribute MemberMgrB mb){
+		System.out.println(mb);
+		model.addAttribute(mb);
+		project.backController(1, model);
+		return "memberMgr";
+	}
+	*/
 }
 
  
