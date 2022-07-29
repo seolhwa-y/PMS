@@ -170,24 +170,21 @@
 			SELECT * FROM SENDLIST WHERE PROCODE = #{proCode} AND PROACCEPT = #{memberInfo.proAccept}
 		</foreach>
 	</select>
-	<select id="notInviteMember" resultType = "com.pms.beans.MemberMgrB">
-		SELECT PMB_CODE AS PMBCODE, PMB_NAME AS PMBNAME, PMB_EMAIL AS PMBEMAIL
-		FROM PMB LEFT OUTER JOIN PRM ON PMB.PMB_CODE = PRM.PRM_PMBCODE
-		WHERE PRM.PRM_PROCODE IS NULL 
+	<select id="notInviteMember" parameterType = "com.pms.beans.ProBean" resultType = "com.pms.beans.MemberMgrB">
+		SELECT PMB_CODE AS PMBCODE,
+       		   PMB_NAME AS PMBNAME,
+     		   PMB_EMAIL AS PMBEMAIL
+		FROM PMB WHERE PMB_CODE NOT IN(SELECT PRM_PMBCODE FROM PRM WHERE PRM_PROCODE = #{proCode})
 	</select>
-	<!-- <select id="getSendEmailList" parameterType = "com.pms.beans.ProBean" resultType = "com.pms.beans.MemberMgrB">
-		SELECT 	PMBCODE,
-        PMBNAME,
-        PMBEMAIL,
-        PMBACCEPT,
-        PMBCLASSNAME,
-        PMBLEVELNAME,
-        PROCODE
-		FROM SENDEMAILLIST 
-		WHERE PROCODE= #{proCode}
-	</select> -->
-	
-	
+	<select id="getSendList" parameterType = "com.pms.beans.ProBean" resultType = "com.pms.beans.MemberMgrB">
+		SELECT * FROM INVITEDMEMBER
+		WHERE PROCODE = #{proCode}
+	</select>
+	<select id="getExpireSendList" parameterType = "com.pms.beans.ProBean" resultType = "com.pms.beans.MemberMgrB">
+		SELECT PROCODE, PMBCODE, PMBNAME, PMBEMAIL, TO_CHAR(EXPIREDMEMBER.INVITEDATE,'YYYYMMDDHH24MISS') AS INVITEDATE, TO_CHAR(EXPIREDMEMBER.EXPIREDATE,'YYYYMMDDHH24MISS') AS EXPIREDATE  
+		FROM EXPIREDMEMBER WHERE PROCODE = #{proCode}
+	</select>
+
 		<!-- 연관 테이블의 Collection 개체 가져오기  
 	<select id="getProject" parameterType="com.pms.beans.CerB" resultMap="getProjectInfo">
 		SELECT * 

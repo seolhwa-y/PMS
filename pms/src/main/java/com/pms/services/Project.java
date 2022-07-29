@@ -80,8 +80,8 @@ public class Project implements ServicesRule {
 		try {
 
 			ProBean pro = (ProBean)mav.getModel().get("proBean");
-
-			int result = this.session.insert("insNewProjectMember", pro);
+			System.out.println(pro.getProMembers().get(0).getPmbCode());
+			int result = this.session.insert("insProjectMembers", pro);
 			String subject = "[초대장] 프로젝트 참여 초대";
 			String sender = "zzanggirlji@naver.com";
 			MimeMessage javaMail = mail.createMimeMessage();
@@ -258,50 +258,30 @@ public class Project implements ServicesRule {
 	private void moveMemberMgr(ModelAndView mav) { //mav proBean 도착
 		System.out.println(((ProBean)mav.getModel().get("proBean")).getProCode());
 		ProBean pro = ((ProBean)mav.getModel().get("proBean"));
-		ProMemberB pb = new ProMemberB();
-		List<ProMemberB> asd = new ArrayList<ProMemberB>();
-		String proCode = pro.getProCode();
-		
-		
+
 		// 1번박스 초대보냈던 리스트
 		// 1-1. proAccept = ac인 멤버 가져오기
-		pb.setProAccept("AC");
-		asd.add(pb);
-		pro.setProMembers(asd);
-		mav.addObject("acList" ,this.makeAcList(this.session.selectList("isAcceptMember", pro)));
+		mav.addObject("sendList" ,this.makeAcList(this.session.selectList("getSendList", pro)));
 		
 		// 1-2  proAccept = st인 멤버 가져오기
-		pro = new ProBean();
-		pb = new ProMemberB();
-		asd = new ArrayList<ProMemberB>();
-		pb.setProAccept("ST");
-		asd.add(pb);
-		pro.setProMembers(asd);
-		pro.setProCode(proCode);
+		mav.addObject("stList",this.makeStList(this.session.selectList("getExpireSendList", pro)));
 		
-		System.out.println(pro);
-		mav.addObject("stList",this.makeStList(this.session.selectList("isAcceptMember", pro)));
-		
-	    //mav.addObject("sendlist",this.sendListInfo(this.session.selectList("getSendEmailList", pro)));
-
 		// 2번박스 그외 초대가능한 새로운 멤버리스트
-		mav.addObject("newList",this.makeNotInviteMember(this.session.selectList("notInviteMember")));
+		mav.addObject("newList",this.makeNotInviteMember(this.session.selectList("notInviteMember", pro)) +"<input name='code' type='hidden' value = '"+pro.getProCode()+"'/>");
+		
 		/*
 		// 3번박스 -> newProject.jsp에서 moveDiv참조 여기선x
 	    */
-	    
 		mav.setViewName("memberMgr");
 	}
+
 	
 	// 1-1번 ac인 멤버 가져오기
 	private String makeAcList(List<MemberMgrB> list) {
 		StringBuffer sb = new StringBuffer();
-		/*SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
-		//"<div class=\"items name\">발송인</div><div class=\"items invite\">초대일자</div><div class=\"items expire\">만료일자</div><div class=\"items accept\">회신</div>");
-
-		System.out.println(list.size());*/
 
 		for(MemberMgrB mb: list) {
+			if(mb.getPrmAccept().equals("AC")) {
 					try {
 						mb.setPmbName(this.enc.aesDecode(mb.getPmbName(), mb.getPmbCode()));
 						mb.setPmbEmail(this.enc.aesDecode(mb.getPmbEmail(), mb.getPmbCode()));
@@ -313,18 +293,18 @@ public class Project implements ServicesRule {
 					} catch (InvalidKeyException | UnsupportedEncodingException | NoSuchAlgorithmException
 							| NoSuchPaddingException | InvalidAlgorithmParameterException | IllegalBlockSizeException
 							| BadPaddingException e) {e.printStackTrace();}
+			}
 		}
 		return sb.toString();
 	}
 	
 	// 1-2번 st인 멤버 가져오기
 	private String makeStList(List<MemberMgrB> list) {
-		//st인 애들 가져오고
-		//만료여부 확인
+		//st인 애들 가져오고 만료여부 확인
 		StringBuffer sb = new StringBuffer();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
 		
-		int idx = 0;
+		int idx = -1;
 		for(MemberMgrB mb: list) {
 				try {
 					idx ++;
@@ -344,16 +324,8 @@ public class Project implements ServicesRule {
 					sb.append("</div>");
 
 					}
-				} catch (Exception e) {e.printStackTrace();				}
-						//sb.append("<div name='seList' className='box multi' value='"+ list.get(idx).getPmbCode() +":"+list.get(idx).getPmbEmail()+"'>");
-				//sb.append("<span class='small' name='smailList'>"+ list.get(idx).getPmbClassName() +"</span><br/>");
-				//sb.append("<span class='general'>"+ list.get(idx).getPmbName() +"["+list.get(idx).getPmbLevelName() +"]</span>");
-			
-			//여기에서 2번리스트 만들어서 보낼수 있지않을까
-			//아니면 전체 멤버리스트하고 흠,,.,.거르는걸모르겠네
-		}
-		
-		System.out.println(sb);
+				} catch (Exception e) {e.printStackTrace();	}
+			}
 		return sb.toString();
 	}
 	
@@ -361,68 +333,19 @@ public class Project implements ServicesRule {
 	private String makeNotInviteMember(List<MemberMgrB> list) {
 		StringBuffer sb = new StringBuffer();
 
-		int idx = -1;
 		for(MemberMgrB mb: list) {
 				try {
-					idx ++;
-							
 					mb.setPmbName(this.enc.aesDecode(mb.getPmbName(), mb.getPmbCode()));
 					mb.setPmbEmail(this.enc.aesDecode(mb.getPmbEmail(), mb.getPmbCode()));
 
-					sb.append("<div name='seList' ondblclick='window.moveDiv(this)' className='box multi' value='"+ mb.getPmbCode() +":"+mb.getPmbEmail()+":"+mb.getProCode()+"'>");
+					sb.append("<div name='seList' ondblclick='window.moveDiv(this)' className='box multi' value='"+ mb.getPmbCode() +":"+mb.getPmbEmail()+"'>");
 					sb.append("<span class='small' name='smailList'>"+ mb.getPmbCode() +"</span><br/>");
 					sb.append("<span class='general'>"+ mb.getPmbName()+"</span>");
 					sb.append("</div>");
-
-					
 				} catch (Exception e) {e.printStackTrace();	}
-
-
 		}
-		System.out.println(sb);
 		return sb.toString();
 	}
-	/*
-	// 1번박스 초대보냈던 리스트 생성
-	private String sendListInfo(List<MemberMgrB> list) {
-		StringBuffer sb = new StringBuffer();
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
-		//"<div class=\"items name\">발송인</div><div class=\"items invite\">초대일자</div><div class=\"items expire\">만료일자</div><div class=\"items accept\">회신</div>");
-		int idx = -1;
-		System.out.println(list.size());
-		for(MemberMgrB mb: list) {
-				try {
-
-					idx ++;
-					if(!((CerB) this.pu.getAttribute("accessInfo")).getPmbCode().equals(mb.getPmbCode())) {
-					boolean expired = Long.parseLong(mb.getExpireDate().substring(0))
-							- Long.parseLong(sdf.format(new Date())) >= 0 ? true : false;
-					mb.setPmbName(this.enc.aesDecode(mb.getPmbName(), mb.getPmbCode()));
-					mb.setPmbEmail(this.enc.aesDecode(mb.getPmbEmail(), mb.getPmbCode()));
-
-					sb.append("<div name='seList' className='box multi' value='"+ mb.getPmbCode() +":"+mb.getPmbEmail()+"'>");
-					sb.append("<span class='small' name='smailList'>"+ mb.getPmbClassName() +"</span><br/>");
-					sb.append("<span class='general'>"+ mb.getPmbName() +"["+mb.getPmbLevelName() +"]</span>");
-					sb.append("<input type='button' value='메일 재전송' onClick='window.resendEmail("+mb.getPmbCode() +")'" + (expired ? "disabled" : "")+"/>");
-					// if~~ ac상태면 놔두고 st상태에서 인증만료가되면 메일재전송 버튼 만들어서 메일보내기 인증만료 전이면 그냥 st로 보이게
-					sb.append("</div>");
-
-					}
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-						//sb.append("<div name='seList' className='box multi' value='"+ list.get(idx).getPmbCode() +":"+list.get(idx).getPmbEmail()+"'>");
-				//sb.append("<span class='small' name='smailList'>"+ list.get(idx).getPmbClassName() +"</span><br/>");
-				//sb.append("<span class='general'>"+ list.get(idx).getPmbName() +"["+list.get(idx).getPmbLevelName() +"]</span>");
-			
-			//여기에서 2번리스트 만들어서 보낼수 있지않을까
-			//아니면 전체 멤버리스트하고 흠,,.,.거르는걸모르겠네
-		}
-		
-		System.out.println(sb);
-		return sb.toString();
-	}*/
 
 	// INSERT OR UPDATE 되었는지 확인
 	private boolean convertToBoolean(int number) {
