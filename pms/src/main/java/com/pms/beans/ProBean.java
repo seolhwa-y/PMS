@@ -13,4 +13,9 @@ public class ProBean {
 	private String proEnd;
 	private String proVisible;
 	private List<ProMemberB> proMembers;
+	
+	private List<ModuleList> moduleList;
+	private List<JobList> jobsList;
+	private List<ModuleJobList> moduleJobsList;
+	private List<MethodList> methodList;
 }

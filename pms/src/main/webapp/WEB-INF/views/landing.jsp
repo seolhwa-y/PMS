@@ -15,7 +15,6 @@ function callServer(ajaxData){
 	jsonData = JSON.parse(ajaxData);
 	const publicIp = ("aslPublicIp=" + jsonData.ip);
 	location.href = "http://localhost/First?" + publicIp;
-	//dd
 } 
 </script>
 </head>

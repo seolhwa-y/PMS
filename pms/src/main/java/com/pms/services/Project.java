@@ -58,7 +58,8 @@ public class Project implements ServicesRule {
 					this.regProjectMembersCtl(mav);
 					break;
 				case 2:
-					this.moveJobs(mav);
+					System.out.println("GKFGKS");
+					this.moveJobsCtl(mav);
 					break;
 				case 3:
 					this.moveMemberMgr(mav);
@@ -252,10 +253,207 @@ public class Project implements ServicesRule {
 		this.dBoard.backController(0, mav);
 	}
 	
-	// jobs 화면 이동
-	private void moveJobs(ModelAndView mav) {
-		System.out.println(((ProBean)mav.getModel().get("proBean")).getProCode());
+//	// jobs 화면 이동
+//	private void moveJobs(ModelAndView mav) {
+//		ProBean pro = ((ProBean)mav.getModel().get("proBean"));
+//		List<ProBean> list = new ArrayList<ProBean>();
+//		
+//		list = this.session.selectList("getMethodInfo", pro);
+//		
+//		if(list.size() > 0) {
+//			this.make(list.get(0));
+//		}else {
+//			
+//		}
+//		
+//		/* ModuleList */
+//		mav.addObject("ModuleList", this.test(this.session.selectList("getModuleList", pro), 1));
+//		/* JobList */
+//		mav.addObject("JobList", this.test(this.session.selectList("getJobsList", pro), 2));
+//		/* ModuleJobList */
+//		mav.addObject("ModuleJobList", this.test(this.session.selectList("getMJList", pro), 3));
+//		/* MethodList */
+//		mav.addObject("MethodList", this.test(this.session.selectList("getMethodList", pro), 4));
+//				
+//		System.out.println("*****확인용 : " +  this.session.selectList("getMethodInfo", pro));
+//		
+//		mav.setViewName("jobs");
+//	}
+//	
+//	private String make(ProBean pro) {
+//		StringBuffer sb = new StringBuffer();
+//		
+//		sb.append("<table>");
+//		
+//		if(pro.getModuleList().size() > 0) {
+//			sb.append("<tr><th>순번</th><th>모듈명</th><th>모듀상세</th><th>Action</th></tr>");
+//			int idx = 0;
+//			for(ModuleList module : pro.getModuleList()) {
+//				idx++;
+//				sb.append("<tr><td>" + idx + "</td><td>" + module.getMouName() + "</td><td>" + module.getMouComments() + "</td>"
+//						+ "<td><input type = 'button' value = '수정' onClick = 'updModule("+ module.getProCode +", "+ module.getMouCode +")' / >"
+//						+ "<input type = 'button' value = '삭제' onClick = 'delModule("+ module.getProCode +", "+ module.getMouCode +")' / ></td></tr>");
+//				
+//			}
+//		}else {
+//			sb.append("<tr><th>등록 묘듈 X</th></tr>");
+//		}
+//		
+//		sb.append("</table>");
+//		
+//		return sb.toString();
+//	}
+//	
+//	private String test(List<ModuleBean> list , int num) {
+//		StringBuffer sb = new StringBuffer();
+//		// 배열....이용....몰라....지송....스위치 쵝오
+//		
+//		
+//		switch(num) {
+//		case 1 : 
+//			for(ModuleBean mb : list) {
+//				sb.append("<div class = 'ModuleList' >");
+//				if(list != null && list.size() > 0){
+//					sb.append("<div>PROCODE = " + mb.getPROCODE() + "</div>");
+//					sb.append("<div>MOUCODE = " + mb.getMOUCODE() + "</div>");
+//					sb.append("<div>MOUNAME = " + mb.getMOUNAME() + "</div>");
+//					sb.append("<div>MOUCOMMENTS = " + ((mb.getMOUCOMMENTS() == null)? "none" : mb.getMOUCOMMENTS()) + "</div>");
+//				}
+//				sb.append("</div>");
+//			}
+//			break;
+//			
+//		case 2 : 
+//			for(ModuleBean mb : list) {
+//				sb.append("<div class = 'JobList' >");
+//				if(list != null && list.size() > 0){
+//					sb.append("<div>PROCODE = " + mb.getPROCODE() + "</div>");
+//					sb.append("<div>JOSCODE = " + mb.getJOSCODE() + "</div>");
+//					sb.append("<div>JOSNAME = " + mb.getJOSNAME() + "</div>");
+//					sb.append("<div>JOSCOMMENTS = " + ((mb.getJOSCOMMENTS() == null)? "none" : mb.getJOSCOMMENTS()) + "</div>");
+//				}
+//				sb.append("</div>");
+//			}
+//			break;
+//			
+//		case 3 : 
+//			for(ModuleBean mb : list) {
+//				sb.append("<div class = 'ModuleJobList' >");
+//				if(list != null && list.size() > 0){
+//					sb.append("<div>PROCODE = " + mb.getPROCODE() + "</div>");
+//					sb.append("<div>MOUCODE = " + mb.getMOUCODE() + "</div>");
+//					sb.append("<div>JOSCODE = " + mb.getJOSCODE() + "</div>");
+//					sb.append("<div>PMBCODE = " + mb.getPMBCODE() + "</div>");
+//				}
+//				sb.append("</div>");
+//			}
+//			break;
+//			
+//		case 4 : 
+//			for(ModuleBean mb : list) {
+//				sb.append("<div class = 'MethodList' >");
+//				if(list != null && list.size() > 0){
+//					sb.append("<div>PROCODE = " + mb.getPROCODE() + "</div>");
+//					sb.append("<div>MOUCODE = " + mb.getMOUCODE() + "</div>");
+//					sb.append("<div>JOSCODE = " + mb.getJOSCODE() + "</div>");
+//					sb.append("<div>METCODE = " + mb.getMETCODE() + "</div>");
+//					sb.append("<div>METNAME = " + mb.getMETNAME() + "</div>");
+//					sb.append("<div>MCCODE = " + mb.getMCCODE() + "</div>");
+//				}
+//				sb.append("</div>");
+//			}
+//			break;
+//			
+//		default : 
+//		}
+//		
+//		return sb.toString();
+//	}
+	
+	private void moveJobsCtl(ModelAndView mav) {
+		System.out.println("GKFGKS");
+		/* Project 정보 조회  ModuleList 조회  JobList 조회 ModuleJobList 조회  MethodList 조회 */
+		List<ProBean> projectList = this.session.selectList("getProjectDetail", ((ProBean)mav.getModel().get("proBean")));
+		
+		if(projectList.size() > 0) {
+			this.makeJobs1(projectList.get(0));
+		}else {
+			
+		}
+				
 		mav.setViewName("jobs");
+	}
+	
+	/* Module List */
+	private String makeJobs1(ProBean project) {
+		StringBuffer sb = new StringBuffer();
+		// 모듈
+		sb.append("<table>");
+		if(project.getModuleList().size() > 0 ) {
+			sb.append("<tr><th>순번</th><th>모듈명</th><th>모듈상세</th><th>Action</th></tr>");
+			int idx = 0;
+			for(ModuleList module : project.getModuleList()) {
+				idx++;
+				sb.append("<tr><td>" + idx + "</td><td>" + module.getMouName() + "</td><td>" + module.getMouComments() + "</td><td>"
+						+ "<button class=\"\" onClick=\"updModule('" + module.getProCode() + "','" + module.getMouCode() + "')\">수정</button>"
+						+ "<button class=\"\" onClick=\"delModule('" + module.getProCode() + "', '" + module.getMouCode() + "')\">삭제</button></td></tr>");
+			}
+		}else {
+			sb.append("<tr><td>등록 모듈 없음</td></tr>");
+		}
+		sb.append("</table>");
+		
+		//좝
+		sb.append("<table>");
+		if(project.getModuleList().size() > 0 ) {
+			sb.append("<tr><th>순번</th><th>좝명</th><th>좝상세</th><th>Action</th></tr>");
+			int idx = 0;
+			for(JobList jos : project.getJobsList()) {
+				idx++;
+				sb.append("<tr><td>" + idx + "</td><td>" + jos.getJosName() + "</td><td>" + jos.getJosComments() + "</td><td>"
+						+ "<button class=\"\" onClick=\"updModule('" + jos.getProCode() + "','" + jos.getJosCode() + "')\">수정</button>"
+						+ "<button class=\"\" onClick=\"delModule('" + jos.getProCode() + "', '" + jos.getJosCode() + "')\">삭제</button></td></tr>");
+			}
+		}else {
+			sb.append("<tr><td>등록 모듈 없음</td></tr>");
+		}
+		sb.append("</table>");
+		
+		// 모듈좝
+		sb.append("<table>");
+		if(project.getModuleList().size() > 0 ) {
+			sb.append("<tr><th>순번</th><th>모듈명</th><th>모듈상세</th><th>Action</th></tr>");
+			int idx = 0;
+			for(ModuleJobList mj : project.getModuleJobsList()) {
+				idx++;
+				sb.append("<tr><td>" + idx + "</td><td>" + mj.getMouCode() + "</td><td>" + mj.getJosCode() + "</td><td>"
+						+ "<button class=\"\" onClick=\"updModule('" + mj.getProCode() + "','" + mj.getPmbCode() + "')\">수정</button>"
+						+ "<button class=\"\" onClick=\"delModule('" + mj.getProCode() + "', '" + mj.getPmbCode() + "')\">삭제</button></td></tr>");
+			}
+		}else {
+			sb.append("<tr><td>등록 모듈 없음</td></tr>");
+		}
+		sb.append("</table>");
+		
+		// 메소드
+		sb.append("<table>");
+		if(project.getModuleList().size() > 0 ) {
+			sb.append("<tr><th>순번</th><th>모듈명</th><th>모듈상세</th><th>Action</th></tr>");
+			int idx = 0;
+			for(MethodList mt : project.getMethodList()) {
+				idx++;
+				sb.append("<tr><td>" + idx + "</td><td>" + mt.getMetName() + "</td><td>" + mt.getMcName() + "</td><td>"
+						+ "<button class=\"\" onClick=\"updModule('" + mt.getProCode() + "','" + mt.getMouCode() + "',"
+						+ "'" + mt.getJosCode() + "','" + mt.getMetCode() + "','" + mt.getMcCode() + "')\">수정</button>"
+						+ "<button class=\"\" onClick=\"delModule('" + mt.getProCode() + "','" + mt.getMouCode() + "',"
+						+ "'" + mt.getJosCode() + "','" + mt.getMetCode() + "','" + mt.getMcCode() + "')\\\">삭제</button></td></tr>");
+			}
+		}else {
+			sb.append("<tr><td>등록 모듈 없음</td></tr>");
+		}
+		sb.append("</table>");
+		
+		return sb.toString();
 	}
 	
 	// memberMgr 화면 이동

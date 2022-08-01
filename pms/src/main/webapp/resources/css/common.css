@@ -1,11 +1,38 @@
 @charset "UTF-8";
 
 body	{ top:0; left:0;}
-span	{ width:40%}
+span	{ width:40%;}
+
+.moduleList{
+ 	display : flex;
+    border: 2px solid;
+    justify-content: space-evenly;
+}
+#moduleList {
+	display: flex;
+}
+
+.module{
+    color: #fff;
+    display: flex;
+    position: relative;
+    border: 1px solid rgba(255, 187, 0, 1);
+    flex-direction: column;
+    align-content: center;
+}
+
+.ModuleList, .JobList, .ModuleJobList, .MethodList {
+	display : flex;
+	flex-flow : nowrap;
+	flex-direction: column;
+	justify-content: space-evenly;
+	border: 2px solid;
+}
+
 /* PMS Template */
 #plzec-zone	{
 	position:absolute; top:3px; left:3px; 
-	width:calc(100% - 3px); height:calc(100% - 3px);background-color: rgba(76,76,76,1);
+	width:calc(100% - 3px); height:calc(100% + 100rem);background-color: rgba(76,76,76,1);
 }
 #menu-icon	{ float:left;
 	width: 50px; height: 50px;
@@ -74,7 +101,9 @@ span	{ width:40%}
 	background-color: rgba(255,187,0,1); 
 }
 
-#content{ float:left;
+#content{ 
+	margin-top : 5%;
+	float:left;
 	width: calc(100% - 56px); height: calc(100% - 56px);
 	border-right: 3px solid rgba(255, 255, 255, 1);
 	border-bottom: 3px solid rgba(255, 255, 255, 1); 

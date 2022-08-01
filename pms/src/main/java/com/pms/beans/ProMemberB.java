@@ -6,6 +6,7 @@ import lombok.Data;
 
 @Data
 public class ProMemberB {
+		private String proCode;
 		private String pmbCode;
 		private String spmbCode;
 		private String proPosition;

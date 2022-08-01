@@ -128,7 +128,7 @@ public class HomeController {
 	@RequestMapping(value="/MoveJobs", method= RequestMethod.POST)
 	public ModelAndView moveJobs(ModelAndView mav, @ModelAttribute ProBean pro) {
 		mav.addObject(pro);
-		
+		System.out.println("GKFGKS");
 		this.project.backController(2, mav);
 		return mav;
 	}

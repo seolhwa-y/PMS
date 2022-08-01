@@ -20,6 +20,7 @@ function initJobs(){
 .pro.list	{margin-left:2.1%;overflow-x:hidden;overflow-y:auto;}
 .pro.list.items	{border:0px; width:90%; height:100%;margin-left:0;}
 .pro.invite.items	{border:0px; width:100%; height:70%;margin-left:0;}
+
 </style>
 </head>
 <body onLoad="initJobs()" >
@@ -45,18 +46,11 @@ function initJobs(){
 			<div class="menu" onClick="">PM</div>
 		</div>
 		<div id="content">
-			<div id="projectInfo" class="pro">
-				<div class="box item title">메일 보낸 멤버</div>
-				<div id="sendlist" class="pro list items"></div>
-			</div>
-			<div id="pmbMembers" class="pro list">
-				<div class="box item title">추가로 초대 가능한 멤버</div>
-				<div id="list" class="pro list items"></div>
-			</div>
-			<div id="proMembers" class="pro list">
-				<div class="box item title">추가로 초대 예정 멤버</div>
-				<div id="invite" class="pro invite items"></div>
-				<div id="send" style="display:none;"><input type="button" class="btn" value="SEND EMAIL" onClick="sendEmail2()"/></div>
+			<div id = "moduleList">
+				<div class = "module">모듈 관리  ${ModuleList}</div>
+				<div class = "module">잡 관리  ${JobList}</div>
+				<div class = "module">모듈-잡 연계  ${ModuleJobList}</div>
+				<div class = "module">메소드 등록  ${MethodList}</div>
 			</div>
 		</div>
 	

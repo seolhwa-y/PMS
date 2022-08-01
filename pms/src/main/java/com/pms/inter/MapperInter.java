@@ -33,4 +33,13 @@ public interface MapperInter {
 	
 	public List<MemberMgrB> isAcceptMember(ProBean pro);
 	public List<MemberMgrB> notInviteMember();
+	
+//	public List<ModuleBean> getModuleList(ProBean pro);
+//	public List<ModuleBean> getJobsList(ProBean pro);
+//	public List<ModuleBean> getMJList(ProBean pro);
+//	public List<ModuleBean> getMethodList(ProBean pro);
+	
+	/* 업무관리 페이지 전달 정보 */
+	public List<ProBean> getProjectDetail(ProBean pro);
+	
 }
