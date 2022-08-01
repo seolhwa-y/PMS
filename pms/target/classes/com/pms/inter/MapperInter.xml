@@ -178,6 +178,119 @@
 		SELECT PROCODE, PMBCODE, PMBNAME, PMBEMAIL, TO_CHAR(EXPIREDMEMBER.INVITEDATE,'YYYYMMDDHH24MISS') AS INVITEDATE, TO_CHAR(EXPIREDMEMBER.EXPIREDATE,'YYYYMMDDHH24MISS') AS EXPIREDATE  
 		FROM EXPIREDMEMBER WHERE PROCODE = #{proCode}
 	</select>
+	
+<!-- 	<select id="getModuleList" parameterType = "com.pms.beans.ProBean" resultType = "com.pms.beans.ModuleBean">
+		SELECT  MOU_PROCODE AS PROCODE,
+		        MOU_CODE AS MOUCODE,
+		        MOU_NAME AS MOUNAME,
+		        MOU_COMMENTS AS MOUCOMMENTS
+		FROM MOU 
+		WHERE MOU_PROCODE = #{proCode}
+	</select>
+	<select id="getJobsList" parameterType = "com.pms.beans.ProBean" resultType = "com.pms.beans.ModuleBean">
+		SELECT  JOS_PROCODE AS PROCODE,
+		        JOS_CODE AS JOSCODE,
+		        JOS_NAME AS JOSNAME,
+		        JOS_COMMENTS AS JOSCOMMENTS
+		FROM JOS 
+		WHERE JOS_PROCODE = #{proCode}
+	</select>
+	<select id="getMJList" parameterType = "com.pms.beans.ProBean" resultType = "com.pms.beans.ModuleBean">
+		SELECT  MJ_PROCODE AS PROCODE,
+		        MJ_MOUCODE AS MOUCODE,
+		        MJ_JOSCODE AS JOSCODE,
+		        MJ_PRMPMBCODE AS PMBCODE 
+		FROM MJ 
+		WHERE MJ_PROCODE = #{proCode}
+	</select>
+	<select id="getMethodList" parameterType = "com.pms.beans.ProBean" resultType = "com.pms.beans.ModuleBean">
+		SELECT  MET_MJPROCODE AS PROCODE,
+		        MET_MJMOUCODE AS MOUCODE,
+		        MET_MJJOSCODE AS JOSCODE,
+		        MET_CODE AS METCODE,
+		        MET_NAME AS METNAME,
+		        MET_MCCODE AS MCCODE
+		FROM MET 
+		WHERE MET_MJPROCODE = #{proCode}
+	</select> -->
+	<resultMap type="com.pms.beans.ProBean" id="getProjectInfo">
+		<id property="proCode" column="PRO_CODE"/>
+		<result property="proName" column="PRO_NAME"/>
+		<result property="proComments" column="PRO_COMMENTS"/>
+		<result property="proStart" column="PRO_START"/>
+		<result property="proEnd" column="PRO_END"/>
+		<result property="proVisible" column="PRO_VISIBLE"/>
+		<collection property="proMembers" column="PRO_CODE" select="getProjectMembers" ofType="com.pms.beans.ProMemberB" javaType="java.util.ArrayList"/>
+	</resultMap>
+	<resultMap id="getProjectDetailInfo" type="com.pms.beans.ProBean">
+		<id column="PRO_CODE" property="proCode" />
+		<result column="PRO_NAME" property="proName" />
+<!-- 		<result column="PRO_COMMENTS" property="proComments" /> -->
+		<result column="PRO_START" property="proStart" />
+		<result column="PRO_END" property="proEnd" />
+		<result column="PRO_VISIBLE" property="proVisible" />
+		
+		<collection property="proMembers" javaType="java.util.ArrayList" column="PRO_CODE" ofType="com.pms.beans.ProMemberB" select="getProjectMembers"></collection>
+		<collection property="moduleList" javaType="java.util.ArrayList" column="PRO_CODE" ofType="com.pms.beans.ModuleList" select="getModuleList"></collection>
+		<collection property="jobsList" javaType="java.util.ArrayList" column="PRO_CODE" ofType="com.pms.beans.JobList" select="getJobsList"></collection>
+		<collection property="moduleJobsList" javaType="java.util.ArrayList" column="PRO_CODE" ofType="com.pms.beans.ModuleJobList" select="getModuleJobsList"></collection>
+		<collection property="methodList" javaType="java.util.ArrayList" column="PRO_CODE" ofType="com.pms.beans.MethodList" select="getMethodList"></collection>
+	</resultMap>
+	<select id="getProject" resultMap="getProjectInfo"
+	parameterType="com.pms.beans.CerB">
+		SELECT *FROM PRO WHERE PRO_CODE IN(SELECT PRM_PROCODE 
+		FROM PRM 
+		WHERE PRM_PMBCODE = #{pmbCode}) 
+	</select>
+	<select id="getProjectDetail" resultMap="getProjectDetailInfo"
+		parameterType="com.pms.beans.ProBean">
+		SELECT *
+		FROM PRO 
+		WHERE PRO_CODE = #{proCode} 
+	</select>
+	<select id="getProjectMembers"
+		resultType="com.pms.beans.ProMemberB">
+		SELECT PRM_PMBCODE AS PMBCODE,PMB_NAME AS
+		PMBNAME,PRM_POSITION AS PROPOSITION,PRM_ACCEPT AS PROACCEPT
+		FROM PRM
+		INNER JOIN PMB ON PRM.PRM_PMBCODE = PMB.PMB_CODE 
+		WHERE PRM_PROCODE = #{proCode} 
+	</select>
+	<select id="getModuleList" resultType="com.pms.beans.ModuleList">
+		SELECT 	MOU_CODE AS MOUCODE, 
+				MOU_NAME AS MOUNAME,
+				MOU_COMMENTS AS MOUCOMMENTS 
+		FROM MOU 
+		WHERE MOU_PROCODE = #{proCode}
+	</select>
+	
+	<select id="getJobsList" resultType="com.pms.beans.JobList">
+		SELECT 	JOS_PROCODE AS PROCODE, 
+				JOS_CODE AS JOSCODE, 
+				JOS_NAME AS JOSNAME,
+				JOS_COMMENTS AS JOSCOMMENTS 
+		FROM JOS 
+		WHERE JOS_PROCODE = #{proCode}
+	</select>
+	<select id="getModuleJobsList" resultType="com.pms.beans.ModuleJobList">
+		SELECT 	MJ_PROCODE AS PROCODE,
+				MJ_MOUCODE AS MOUCODE, 
+				MJ_JOSCODE AS JOSCODE, 
+				MJ_PRMPMBCODE AS PMBCODE 
+		FROM MJ 
+		WHERE MJ_PROCODE = #{proCode}
+	</select>
+	<select id="getMethodList" resultType="com.pms.beans.MethodList">
+		SELECT 	MET_MJPROCODE AS PROCODE,
+				MET_MJMOUCODE AS MOUCODE, 
+				MET_MJJOSCODE AS JOSCODE, 
+				MET_CODE AS METCODE, 
+				MET_NAME AS METNAME, 
+				MET_MCCODE AS MCCODE,
+				MCA_NAME AS MCNAME
+		FROM MET INNER JOIN MCA ON MET.MET_MCCODE = MCA.MCA_CODE
+		WHERE MET_MJPROCODE =  #{proCode}
+	</select>
 
 		<!-- 연관 테이블의 Collection 개체 가져오기  
 	<select id="getProject" parameterType="com.pms.beans.CerB" resultMap="getProjectInfo">
