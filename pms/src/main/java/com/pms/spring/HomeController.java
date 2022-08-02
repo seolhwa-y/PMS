@@ -13,6 +13,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.pms.beans.CerB;
 import com.pms.beans.EmailCerB;
 import com.pms.beans.MemberMgrB;
+import com.pms.beans.ModuleB;
 import com.pms.beans.ProBean;
 import com.pms.services.Certification;
 import com.pms.services.DashBoard;
@@ -126,9 +127,8 @@ public class HomeController {
 	
 	// Job 페이지 이동
 	@RequestMapping(value="/MoveJobs", method= RequestMethod.POST)
-	public ModelAndView moveJobs(ModelAndView mav, @ModelAttribute ProBean pro) {
-		mav.addObject(pro);
-		System.out.println("GKFGKS");
+	public ModelAndView moveJobs(ModelAndView mav, @ModelAttribute ModuleB module) {
+		mav.addObject(module);
 		this.project.backController(2, mav);
 		return mav;
 	}

@@ -102,6 +102,7 @@ span	{ width:40%;}
 }
 
 #content{ 
+	position : relative;
 	margin-top : 5%;
 	float:left;
 	width: calc(100% - 56px); height: calc(100% - 56px);

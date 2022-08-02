@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.pms.beans.CerB;
 import com.pms.beans.MemberMgrB;
+import com.pms.beans.ModuleB;
 import com.pms.beans.ProBean;
 import com.pms.services.Project;
 
@@ -36,8 +37,69 @@ public class APIController {
 		model.addAttribute(mb);
 		project.backController(1, model);
 		return (MemberMgrB)model.getAttribute("memberMgrB");
+		
 	}
 	
+	@SuppressWarnings("unchecked")
+	@PostMapping("/UpdModule")
+	public ModuleB updModul(Model model, @ModelAttribute ModuleB module){
+		/* Developer : 지수 */
+
+		model.addAttribute(module);
+		project.backController(2, model);
+		return (ModuleB)model.getAttribute("moduleB");
+		
+	}
+	@SuppressWarnings("unchecked")
+	@PostMapping("/InsModule")
+	public ModuleB insModul(Model model, @ModelAttribute ModuleB module){
+		/* Developer : 지수 */
+
+		model.addAttribute(module);
+		project.backController(3, model);
+		return (ModuleB)model.getAttribute("moduleB");
+
+	}
+	@SuppressWarnings("unchecked")
+	@PostMapping("/InsJobs")
+	public ModuleB insJobs(Model model, @ModelAttribute ModuleB module){
+		/* Developer : 지수 */
+
+		model.addAttribute(module);
+		project.backController(6, model);
+		return (ModuleB)model.getAttribute("moduleB");
+		
+	}
+	@SuppressWarnings("unchecked")
+	@PostMapping("/DelModule")
+	public ModuleB delModule(Model model, @ModelAttribute ModuleB module){
+		/* Developer : 지수 */
+
+		model.addAttribute(module);
+		project.backController(4, model);
+		return (ModuleB)model.getAttribute("moduleB");
+		
+	}
+	@SuppressWarnings("unchecked")
+	@PostMapping("/UpdJobs")
+	public ModuleB updJobs(Model model, @ModelAttribute ModuleB module){
+		/* Developer : 지수 */
+
+		model.addAttribute(module);
+		project.backController(5, model);
+		return (ModuleB)model.getAttribute("moduleB");
+		
+	}
+	@SuppressWarnings("unchecked")
+	@PostMapping("/DelJobs")
+	public ModuleB delJobs(Model model, @ModelAttribute ModuleB module){
+		/* Developer : 지수 */
+
+		model.addAttribute(module);
+		project.backController(7, model);
+		return (ModuleB)model.getAttribute("moduleB");
+
+	}
 	/*
 	 * 	
 	@PostMapping("/ReSendEmail")

@@ -150,8 +150,7 @@
 		INNER JOIN PMB ON PRM.PRM_PMBCODE =
 		PMB.PMB_CODE
 		WHERE MP.PMBCODE = #{pmbCode} AND MP.PRMACCEPT = 'AC' AND
-		PRM.PRM_POSITION
-		= 'MG'
+		PRM.PRM_POSITION IS NOT NULL AND PRM.PRM_PMBCODE= #{pmbCode}
 	</select>
 	<select id="getMemberNum" parameterType = "com.pms.beans.ProjectInfoB" resultType="string">
 		<![CDATA[
@@ -179,7 +178,18 @@
 		FROM EXPIREDMEMBER WHERE PROCODE = #{proCode}
 	</select>
 	
-<!-- 	<select id="getModuleList" parameterType = "com.pms.beans.ProBean" resultType = "com.pms.beans.ModuleBean">
+	<update id="updModule" parameterType = "com.pms.beans.ModuleB">
+		UPDATE MOU 
+		SET MOU_NAME = #{mouName} , MOU_COMMENTS = #{mouComments}
+		WHERE MOU_PROCODE = #{proCode} AND MOU_CODE = #{mouCode}
+	</update>
+	<delete id="delModule" parameterType = "com.pms.beans.ModuleB">
+		DELETE FROM MOU WHERE MOU_PROCODE = #{proCode} AND MOU_CODE = #{mouCode}
+	</delete>
+	<insert id="insModule" parameterType = "com.pms.beans.ModuleB">
+		INSERT INTO MOU(MOU_PROCODE, MOU_CODE, MOU_NAME, MOU_COMMENTS) VALUES(#{proCode},#{mouCode},#{mouName},#{mouComments})
+	</insert>
+ 	<select id="getModuleList" parameterType = "java.util.HashMap" resultType = "com.pms.beans.ModuleB">
 		SELECT  MOU_PROCODE AS PROCODE,
 		        MOU_CODE AS MOUCODE,
 		        MOU_NAME AS MOUNAME,
@@ -187,7 +197,19 @@
 		FROM MOU 
 		WHERE MOU_PROCODE = #{proCode}
 	</select>
-	<select id="getJobsList" parameterType = "com.pms.beans.ProBean" resultType = "com.pms.beans.ModuleBean">
+	
+	<update id="updJobs" parameterType = "com.pms.beans.ModuleB">
+		UPDATE JOS
+		SET JOS_NAME = #{josName} , JOS_COMMENTS = #{josComments}
+		WHERE JOS_PROCODE = #{proCode} AND JOS_CODE = #{josCode}
+	</update>
+	<delete id="delJobs" parameterType = "com.pms.beans.ModuleB">
+		DELETE FROM JOS WHERE JOS_PROCODE = #{proCode} AND JOS_CODE = #{josCode}
+	</delete>
+	<insert id="insJobs" parameterType = "com.pms.beans.ModuleB">
+		INSERT INTO JOS(JOS_PROCODE, JOS_CODE, JOS_NAME, JOS_COMMENTS) VALUES(#{proCode},#{josCode},#{josName},#{josComments})
+	</insert>
+	<select id="getJobsList" parameterType = "java.util.HashMap" resultType = "com.pms.beans.ModuleB">
 		SELECT  JOS_PROCODE AS PROCODE,
 		        JOS_CODE AS JOSCODE,
 		        JOS_NAME AS JOSNAME,
@@ -195,25 +217,61 @@
 		FROM JOS 
 		WHERE JOS_PROCODE = #{proCode}
 	</select>
-	<select id="getMJList" parameterType = "com.pms.beans.ProBean" resultType = "com.pms.beans.ModuleBean">
-		SELECT  MJ_PROCODE AS PROCODE,
-		        MJ_MOUCODE AS MOUCODE,
-		        MJ_JOSCODE AS JOSCODE,
-		        MJ_PRMPMBCODE AS PMBCODE 
-		FROM MJ 
-		WHERE MJ_PROCODE = #{proCode}
+	
+	<update id="updModuleJobs" parameterType = "com.pms.beans.ModuleB">
+	
+	</update>
+	<delete id="delModuleJobs" parameterType = "com.pms.beans.ModuleB">
+	
+	</delete>
+	<insert id="insModuleJobs" parameterType = "com.pms.beans.ModuleB">
+	
+	</insert>
+	<select id="getMJList" parameterType = "java.util.HashMap" resultType = "com.pms.beans.ModuleB">
+		SELECT  PROCODE,
+		        MOUCODE,
+		        JOSCODE,
+		        PMBCODE,
+		        MOUNAME,
+		        JOSNAME,
+		        PMBNAME
+		FROM PROCESSINFO 
+		WHERE PROCODE = #{proCode}
 	</select>
-	<select id="getMethodList" parameterType = "com.pms.beans.ProBean" resultType = "com.pms.beans.ModuleBean">
-		SELECT  MET_MJPROCODE AS PROCODE,
-		        MET_MJMOUCODE AS MOUCODE,
-		        MET_MJJOSCODE AS JOSCODE,
-		        MET_CODE AS METCODE,
-		        MET_NAME AS METNAME,
-		        MET_MCCODE AS MCCODE
-		FROM MET 
-		WHERE MET_MJPROCODE = #{proCode}
-	</select> -->
-	<resultMap type="com.pms.beans.ProBean" id="getProjectInfo">
+	<select id="getPmbInfo" parameterType = "java.util.HashMap" resultType="com.pms.beans.ModuleB">
+		SELECT PRM_PMBCODE AS PMBCODE,
+        PMB_NAME AS PMBNAME
+		FROM PRM INNER JOIN PMB ON PRM_PMBCODE=PMB_CODE
+		WHERE PRM_PROCODE = ${proCode} AND PRM_ACCEPT ='AC'
+	</select>
+	<update id="updMethod" parameterType = "com.pms.beans.ModuleB">
+	
+	</update>
+	<delete id="delMethod" parameterType = "com.pms.beans.ModuleB">
+	
+	</delete>
+	<insert id="insMethod" parameterType = "com.pms.beans.ModuleB">
+	
+	</insert>
+	<select id="getMethodList" parameterType = "java.util.HashMap" resultType = "com.pms.beans.ModuleB">
+		SELECT  PROCODE,
+		        MOUCODE,
+		        JOSCODE,
+		        METCODE,
+		        METNAME,
+		        MCCODE,
+		        MOUNAME,
+		        JOSNAME,
+		        MCNAME
+		FROM PROCESSINFO 
+		WHERE PROCODE = #{proCode}
+	</select>
+	<select id="getMcList" resultType = "com.pms.beans.ModuleB">
+		SELECT MCA_NAME AS MCNAME,
+			   MCA_CODE AS MCCODE
+		FROM MCA
+	</select>
+	<!-- <resultMap type="com.pms.beans.ProBean" id="getProjectInfo">
 		<id property="proCode" column="PRO_CODE"/>
 		<result property="proName" column="PRO_NAME"/>
 		<result property="proComments" column="PRO_COMMENTS"/>
@@ -225,7 +283,7 @@
 	<resultMap id="getProjectDetailInfo" type="com.pms.beans.ProBean">
 		<id column="PRO_CODE" property="proCode" />
 		<result column="PRO_NAME" property="proName" />
-<!-- 		<result column="PRO_COMMENTS" property="proComments" /> -->
+		<result column="PRO_COMMENTS" property="proComments" />
 		<result column="PRO_START" property="proStart" />
 		<result column="PRO_END" property="proEnd" />
 		<result column="PRO_VISIBLE" property="proVisible" />
@@ -290,7 +348,7 @@
 				MCA_NAME AS MCNAME
 		FROM MET INNER JOIN MCA ON MET.MET_MCCODE = MCA.MCA_CODE
 		WHERE MET_MJPROCODE =  #{proCode}
-	</select>
+	</select> -->
 
 		<!-- 연관 테이블의 Collection 개체 가져오기  
 	<select id="getProject" parameterType="com.pms.beans.CerB" resultMap="getProjectInfo">

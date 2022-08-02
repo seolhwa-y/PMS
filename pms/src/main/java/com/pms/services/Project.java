@@ -7,6 +7,7 @@ import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.crypto.BadPaddingException;
@@ -58,8 +59,7 @@ public class Project implements ServicesRule {
 					this.regProjectMembersCtl(mav);
 					break;
 				case 2:
-					System.out.println("GKFGKS");
-					this.moveJobsCtl(mav);
+					this.moveJobs(mav);
 					break;
 				case 3:
 					this.moveMemberMgr(mav);
@@ -81,7 +81,6 @@ public class Project implements ServicesRule {
 		try {
 
 			ProBean pro = (ProBean)mav.getModel().get("proBean");
-			System.out.println(pro.getProMembers().get(0).getPmbCode());
 			int result = this.session.insert("insProjectMembers", pro);
 			String subject = "[초대장] 프로젝트 참여 초대";
 			String sender = "zzanggirlji@naver.com";
@@ -128,6 +127,24 @@ public class Project implements ServicesRule {
 				case 1:
 					this.reSendEmailCtl(model);
 					break;
+				case 2:
+					this.updModule(model);
+					break;
+				case 3:
+					this.insModule(model);
+					break;
+				case 4:
+					this.delModule(model);
+					break;
+				case 5:
+					this.updJobs(model);
+					break;
+				case 6:
+					this.insJobs(model);
+					break;
+				case 7:
+					this.delJobs(model);
+					break;
 				default:
 				}
 			} else {
@@ -137,6 +154,50 @@ public class Project implements ServicesRule {
 		}
 	}
 	
+	private void delJobs(Model model) {
+		ModuleB module = (ModuleB) model.getAttribute("moduleB");
+		if(this.convertToBoolean(this.session.delete("delJobs", module))) {
+			System.out.println("만세~!~!~@~!");
+		}
+	}
+
+	private void updJobs(Model model) {
+		System.out.println("왔니?");
+		ModuleB module = (ModuleB) model.getAttribute("moduleB");
+		if(this.convertToBoolean(this.session.update("updJobs", module))) { 
+			System.out.println("만세~!~!~@~!");
+		}
+	}
+
+	private void delModule(Model model) {
+		ModuleB module = (ModuleB) model.getAttribute("moduleB");
+		if(this.convertToBoolean(this.session.delete("delModule", module))) {
+			System.out.println("만세~!~!~@~!");
+		}
+	}
+
+	private void insJobs(Model model) {
+		ModuleB module = (ModuleB) model.getAttribute("moduleB");
+		if(this.convertToBoolean(this.session.insert("insJobs", module))) {
+			System.out.println("만세~!~!~@~!");
+		}
+	}
+
+	private void insModule(Model model) {
+		ModuleB module = (ModuleB) model.getAttribute("moduleB");
+		if(this.convertToBoolean(this.session.insert("insModule", module))) {
+			System.out.println("만세~!~!~@~!");
+		}
+	}
+
+	private void updModule(Model model) {
+		ModuleB module = (ModuleB) model.getAttribute("moduleB");
+		if(this.convertToBoolean(this.session.update("updModule", module))) {
+
+			
+		}
+	}
+
 	// ajax 메일재전송
 	private void reSendEmailCtl(Model model) {
 
@@ -191,8 +252,6 @@ public class Project implements ServicesRule {
 				memberList = this.session.selectList("getMembers", cb);
 				memberList.get(0).setMessage(proCode);
 				for (CerB ce : memberList) {
-					System.out.println("GHKR DLS " +ce.getPmbName() );
-					System.out.println("GHKR DLS " +this.enc.aesDecode(ce.getPmbName(), ce.getPmbCode()));
 					ce.setPmbName(this.enc.aesDecode(ce.getPmbName(), ce.getPmbCode()));
 					ce.setPmbEmail(this.enc.aesDecode(ce.getPmbEmail(), ce.getPmbCode()));
 				}
@@ -253,212 +312,250 @@ public class Project implements ServicesRule {
 		this.dBoard.backController(0, mav);
 	}
 	
-//	// jobs 화면 이동
-//	private void moveJobs(ModelAndView mav) {
-//		ProBean pro = ((ProBean)mav.getModel().get("proBean"));
-//		List<ProBean> list = new ArrayList<ProBean>();
+	// jobs 화면 이동
+	private void moveJobs(ModelAndView mav) {
+		HashMap<String,String> map = new HashMap<String,String>();
+		map.put("proCode", ((ModuleB) mav.getModel().get("moduleB")).getProCode());
+		ModuleB module = (ModuleB) mav.getModel().get("moduleB");
+		System.out.println(map);
+		System.out.println(this.session.selectList("getModuleList", module));
+		/* ModuleList */
+		mav.addObject("ModuleList", this.test(this.session.selectList("getModuleList", map), 1));
+		//mav.addObject("updMouList", this.makeUpdSelect(this.session.selectList("getModuleList", map),1));
+		/* JobList */
+		mav.addObject("JobList", this.test(this.session.selectList("getJobsList", map), 2));
+		//mav.addObject("updJosList", this.makeUpdSelect(this.session.selectList("getJobsList", map),2));
+		/* ModuleJobList */
+		mav.addObject("ModuleJobList", this.test(this.session.selectList("getMJList", map), 3));
+		mav.addObject("updMJList", this.makeUpdSelect(this.session.selectList("getPmbInfo", map),3));
+		/* MethodList */
+		mav.addObject("MethodList", this.test(this.session.selectList("getMethodList", map), 4));
+		mav.addObject("updMetList", this.makeUpdSelect(this.session.selectList("getMcList", map),4));
+						
+		mav.addObject("proCode", module.getProCode());
+		mav.setViewName("jobs");
+	}
+	
+
+	private String makeUpdSelect(List<ModuleB> selectList, int num) {
+		StringBuffer sb = new StringBuffer();
+		
+		switch(num) {
+			case 3 :
+				sb.append("<select name='mjPmb' class='box'>");
+				sb.append("<option disabled selected> 담당자를 선택하세요</option>");
+				if(selectList != null && selectList.size() > 0) {
+					for(ModuleB mb : selectList) {
+						try {
+							mb.setPmbName(this.enc.aesDecode(mb.getPmbName(), mb.getPmbCode()));
+						} catch (InvalidKeyException | UnsupportedEncodingException | NoSuchAlgorithmException
+								| NoSuchPaddingException | InvalidAlgorithmParameterException
+								| IllegalBlockSizeException | BadPaddingException e) {e.printStackTrace();}
+						sb.append("<option value='"+ mb.getPmbCode() +"'>"+ mb.getPmbName() +"</option>");
+					}
+				}else {
+					sb.append("<option disabled selected>선택하실 멤버가 없습니다</option>");
+				}
+				break;
+			case 4 :
+				sb.append("메소드 이름 : <input class='box' type='text' placeholder='메소드 이름' maxlength='2' />");
+				sb.append("<select name='mcInfo' class='box'>");
+				sb.append("<option disabled selected>메소드 카테고리를 선택하세요</option>");
+				if(selectList != null && selectList.size() > 0) {
+					for(ModuleB mb : selectList) {
+						sb.append("<option value='"+ mb.getMcCode() +"'>"+ mb.getMcName() + "</option>");
+					}
+				}else {
+					sb.append("<option disabled selected>선택하실 카테고리가 없습니다</option>");
+				}
+				break;
+				
+			default :
+		}
+		
+		
+		return sb.toString();
+	}
+
+	private String test(List<ModuleB> list , int num) {
+		StringBuffer sb = new StringBuffer();
+		// 배열....이용....몰라....지송....스위치 쵝오
+			
+		switch(num) {
+		
+		case 1 :
+			int idx = 0;
+			for(ModuleB mb : list) {
+				sb.append("<div class = 'ModuleList' >");
+				if(list != null && list.size() > 0){
+					idx ++;
+					sb.append("<div> 순번 : " + idx + "</div>");
+					sb.append("<div>MOUNAME = " + mb.getMouName() + "</div>");
+					sb.append("<div>MOUCOMMENTS = " + ((mb.getMouComments() == null)? "none" : mb.getMouComments()) + "</div>");
+					sb.append("<input type='button' value='수정' onclick=\"updModule(\'"+ mb.getProCode() +":"+ mb.getMouCode() +":"+ mb.getMouName() +":"+ mb.getMouComments()+"\')\"/>");
+					sb.append("<input type='button' value='삭제' onclick=\"delModule(\'"+ mb.getProCode() +':'+ mb.getMouCode() +":" +"\')\"/>");
+}
+				sb.append("</div>");
+			}
+			break;
+			
+		case 2 : 
+			idx = 0;
+			for(ModuleB mb : list) {
+
+				sb.append("<div class = 'JobList' >");
+				if(list != null && list.size() > 0){
+					idx ++;
+					sb.append("<div> 순번 : " + idx + "</div>");
+					sb.append("<div>JOSNAME = " + mb.getJosName() + "</div>");
+					sb.append("<div>JOSCOMMENTS = " + ((mb.getJosComments() == null)? "none" : mb.getJosComments()) + "</div>");
+					sb.append("<input type='button' value='수정' onclick=\"window.updJobs(\'"+ mb.getProCode() +":"+ mb.getJosCode() +":"+ mb.getJosName() +":"+ mb.getJosComments()+"\')\" />");
+					sb.append("<input type='button' value='삭제' onclick=\"window.delJobs(\'"+ mb.getProCode() +":"+ mb.getJosCode()+"\')\" />");
+				
+				}
+				sb.append("</div>");
+			}
+			break;
+			
+		case 3 : 
+			idx = 0;
+			for(ModuleB mb : list) {
+				sb.append("<div class = 'ModuleJobList' >");
+				if(list != null && list.size() > 0){
+					idx ++;
+					try {
+						mb.setPmbName(this.enc.aesDecode(mb.getPmbName(), mb.getPmbCode()));
+						sb.append("<div> 순번 : " + idx + "</div>");
+						sb.append("<input type='hidden' value='" + mb.getProCode() + "'/>");
+						sb.append("<div>MOUNAME = " + mb.getMouName() + "</div>");
+						sb.append("<div>JOSNAME = " + mb.getJosName() + "</div>");
+						sb.append("<div>PMBNAME = " + mb.getPmbName() + "</div>");
+						sb.append("<input type='hidden' value='" + mb.getPmbCode() + "'/>");
+						sb.append("<input type='button' value='수정' onclick=\"window.updModuleJobs(\'"+ mb.getProCode() +":"+ mb.getMouCode()+":"+ mb.getJosCode()+":"+ mb.getPmbCode() +":"+ mb.getPmbName()+"\')\" />");
+						sb.append("<input type='button' value='삭제' onclick=\"window.delModuleJobs(\'"+ mb.getProCode() +":"+ mb.getMouCode()+":"+ mb.getJosCode()+":"+ mb.getPmbCode() +"\')\" />");
+					
+					} catch (InvalidKeyException | UnsupportedEncodingException | NoSuchAlgorithmException
+							| NoSuchPaddingException | InvalidAlgorithmParameterException | IllegalBlockSizeException
+							| BadPaddingException e) {e.printStackTrace();}
+					}
+				sb.append("</div>");
+			}
+			break;
+			
+		case 4 : 			
+			idx = 0;
+			for(ModuleB mb : list) {
+				sb.append("<div class = 'MethodList' >");
+				if(list != null && list.size() > 0){
+					idx ++;
+					sb.append("<div> 순번 : " + idx + "</div>");
+					sb.append("<div>MOUNAME = " + mb.getMouName() + "</div>");
+					sb.append("<div>JOSNAME = " + mb.getJosName() + "</div>");
+					sb.append("<div>METNAME = " + mb.getMetName() + "</div>");
+					sb.append("<div>METNAME = " + mb.getMetName() + "</div>");
+					sb.append("<div>MCNAME = " + mb.getMcName() + "</div>");
+					sb.append("<input type='button' value='수정' onclick=\"window.updMethod(\'"+ mb.getProCode() +":"+ mb.getMouCode() +":"+ mb.getJosCode() +":"+ mb.getMetCode() +":"+ mb.getMcCode() +"\')\" />");
+					sb.append("<input type='button' value='삭제' onclick=\"window.delMethod(\'"+ mb.getProCode() +":"+ mb.getMouCode() +":"+ mb.getJosCode() +":"+ mb.getMetCode() +":"+ mb.getMcCode() +"\')\" />");
+				
+				}
+				sb.append("</div>");
+			}
+			break;
+			
+		default : 
+		}
+		
+		return sb.toString();
+	}
+	
+//	private void moveJobsCtl(ModelAndView mav) {
+//		System.out.println("GKFGKS");
+//		/* Project 정보 조회  ModuleList 조회  JobList 조회 ModuleJobList 조회  MethodList 조회 */
+//		List<ProBean> projectList = this.session.selectList("getProjectDetail", ((ProBean)mav.getModel().get("proBean")));
 //		
-//		list = this.session.selectList("getMethodInfo", pro);
-//		
-//		if(list.size() > 0) {
-//			this.make(list.get(0));
+//		if(projectList.size() > 0) {
+//			mav.addObject("ModuleList",this.makeJobs1(projectList.get(0)));
 //		}else {
 //			
 //		}
-//		
-//		/* ModuleList */
-//		mav.addObject("ModuleList", this.test(this.session.selectList("getModuleList", pro), 1));
-//		/* JobList */
-//		mav.addObject("JobList", this.test(this.session.selectList("getJobsList", pro), 2));
-//		/* ModuleJobList */
-//		mav.addObject("ModuleJobList", this.test(this.session.selectList("getMJList", pro), 3));
-//		/* MethodList */
-//		mav.addObject("MethodList", this.test(this.session.selectList("getMethodList", pro), 4));
 //				
-//		System.out.println("*****확인용 : " +  this.session.selectList("getMethodInfo", pro));
-//		
 //		mav.setViewName("jobs");
 //	}
-//	
-//	private String make(ProBean pro) {
+	
+//	/* Module List */
+//	private String makeJobs1(ProBean project) {
 //		StringBuffer sb = new StringBuffer();
-//		
+//		// 모듈
 //		sb.append("<table>");
-//		
-//		if(pro.getModuleList().size() > 0) {
-//			sb.append("<tr><th>순번</th><th>모듈명</th><th>모듀상세</th><th>Action</th></tr>");
+//		if(project.getModuleList().size() > 0 ) {
+//			sb.append("<tr><th>순번</th><th>모듈명</th><th>모듈상세</th><th>Action</th></tr>");
 //			int idx = 0;
-//			for(ModuleList module : pro.getModuleList()) {
+//			for(ModuleList module : project.getModuleList()) {
 //				idx++;
-//				sb.append("<tr><td>" + idx + "</td><td>" + module.getMouName() + "</td><td>" + module.getMouComments() + "</td>"
-//						+ "<td><input type = 'button' value = '수정' onClick = 'updModule("+ module.getProCode +", "+ module.getMouCode +")' / >"
-//						+ "<input type = 'button' value = '삭제' onClick = 'delModule("+ module.getProCode +", "+ module.getMouCode +")' / ></td></tr>");
-//				
+//				sb.append("<tr><td>" + idx + "</td><td>" + module.getMouName() + "</td><td>" + module.getMouComments() + "</td><td>"
+//						+ "<button class=\"\" onClick=\"updModule('" + module.getProCode() + "','" + module.getMouCode() + "')\">수정</button>"
+//						+ "<button class=\"\" onClick=\"delModule('" + module.getProCode() + "', '" + module.getMouCode() + "')\">삭제</button></td></tr>");
 //			}
 //		}else {
-//			sb.append("<tr><th>등록 묘듈 X</th></tr>");
+//			sb.append("<tr><td>등록 모듈 없음</td></tr>");
 //		}
+//		sb.append("</table>");
 //		
+//		//좝
+//		sb.append("<table>");
+//		if(project.getModuleList().size() > 0 ) {
+//			sb.append("<tr><th>순번</th><th>좝명</th><th>좝상세</th><th>Action</th></tr>");
+//			int idx = 0;
+//			for(JobList jos : project.getJobsList()) {
+//				idx++;
+//				sb.append("<tr><td>" + idx + "</td><td>" + jos.getJosName() + "</td><td>" + jos.getJosComments() + "</td><td>"
+//						+ "<button class=\"\" onClick=\"updModule('" + jos.getProCode() + "','" + jos.getJosCode() + "')\">수정</button>"
+//						+ "<button class=\"\" onClick=\"delModule('" + jos.getProCode() + "', '" + jos.getJosCode() + "')\">삭제</button></td></tr>");
+//			}
+//		}else {
+//			sb.append("<tr><td>등록 모듈 없음</td></tr>");
+//		}
+//		sb.append("</table>");
+//		
+//		// 모듈좝
+//		sb.append("<table>");
+//		if(project.getModuleList().size() > 0 ) {
+//			sb.append("<tr><th>순번</th><th>모듈명</th><th>모듈상세</th><th>Action</th></tr>");
+//			int idx = 0;
+//			for(ModuleJobList mj : project.getModuleJobsList()) {
+//				idx++;
+//				sb.append("<tr><td>" + idx + "</td><td>" + mj.getMouCode() + "</td><td>" + mj.getJosCode() + "</td><td>"
+//						+ "<button class=\"\" onClick=\"updModule('" + mj.getProCode() + "','" + mj.getPmbCode() + "')\">수정</button>"
+//						+ "<button class=\"\" onClick=\"delModule('" + mj.getProCode() + "', '" + mj.getPmbCode() + "')\">삭제</button></td></tr>");
+//			}
+//		}else {
+//			sb.append("<tr><td>등록 모듈 없음</td></tr>");
+//		}
+//		sb.append("</table>");
+//		
+//		// 메소드
+//		sb.append("<table>");
+//		if(project.getModuleList().size() > 0 ) {
+//			sb.append("<tr><th>순번</th><th>모듈명</th><th>모듈상세</th><th>Action</th></tr>");
+//			int idx = 0;
+//			for(MethodList mt : project.getMethodList()) {
+//				idx++;
+//				sb.append("<tr><td>" + idx + "</td><td>" + mt.getMetName() + "</td><td>" + mt.getMcName() + "</td><td>"
+//						+ "<button class=\"\" onClick=\"updModule('" + mt.getProCode() + "','" + mt.getMouCode() + "',"
+//						+ "'" + mt.getJosCode() + "','" + mt.getMetCode() + "','" + mt.getMcCode() + "')\">수정</button>"
+//						+ "<button class=\"\" onClick=\"delModule('" + mt.getProCode() + "','" + mt.getMouCode() + "',"
+//						+ "'" + mt.getJosCode() + "','" + mt.getMetCode() + "','" + mt.getMcCode() + "')\\\">삭제</button></td></tr>");
+//			}
+//		}else {
+//			sb.append("<tr><td>등록 모듈 없음</td></tr>");
+//		}
 //		sb.append("</table>");
 //		
 //		return sb.toString();
 //	}
 //	
-//	private String test(List<ModuleBean> list , int num) {
-//		StringBuffer sb = new StringBuffer();
-//		// 배열....이용....몰라....지송....스위치 쵝오
-//		
-//		
-//		switch(num) {
-//		case 1 : 
-//			for(ModuleBean mb : list) {
-//				sb.append("<div class = 'ModuleList' >");
-//				if(list != null && list.size() > 0){
-//					sb.append("<div>PROCODE = " + mb.getPROCODE() + "</div>");
-//					sb.append("<div>MOUCODE = " + mb.getMOUCODE() + "</div>");
-//					sb.append("<div>MOUNAME = " + mb.getMOUNAME() + "</div>");
-//					sb.append("<div>MOUCOMMENTS = " + ((mb.getMOUCOMMENTS() == null)? "none" : mb.getMOUCOMMENTS()) + "</div>");
-//				}
-//				sb.append("</div>");
-//			}
-//			break;
-//			
-//		case 2 : 
-//			for(ModuleBean mb : list) {
-//				sb.append("<div class = 'JobList' >");
-//				if(list != null && list.size() > 0){
-//					sb.append("<div>PROCODE = " + mb.getPROCODE() + "</div>");
-//					sb.append("<div>JOSCODE = " + mb.getJOSCODE() + "</div>");
-//					sb.append("<div>JOSNAME = " + mb.getJOSNAME() + "</div>");
-//					sb.append("<div>JOSCOMMENTS = " + ((mb.getJOSCOMMENTS() == null)? "none" : mb.getJOSCOMMENTS()) + "</div>");
-//				}
-//				sb.append("</div>");
-//			}
-//			break;
-//			
-//		case 3 : 
-//			for(ModuleBean mb : list) {
-//				sb.append("<div class = 'ModuleJobList' >");
-//				if(list != null && list.size() > 0){
-//					sb.append("<div>PROCODE = " + mb.getPROCODE() + "</div>");
-//					sb.append("<div>MOUCODE = " + mb.getMOUCODE() + "</div>");
-//					sb.append("<div>JOSCODE = " + mb.getJOSCODE() + "</div>");
-//					sb.append("<div>PMBCODE = " + mb.getPMBCODE() + "</div>");
-//				}
-//				sb.append("</div>");
-//			}
-//			break;
-//			
-//		case 4 : 
-//			for(ModuleBean mb : list) {
-//				sb.append("<div class = 'MethodList' >");
-//				if(list != null && list.size() > 0){
-//					sb.append("<div>PROCODE = " + mb.getPROCODE() + "</div>");
-//					sb.append("<div>MOUCODE = " + mb.getMOUCODE() + "</div>");
-//					sb.append("<div>JOSCODE = " + mb.getJOSCODE() + "</div>");
-//					sb.append("<div>METCODE = " + mb.getMETCODE() + "</div>");
-//					sb.append("<div>METNAME = " + mb.getMETNAME() + "</div>");
-//					sb.append("<div>MCCODE = " + mb.getMCCODE() + "</div>");
-//				}
-//				sb.append("</div>");
-//			}
-//			break;
-//			
-//		default : 
-//		}
-//		
-//		return sb.toString();
-//	}
-	
-	private void moveJobsCtl(ModelAndView mav) {
-		System.out.println("GKFGKS");
-		/* Project 정보 조회  ModuleList 조회  JobList 조회 ModuleJobList 조회  MethodList 조회 */
-		List<ProBean> projectList = this.session.selectList("getProjectDetail", ((ProBean)mav.getModel().get("proBean")));
-		
-		if(projectList.size() > 0) {
-			this.makeJobs1(projectList.get(0));
-		}else {
-			
-		}
-				
-		mav.setViewName("jobs");
-	}
-	
-	/* Module List */
-	private String makeJobs1(ProBean project) {
-		StringBuffer sb = new StringBuffer();
-		// 모듈
-		sb.append("<table>");
-		if(project.getModuleList().size() > 0 ) {
-			sb.append("<tr><th>순번</th><th>모듈명</th><th>모듈상세</th><th>Action</th></tr>");
-			int idx = 0;
-			for(ModuleList module : project.getModuleList()) {
-				idx++;
-				sb.append("<tr><td>" + idx + "</td><td>" + module.getMouName() + "</td><td>" + module.getMouComments() + "</td><td>"
-						+ "<button class=\"\" onClick=\"updModule('" + module.getProCode() + "','" + module.getMouCode() + "')\">수정</button>"
-						+ "<button class=\"\" onClick=\"delModule('" + module.getProCode() + "', '" + module.getMouCode() + "')\">삭제</button></td></tr>");
-			}
-		}else {
-			sb.append("<tr><td>등록 모듈 없음</td></tr>");
-		}
-		sb.append("</table>");
-		
-		//좝
-		sb.append("<table>");
-		if(project.getModuleList().size() > 0 ) {
-			sb.append("<tr><th>순번</th><th>좝명</th><th>좝상세</th><th>Action</th></tr>");
-			int idx = 0;
-			for(JobList jos : project.getJobsList()) {
-				idx++;
-				sb.append("<tr><td>" + idx + "</td><td>" + jos.getJosName() + "</td><td>" + jos.getJosComments() + "</td><td>"
-						+ "<button class=\"\" onClick=\"updModule('" + jos.getProCode() + "','" + jos.getJosCode() + "')\">수정</button>"
-						+ "<button class=\"\" onClick=\"delModule('" + jos.getProCode() + "', '" + jos.getJosCode() + "')\">삭제</button></td></tr>");
-			}
-		}else {
-			sb.append("<tr><td>등록 모듈 없음</td></tr>");
-		}
-		sb.append("</table>");
-		
-		// 모듈좝
-		sb.append("<table>");
-		if(project.getModuleList().size() > 0 ) {
-			sb.append("<tr><th>순번</th><th>모듈명</th><th>모듈상세</th><th>Action</th></tr>");
-			int idx = 0;
-			for(ModuleJobList mj : project.getModuleJobsList()) {
-				idx++;
-				sb.append("<tr><td>" + idx + "</td><td>" + mj.getMouCode() + "</td><td>" + mj.getJosCode() + "</td><td>"
-						+ "<button class=\"\" onClick=\"updModule('" + mj.getProCode() + "','" + mj.getPmbCode() + "')\">수정</button>"
-						+ "<button class=\"\" onClick=\"delModule('" + mj.getProCode() + "', '" + mj.getPmbCode() + "')\">삭제</button></td></tr>");
-			}
-		}else {
-			sb.append("<tr><td>등록 모듈 없음</td></tr>");
-		}
-		sb.append("</table>");
-		
-		// 메소드
-		sb.append("<table>");
-		if(project.getModuleList().size() > 0 ) {
-			sb.append("<tr><th>순번</th><th>모듈명</th><th>모듈상세</th><th>Action</th></tr>");
-			int idx = 0;
-			for(MethodList mt : project.getMethodList()) {
-				idx++;
-				sb.append("<tr><td>" + idx + "</td><td>" + mt.getMetName() + "</td><td>" + mt.getMcName() + "</td><td>"
-						+ "<button class=\"\" onClick=\"updModule('" + mt.getProCode() + "','" + mt.getMouCode() + "',"
-						+ "'" + mt.getJosCode() + "','" + mt.getMetCode() + "','" + mt.getMcCode() + "')\">수정</button>"
-						+ "<button class=\"\" onClick=\"delModule('" + mt.getProCode() + "','" + mt.getMouCode() + "',"
-						+ "'" + mt.getJosCode() + "','" + mt.getMetCode() + "','" + mt.getMcCode() + "')\\\">삭제</button></td></tr>");
-			}
-		}else {
-			sb.append("<tr><td>등록 모듈 없음</td></tr>");
-		}
-		sb.append("</table>");
-		
-		return sb.toString();
-	}
-	
 	// memberMgr 화면 이동
 	private void moveMemberMgr(ModelAndView mav) { //mav proBean 도착
-		System.out.println(((ProBean)mav.getModel().get("proBean")).getProCode());
 		ProBean pro = ((ProBean)mav.getModel().get("proBean"));
 
 		// 1번박스 초대보냈던 리스트

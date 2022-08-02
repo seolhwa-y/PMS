@@ -144,13 +144,13 @@ function makeLightBox(title, fn1, fn2){
 	
 	let reg = document.createElement("button");
 	reg.setAttribute("class", "btn small");
-	reg.innerText = title;
+	reg.innerText = "O";
 	reg.addEventListener("click", window[fn1]);
 	cfoot.appendChild(reg);
 	
 	let closing = document.createElement("button");
 	closing.setAttribute("class", "btn small");
-	closing.innerText = title + " 취소";
+	closing.innerText = "X";
 	closing.addEventListener("click", window[fn2]);
 	cfoot.appendChild(closing);
 	

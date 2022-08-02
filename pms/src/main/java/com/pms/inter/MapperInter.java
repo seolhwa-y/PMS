@@ -1,5 +1,6 @@
 package com.pms.inter;
 
+import java.util.HashMap;
 import java.util.List;
 
 import com.pms.beans.*;
@@ -27,6 +28,7 @@ public interface MapperInter {
 	public int updAuthLog(EmailCerB ecb);
 	
 	public String getMemberNum(ProjectInfoB proInfo);
+	
 	/* 내가 속한 프로젝트 정보 */
 	public List<ProBean> getProject(ProBean pro);
 	public List<MemberMgrB> getSendEmailList(ProBean pro);
@@ -34,12 +36,36 @@ public interface MapperInter {
 	public List<MemberMgrB> isAcceptMember(ProBean pro);
 	public List<MemberMgrB> notInviteMember();
 	
-//	public List<ModuleBean> getModuleList(ProBean pro);
-//	public List<ModuleBean> getJobsList(ProBean pro);
-//	public List<ModuleBean> getMJList(ProBean pro);
-//	public List<ModuleBean> getMethodList(ProBean pro);
+	/* 업무관리 페이지 전달 정보*/
+	public List<ModuleB> getModuleList(HashMap<String,String> map);
 	
-	/* 업무관리 페이지 전달 정보 */
-	public List<ProBean> getProjectDetail(ProBean pro);
+	public List<ModuleB> getJobsList(HashMap<String,String> map);
+	public List<ModuleB> getMJList(HashMap<String,String> map);
+	public List<ModuleB> getMethodList(HashMap<String,String> map);
 	
+	/* Module update, delete, insert */
+	public int updModule(ModuleB module);
+	public int delModule(ModuleB module);
+	public int insModule(ModuleB module);
+	//public List<ModuleB> getModuleList(HashMap map);
+	
+	/* Jobs update, delete, insert */
+	public int updJobs(ModuleB module);
+	public int delJobs(ModuleB module);
+	public int insJobs(ModuleB module);
+	public List<ModuleB> getJobsList(ModuleB module);
+
+	/* ModuleJobs update, delete, insert */
+	public int updModuleJobs(ModuleB module);
+	public int delModuleJobs(ModuleB module);
+	public int insModuleJobs(ModuleB module);
+	public List<ModuleB> getModuleJobsList(ModuleB module);
+	public List<ModuleB> getPmbInfo(HashMap<String,String> map);
+	
+	/* Method update, delete, insert */
+	public int updMethod(ModuleB module);
+	public int delMethod(ModuleB module);
+	public int insMethod(ModuleB module);
+	public List<ModuleB> getMethodList(ModuleB module);
+	public List<ModuleB> getMcList();
 }

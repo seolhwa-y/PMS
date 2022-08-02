@@ -198,8 +198,9 @@ public class DashBoard implements ServicesRule {
 	// 내가 참여한 프로젝트 정보 HTML
 	private String projectInfo(List<ProjectInfoB> list) {
 		StringBuffer sb = new StringBuffer();
-		
 		try {
+			CerB cb = (CerB) this.pu.getAttribute("accessInfo");
+			
 			if (list.size() > 0) {
 				int idx = -1;
 				for (ProjectInfoB pib : list) {
@@ -224,6 +225,7 @@ public class DashBoard implements ServicesRule {
 					sb.append("</div>");
 					sb.append("</div>");
 					sb.append("</div>");
+					
 				}
 			}
 		} catch (Exception e) {
