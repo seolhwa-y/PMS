@@ -180,11 +180,23 @@ function insJobsCtl(proCode){
 	postAjaxJson("InsJobs", clientData, "callBack");
 }
 function updModuleJobs(code){ // code = proCode:mouCode:josCode:pmbCode
-	let cbody = document.getElementById("cbody");
-	cbody.innerHTML= "";
-	let canvas = document.getElementById("canvas");
-	const info = code.split(":");
-
+	alert("updMJ진입");
+	let info = code.split(":");
+	let modalContent = document.querySelector("#modalContent");
+	let modalBox = document.querySelector("#modalBox");
+	let modalTitle = document.querySelector("#modalTitle");
+	let modalBottom = document.querySelector("#modalBottom");
+	modalContent.innerHTML= "";
+	
+	modalTitle.innerText="모델앤좝 수정";
+	
+	modalContent.innerHTML = "모델앤좝 : <input class='box josName' type='text' value=\'"+info[2]+"\' />"
+							+"좝 내용 : <input class='box josComment' type='text' value=\'"+info[3]+"\' />";
+	
+	modalBottom.innerHTML = "<input type='button' value='O' onclick=\"updJobsCtl(\'"+code+"\')\"/>"
+							+"<input type='button' value='X' onclick='cancel()'/>";
+	
+	modalBox.style.display = "block";
 	cbody.innerHTML= "${updMJList}";
 	
 	canvas.style.display = "block";
