@@ -68,4 +68,12 @@ public interface MapperInter {
 	public int insMethod(ModuleB module);
 	public List<ModuleB> getMethodList(ModuleB module);
 	public List<ModuleB> getMcList();
+	public String getMetCode(ModuleB module);
+	
+	/* 프로젝트 진행 페이지에서 프로젝트 정보 가져오기 */
+	public List<ProgressMgrB> getProInfo(HashMap<String,String> map);
+	public List<ProgressMgrB> getModuleNum(HashMap<String,String> map);
+	public List<ProgressMgrB> getJobsNum(HashMap<String,String> map);
+	public List<ProgressMgrB> getModuleJobsNum(HashMap<String,String> map);
+	public List<ProgressMgrB> getMethodNum(HashMap<String,String> map);
 }

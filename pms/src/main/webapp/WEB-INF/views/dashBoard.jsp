@@ -77,6 +77,16 @@ function memberCtl(idx){
 	
 	form.submit();
 }
+
+function progressCtl(){
+	const form = document.getElementsByName("clientData")[0];
+	form.action = "MoveProgressMgr";
+	form.method = "post";
+	let proCode = document.getElementsByClassName("proCode")[0].value;
+	form.appendChild(createHidden("proCode", proCode));
+	
+	form.submit();
+}
 </script>
 <style>
 @import url("resources/css/common.css");

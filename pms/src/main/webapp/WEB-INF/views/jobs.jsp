@@ -34,8 +34,8 @@ function updModule(code){ // code = proCode:mouCode:mouName:mouComment
 	modalContent.innerHTML = "모듈 이름 : <input class='box moduleName' type='text' value=\'"+info[2]+"\' />"
 							+"모듈 내용 : <input class='box moduleComment' type='text' value=\'"+info[3]+"\' />";
 	
-	modalBottom.innerHTML = "<input type='button' value='O' onclick=\"updModuleCtl(\'"+code+"\')\"/>"
-							+"<input type='button' value='X' onclick='cancel()'/>";
+	modalBottom.innerHTML = "<input type='button' class='box' value='O' onclick=\"updModuleCtl(\'"+code+"\')\"/>"
+							+"<input type='button' class='box' value='X' onclick='cancel()'/>";
 	
 	modalBox.style.display = "block";
 }
@@ -47,7 +47,7 @@ function updModuleCtl(code){
 	let clientData = "proCode="+info[0]+"&mouCode="+info[1]+"&mouName="+moduleName.value+"&mouComments="+moduleComment.value;
 	alert(clientData);
 	
-	postAjaxJson("UpdModule", clientData, "callBack");
+	postAjaxJson("UpdModule", clientData, "callBack1");
 }
 function delModule(code){ // code = proCode:mouCode
 	alert(code);
@@ -60,8 +60,8 @@ function delModule(code){ // code = proCode:mouCode
 	modalBottom.innerHTML="";
 	
 	modalTitle.innerText = "모듈 삭제";
-	modalContent.innerHTML = "<input type='button' value='O' onclick=\"delModuleCtl(\'"+code+"\')\"/>"
-	+"<input type='button' value='X' onclick='cancel()'/>";
+	modalContent.innerHTML = "<input type='button'class='box' value='O' onclick=\"delModuleCtl(\'"+code+"\')\"/>"
+	+"<input type='button' class='box' value='X' onclick='cancel()'/>";
 	
 	modalBox.style.display = "block";
 }
@@ -70,7 +70,7 @@ function delModuleCtl(code){
 	let clientData = "proCode="+info[0]+"&mouCode="+info[1];
 	alert(clientData);
 	
-	postAjaxJson("DelModule", clientData, "callBack");
+	postAjaxJson("DelModule", clientData, "callBack1");
 }
 function insModule(proCode){ 
 	alert(proCode);
@@ -82,11 +82,11 @@ function insModule(proCode){
 	modalBottom.innerHTML="";
 	
 	modalTitle.innerText = "모듈 등록";
-	modalContent.innerHTML = "모듈 코드 : <input class='moduleCode' type='text' maxlength='2' />"
-							+"모듈 이름 : <input class='moduleName' type='text' />"
-							+"모듈 설명 : <input class='moduleComments' type='text' />";
-	modalBottom.innerHTML = "<input type='button' value='O' onclick=\"insModuleCtl(\'"+proCode+"\')\"/>"
-	+"<input type='button' value='X' onclick='cancel()'/>";
+	modalContent.innerHTML = "모듈 코드 : <input class='box moduleCode' type='text' maxlength='2' />"
+							+"모듈 이름 : <input class='box moduleName' type='text' />"
+							+"모듈 설명 : <input class='box moduleComments' type='text' />";
+	modalBottom.innerHTML = "<input type='button' class='box' value='O' onclick=\"insModuleCtl(\'"+proCode+"\')\"/>"
+	+"<input type='button' class='box' value='X' onclick='cancel()'/>";
 
 }
 function insModuleCtl(proCode){
@@ -97,7 +97,8 @@ function insModuleCtl(proCode){
 	let clientData = "proCode="+proCode+"&mouCode="+moduleCode+"&mouName="+moduleName+"&mouComments="+moduleComments;
 	alert(clientData);
 	
-	postAjaxJson("InsModule", clientData, "callBack");
+	
+	postAjaxJson("InsModule", clientData, "callBack1");
 }
 function updJobs(code){ // code = proCode:josCode
 	alert("updJobs진입");
@@ -113,8 +114,8 @@ function updJobs(code){ // code = proCode:josCode
 	modalContent.innerHTML = "좝 이름 : <input class='box josName' type='text' value=\'"+info[2]+"\' />"
 							+"좝 내용 : <input class='box josComment' type='text' value=\'"+info[3]+"\' />";
 	
-	modalBottom.innerHTML = "<input type='button' value='O' onclick=\"updJobsCtl(\'"+code+"\')\"/>"
-							+"<input type='button' value='X' onclick='cancel()'/>";
+	modalBottom.innerHTML = "<input class='box' type='button' value='O' onclick=\"updJobsCtl(\'"+code+"\')\"/>"
+							+"<input class='box' type='button' value='X' onclick='cancel()'/>";
 	
 	modalBox.style.display = "block";
 	
@@ -127,7 +128,7 @@ function updJobsCtl(code){
 	let clientData = "proCode="+info[0]+"&josCode="+info[1]+"&josName="+josName.value+"&josComments="+josComment.value;
 	alert(clientData);
 	
-	postAjaxJson("UpdJobs", clientData, "callBack");
+	postAjaxJson("UpdJobs", clientData, "callBack2");
 }
 function delJobs(code){ // code = proCode:josCode
 	alert(code);
@@ -140,8 +141,8 @@ function delJobs(code){ // code = proCode:josCode
 	modalBottom.innerHTML="";
 	
 	modalTitle.innerText = "좝 삭제";
-	modalContent.innerHTML = "<input type='button' value='O' onclick=\"delJobsCtl(\'"+code+"\')\"/>"
-	+"<input type='button' value='X' onclick='cancel()'/>";
+	modalContent.innerHTML = "<input class='box' type='button' value='O' onclick=\"delJobsCtl(\'"+code+"\')\"/>"
+	+"<input class='box' type='button' value='X' onclick='cancel()'/>";
 	
 	modalBox.style.display = "block";
 }
@@ -150,7 +151,7 @@ function delJobsCtl(code){
 	let clientData = "proCode="+info[0]+"&josCode="+info[1];
 	alert(clientData);
 	
-	postAjaxJson("DelJobs", clientData, "callBack");
+	postAjaxJson("DelJobs", clientData, "callBack2");
 }
 function insJobs(proCode){ 
 	alert(proCode);
@@ -162,11 +163,11 @@ function insJobs(proCode){
 	modalBottom.innerHTML="";
 	
 	modalTitle.innerText = "좝 등록";
-	modalContent.innerHTML = "좝 코드 : <input class='jobsCode' type='text' maxlength='3' />"
-							+"좝 이름 : <input class='jobsName' type='text' />"
-							+"좝 설명 : <input class='jobsComments' type='text' />";
-	modalBottom.innerHTML = "<input type='button' value='O' onclick=\"insJobsCtl(\'"+proCode+"\')\"/>"
-	+"<input type='button' value='X' onclick='cancel()'/>";
+	modalContent.innerHTML = "좝 코드 : <input class='box jobsCode' type='text' maxlength='3' />"
+							+"좝 이름 : <input class='box jobsName' type='text' />"
+							+"좝 설명 : <input class='box jobsComments' type='text' />";
+	modalBottom.innerHTML = "<input class='box' type='button' value='O' onclick=\"insJobsCtl(\'"+proCode+"\')\"/>"
+	+"<input class='box' type='button' value='X' onclick='cancel()'/>";
 
 }
 function insJobsCtl(proCode){
@@ -177,10 +178,10 @@ function insJobsCtl(proCode){
 	let clientData = "proCode="+proCode+"&josCode="+JobsCode+"&josName="+JobsName+"&josComments="+JobsComments;
 	alert(clientData);
 	
-	postAjaxJson("InsJobs", clientData, "callBack");
+	postAjaxJson("InsJobs", clientData, "callBack2");
 }
 function updModuleJobs(code){ // code = proCode:mouCode:josCode:pmbCode
-	alert("updMJ진입");
+	alert("updJobs진입");
 	let info = code.split(":");
 	let modalContent = document.querySelector("#modalContent");
 	let modalBox = document.querySelector("#modalBox");
@@ -188,85 +189,256 @@ function updModuleJobs(code){ // code = proCode:mouCode:josCode:pmbCode
 	let modalBottom = document.querySelector("#modalBottom");
 	modalContent.innerHTML= "";
 	
-	modalTitle.innerText="모델앤좝 수정";
+	modalTitle.innerText="모듈앤좝 수정";
 	
-	modalContent.innerHTML = "모델앤좝 : <input class='box josName' type='text' value=\'"+info[2]+"\' />"
-							+"좝 내용 : <input class='box josComment' type='text' value=\'"+info[3]+"\' />";
-	
-	modalBottom.innerHTML = "<input type='button' value='O' onclick=\"updJobsCtl(\'"+code+"\')\"/>"
-							+"<input type='button' value='X' onclick='cancel()'/>";
+	modalContent.innerHTML = "${UpdModuleJobList}"
+	modalBottom.innerHTML = "<input class='box' type='button' value='O' onclick=\"updModuleJobsCtl(\'"+code+"\')\"/>"
+							+"<input class='box' type='button' value='X' onclick='cancel()'/>";
 	
 	modalBox.style.display = "block";
-	cbody.innerHTML= "${updMJList}";
 	
-	canvas.style.display = "block";
+}
+function updModuleJobsCtl(code){
+	alert(code);
+	let mjPmb = document.getElementsByName("mjPmb")[0];
+	let pmbCode = mjPmb.options[mjPmb.selectedIndex].value;
+	
+	let info = code.split(":");
+	let clientData = "proCode="+info[0]+"&mouCode="+info[1]+"&josCode="+info[2]+"&pmbCode="+pmbCode;
+	alert(clientData);
+	
+	postAjaxJson("UpdModuleJobs", clientData, "callBack3");
 }
 function delModuleJobs(code){// code = proCode:mouCode:josCode:pmbCode
 	alert(code);
-}
-function insModuleJobs(){
+	let modalContent = document.querySelector("#modalContent");
+	let modalBox = document.querySelector("#modalBox");
+	let modalTitle = document.querySelector("#modalTitle");
+	let modalBottom = document.querySelector("#modalBottom");
+	modalTitle.innerHTML="";
+	modalContent.innerHTML= "";
+	modalBottom.innerHTML="";
 	
+	modalTitle.innerText = "모듈앤좝 삭제";
+	modalContent.innerHTML = "<input class='box' type='button' value='O' onclick=\"delModuleJobsCtl(\'"+code+"\')\"/>"
+	+"<input class='box' type='button' value='X' onclick='cancel()'/>";
+	
+	modalBox.style.display = "block";
+}
+function delModuleJobsCtl(code){
+	let info = code.split(":");
+	let clientData = "proCode="+info[0]+"&mouCode="+info[1]+"&josCode="+info[2]+"&pmbCode="+info[3];
+	alert(clientData);
+	
+	postAjaxJson("DelModuleJobs", clientData, "callBack3");
+}
+function insModuleJobs(proCode){
+	alert(proCode);
+	let modalContent = document.querySelector("#modalContent");
+	let modalBox = document.querySelector("#modalBox");
+	let modalTitle = document.querySelector("#modalTitle");
+	let modalBottom = document.querySelector("#modalBottom");
+	modalContent.innerHTML= "";
+	modalBottom.innerHTML="";
+	
+	modalTitle.innerText = "모듈좝 등록";
+	modalContent.innerHTML = "${insMJList}";
+	modalBottom.innerHTML = "<input class='box' type='button' value='O' onclick=\"insModuleJobsCtl(\'"+proCode+"\')\"/>"
+	+"<input class='box' type='button' value='X' onclick='cancel()'/>";
+
+}
+function insModuleJobsCtl(proCode){
+	let mjMou = document.getElementsByName("mjMou")[0];
+	let MouCode = mjMou.options[mjMou.selectedIndex].value;
+
+	let mjJos = document.getElementsByName("mjJos")[0];
+	let JosCode = mjJos.options[mjJos.selectedIndex].value;
+	
+	let mjPmb = document.getElementsByName("mjPmb")[0];
+	let PmbCode = mjPmb.options[mjPmb.selectedIndex].value;
+
+	let clientData = "proCode="+proCode+"&mouCode="+MouCode+"&josCode="+JosCode+"&pmbCode="+PmbCode;
+	alert(clientData);
+	
+	postAjaxJson("InsMJ", clientData, "callBack3"); 
 }
 function updMethod(code){// code = proCode:mouCode:josCode:metCode:mcCode
-	let cbody = document.getElementById("cbody");
-	cbody.innerHTML= "";
-	let canvas = document.getElementById("canvas");
-	const info = code.split(":");
-
-
-	cbody.innerHTML= "${updMetList}";
+	alert("updJobs진입");
+	let info = code.split(":");
+	let modalContent = document.querySelector("#modalContent");
+	let modalBox = document.querySelector("#modalBox");
+	let modalTitle = document.querySelector("#modalTitle");
+	let modalBottom = document.querySelector("#modalBottom");
+	modalContent.innerHTML= "";
 	
+	modalTitle.innerText="메서드 수정";
 	
-	canvas.style.display = "block";
+	modalContent.innerHTML = "<input id='metName' maxlength='2' type='text' placeholder='메서드 네임을 입력하세요'/>";
+	modalContent.innerHTML += "${UpdMethodList}";
+	
+	modalBottom.innerHTML = "<input class='box' type='button' value='O' onclick=\"updMethodCtl(\'"+code+"\')\"/>"
+							+"<input class='box' type='button' value='X' onclick='cancel()'/>";
+	
+	modalBox.style.display = "block";
+	
+}
+function updMethodCtl(code){
+	alert(code);
+	let mcInfo = document.getElementsByName("mcInfo")[0];
+	let mcInfoCode = mcInfo.options[mcInfo.selectedIndex].value;
+	let metName = document.getElementById("metName").value;
+	
+	let info = code.split(":");
+	let clientData = "proCode="+info[0]+"&mouCode="+info[1]+"&josCode="+info[2]+"&metCode="+info[3]+"&mcCode="+mcInfoCode+"&metName="+metName;
+	alert(clientData);
+	
+	postAjaxJson("UpdMethod", clientData, "callBack4");
 }
 function delMethod(code){// code = proCode:mouCode:josCode:metCode:mcCode
 	alert(code);
+	let modalContent = document.querySelector("#modalContent");
+	let modalBox = document.querySelector("#modalBox");
+	let modalTitle = document.querySelector("#modalTitle");
+	let modalBottom = document.querySelector("#modalBottom");
+	modalTitle.innerHTML="";
+	modalContent.innerHTML= "";
+	modalBottom.innerHTML="";
+	
+	modalTitle.innerText = "메서드 좝 삭제";
+	modalContent.innerHTML = "<input class='box' type='button' value='O' onclick=\"delMethodCtl(\'"+code+"\')\"/>"
+	+"<input class='box' type='button' value='X' onclick='cancel()'/>";
+	
+	modalBox.style.display = "block";
 }
-function insMethod(){
+function delMethodCtl(code){
+	let info = code.split(":");
+	let clientData = "proCode="+info[0]+"&mouCode="+info[1]+"&josCode="+info[2]+"&metCode="+info[3]+"&mcCode="+info[4];
+	alert(clientData);
+	
+	postAjaxJson("DelMethod", clientData, "callBack4");
+}
+function insMethod(proCode){
+		alert(proCode);
+	let modalContent = document.querySelector("#modalContent");
+	let modalBox = document.querySelector("#modalBox");
+	let modalTitle = document.querySelector("#modalTitle");
+	let modalBottom = document.querySelector("#modalBottom");
+	modalContent.innerHTML= "";
+	modalBottom.innerHTML="";
+	
+	modalTitle.innerText = "메서드 등록";
+	modalContent.innerHTML = "<input id='metName' type = 'text' maxlength = '2' placeholder='메서드 이름을 입력하세요'/>";
+	modalContent.innerHTML += "${insMetList}";
+	modalBottom.innerHTML = "<input class='box' type='button' value='O' onclick=\"insMethodCtl(\'"+proCode+"\')\"/>"
+	+"<input class='box' type='button' value='X' onclick='cancel()'/>";
 
 }
-function callBack(ajaxData){
-	const memberList = JSON.parse(ajaxData);
+function insMethodCtl(proCode){
+	alert(proCode);
+	let mjMou = document.getElementsByName("mjMou")[0];
+	let MouCode = mjMou.options[mjMou.selectedIndex].value;
+
+	let mjJos = document.getElementsByName("mjJos")[0];
+	let JosCode = mjJos.options[mjJos.selectedIndex].value;
 	
-	if(memberList[0].message != "프로젝트등록실패"){
-		/* 프로젝트 등록 정보 복사하기 */
-		const formData = document.getElementsByName("proInfo");
-		let projectInfo = document.getElementById("projectInfo");
-		
-		const child = projectInfo.childNodes;
-		child[3].innerText = ("Code : " + memberList[0].message);
-		child[5].innerText = ("Name : " + formData[0].value);
-		child[11].innerText = ("Detail Comment : " + formData[1].value);
-		child[7].innerText = ("Peoriod : " + formData[2].value + " ~ " + formData[3].value);
-		child[9].innerText = ("Share : " + formData[4].value);
-		
-		/* 전체 멤버리스트 출력 */
-		let list = document.getElementById("list");
-		for(idx=0; idx<memberList.length;idx++){
-			let info = "<span class='small'>"+ memberList[idx].pmbClassName +"</span><br/>";
-			info += "<span calss='general'>"+ memberList[idx].pmbName + "[" + memberList[idx].pmbLevelName + "]</span>";
-			let div = createDiv("", "box multi", memberList[idx].pmbCode +":"+memberList[idx].pmbEmail, info);
-			div.addEventListener("dblclick", function(){
-				moveDiv(this);
-			});
-			list.appendChild(div);
-		}
-		
-		/* 프로젝트 등록 창 삭제 */
-		cancelProject();
-		document.getElementById("content").style.display="block";
-	}else{
-		alert(memberList[0].message);
-	}
-		
+	let mcInfo = document.getElementsByName("mcInfo")[0];
+	let mcInfoCode = mcInfo.options[mcInfo.selectedIndex].value;
+	
+	let metName = document.getElementById("metName").value;
+	
+	let clientData = "proCode="+proCode+"&mouCode="+MouCode+"&josCode="+JosCode+"&mcCode="+mcInfoCode+"&metName="+metName;
+	alert(clientData);
+	
+	postAjaxJson("InsMet", clientData, "callBack4"); 
 }
+function callBack1(ajaxData){
+	let NewModuleList = document.getElementById("newModuleList");
+	NewModuleList.innerHTML = "";
+	
+	const info = JSON.parse(ajaxData);
+ 	alert(info.length);
+ 	alert(info.size);
+	for(idx=0; idx<info.length; idx++) {
+		NewModuleList.innerHTML += "<div class = 'ModuleList' >";
+		NewModuleList.innerHTML += "<div> 순번 : " + idx + "</div>";
+		NewModuleList.innerHTML += "<div>MOUNAME = " + info[idx].mouName + "</div>";
+		NewModuleList.innerHTML += "<div>MOUCOMMENTS = " + ((info[idx].mouComments == null)? "none" : info[idx].mouComments) + "</div>";
+		NewModuleList.innerHTML += "<input type='button' class='box' value='수정' onclick=\"updModule(\'"+ info[idx].proCode +":"+ info[idx].mouCode +":"+ info[idx].mouName +":"+ info[idx].mouComments+"\')\"/>";
+		NewModuleList.innerHTML += "<input type='button' class='box' value='삭제' onclick=\"delModule(\'"+ info[idx].proCode +':'+ info[idx].mouCode +":" +"\')\"/>";
+		NewModuleList.innerHTML += "</div>";
+
+	}
+	}
+	
+
+function callBack2(ajaxData){
+	let NewJobsList = document.getElementById("newJobsList");
+	NewJobsList.innerHTML = "";
+	
+	const info = JSON.parse(ajaxData);
+ 	alert(info.length);
+ 	alert(info.size);
+	for(idx=0; idx<info.length; idx++) {
+		NewJobsList.innerHTML += "<div class = 'NewJobsList' >";
+		NewJobsList.innerHTML += "<div> 순번 : " + idx + "</div>";
+		NewJobsList.innerHTML += "<div>JOSNAME = " + info[idx].josName + "</div>";
+		NewJobsList.innerHTML += "<div>JOSCOMMENTS = " + ((info[idx].josComments == null)? "none" : info[idx].josComments) + "</div>";
+		NewJobsList.innerHTML += "<input type='button' class='box' value='수정' onclick=\"updModule(\'"+ info[idx].proCode +":"+ info[idx].josCode +":"+ info[idx].josName +":"+ info[idx].josComments+"\')\"/>";
+		NewJobsList.innerHTML += "<input type='button' class='box' value='삭제' onclick=\"delModule(\'"+ info[idx].proCode +':'+ info[idx].josCode +":" +"\')\"/>";
+		NewJobsList.innerHTML += "</div>";
+
+	}
+	}
+
+function callBack3(ajaxData){
+	let NewModuleJobsList = document.getElementById("newModuleJobsList");
+	NewModuleJobsList.innerHTML = "";
+	
+	const info = JSON.parse(ajaxData);
+ 	alert(info.length);
+ 	alert(info.size);
+	for(idx=0; idx<info.length; idx++) {
+		NewModuleJobsList.innerHTML += "<div class = 'ModuleList' >";
+		NewModuleJobsList.innerHTML += "<div> 순번 : " + idx + "</div>";
+		NewModuleJobsList.innerHTML += "<div>MOUNAME = " + info[idx].mouName + "</div>";
+		NewModuleJobsList.innerHTML += "<div>JOSNAME = " + info[idx].josName + "</div>";
+		NewModuleJobsList.innerHTML += "<div>PMBNAME = " + info[idx].pmbName + "</div>";
+		NewModuleJobsList.innerHTML += "<input type='button' class='box' value='수정' onclick=\"updModule(\'"+ info[idx].proCode +":"+ info[idx].mouCode +":"+ info[idx].pmbCode +":"+ info[idx].pmbName+"\')\"/>";
+		NewModuleJobsList.innerHTML += "<input type='button' class='box' value='삭제' onclick=\"delModule(\'"+ info[idx].proCode +':'+ info[idx].mouCode +":" + info[idx].pmbCode +"\')\"/>";
+		NewModuleJobsList.innerHTML += "</div>";
+
+	}
+	}
+
+function callBack4(ajaxData){
+	let NewMethodList = document.getElementById("newMethodList");
+	NewMethodList.innerHTML = "";
+	
+	const info = JSON.parse(ajaxData);
+ 	alert(info.length);
+ 	alert(info.size);
+	for(idx=0; idx<info.length; idx++) {
+
+		NewMethodList.innerHTML += "<div class = 'ModuleList' >";
+		NewMethodList.innerHTML += "<div> 순번 : " + (idx+1) + "</div>";
+		NewMethodList.innerHTML += "<div>MOUNAME = " + info[idx].mouName + "</div>";
+		NewMethodList.innerHTML += "<div>JOSNAME = " + info[idx].josName + "</div>";
+		NewMethodList.innerHTML += "<div>METNAME = " + info[idx].metName + "</div>";
+		NewMethodList.innerHTML += "<div>MCNAME = " + info[idx].mcName + "</div>";
+		NewMethodList.innerHTML += "<input type='button' class='box' value='수정' onclick=\"updModule(\'"+ info[idx].proCode +':'+ info[idx].mouCode +":"+ info[idx].josCode +":"+ info[idx].metCode +":"+ info[idx].mcCode +"\')\"/>";
+		NewMethodList.innerHTML += "<input type='button' class='box' value='삭제' onclick=\"delModule(\'"+ info[idx].proCode +':'+ info[idx].mouCode +":"+ info[idx].josCode +":"+ info[idx].metCode +":"+ info[idx].mcCode +"\')\"/>";
+		NewMethodList.innerHTML += "</div>";
+
+	}
+	}
+
 function confirm(){
 	const moduleName = document.querySelector(".moduleName");
 	const moduleComment = document.querySelector(".moduleComment");
 }
 function cancel(){
-	let canvas = document.getElementById("canvas");
-	canvas.style.display = "none";
+	let modalBox = document.getElementById("modalBox");
+	modalBox.style.display = "none";
 }
 </script>
 <style>
@@ -360,19 +532,25 @@ function cancel(){
 					<div id="modalBottom"></div>
 				</div>
 			</div>
-			<div id = "moduleList">
-				<div id = "ModuleList" class = "module">모듈 관리
-					<input type="button" value ="등록" onclick="insModule('${param.proCode}')"/>
-				 ${ModuleList}</div>
-				<div id = "JobList" class = "module">잡 관리
-					<input type="button" value ="등록" onclick="insJobs('${param.proCode}')"/>
-				  ${JobList}</div>
-				<div id = "ModuleJobList" class = "module">모듈-잡 연계 
-					<input type="button" value ="등록" onclick="insModuleJobs('${param.proCode}')"/>
-				  ${ModuleJobList}</div>
-				<div id = "MethodList" class = "module">메소드 등록 
-					<input type="button" value ="등록" onclick="insMethod('${param.proCode}')"/>
-				  ${MethodList}</div>
+			<div id = "moduleList" style = "text-align:center;">
+				<div id = "ModuleList"  class = "module"><h3>모듈 관리</h3>
+					<input type="button" class='box' value ="등록" onclick="insModule('${param.proCode}')"/>
+					<div id = "newModuleList">${ModuleList}</div>
+				 </div>
+				<div id = "JobList" class = "module"><h3>잡 관리</h3>
+					<input type="button" class='box' value ="등록" onclick="insJobs('${param.proCode}')"/>
+				  <div id = "newJobsList">${JobList}</div>
+				  </div>
+				<div id = "ModuleJobList" class = "module"><h3>모듈-잡 연계</h3> 
+					<input type="button" class='box' value ="등록" onclick="insModuleJobs('${param.proCode}')"/>
+				  <div id = "newModuleJobsList">${ModuleJobList}</div>
+	
+				  </div>
+				<div id = "MethodList" class = "module"><h3>메소드 등록</h3> 
+					<input type="button" class='box' value ="등록" onclick="insMethod('${param.proCode}')"/>
+				  <div id = "newMethodList">${MethodList}</div>
+				  
+				  </div>
 			</div>
 		</div>
 

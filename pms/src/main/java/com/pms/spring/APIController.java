@@ -42,64 +42,105 @@ public class APIController {
 	
 	@SuppressWarnings("unchecked")
 	@PostMapping("/UpdModule")
-	public ModuleB updModul(Model model, @ModelAttribute ModuleB module){
+	public List<ModuleB> updModul(Model model, @ModelAttribute ModuleB module){
 		/* Developer : 지수 */
 
 		model.addAttribute(module);
 		project.backController(2, model);
-		return (ModuleB)model.getAttribute("moduleB");
-		
+		return (List<ModuleB>)model.getAttribute("moduleB");		
 	}
 	@SuppressWarnings("unchecked")
 	@PostMapping("/InsModule")
-	public ModuleB insModul(Model model, @ModelAttribute ModuleB module){
+	public List<ModuleB> insModul(Model model, @ModelAttribute ModuleB module){
 		/* Developer : 지수 */
 
 		model.addAttribute(module);
 		project.backController(3, model);
-		return (ModuleB)model.getAttribute("moduleB");
+		return (List<ModuleB>)model.getAttribute("moduleB");
 
 	}
 	@SuppressWarnings("unchecked")
 	@PostMapping("/InsJobs")
-	public ModuleB insJobs(Model model, @ModelAttribute ModuleB module){
+	public List<ModuleB> insJobs(Model model, @ModelAttribute ModuleB module){
 		/* Developer : 지수 */
 
 		model.addAttribute(module);
 		project.backController(6, model);
-		return (ModuleB)model.getAttribute("moduleB");
-		
+		return (List<ModuleB>)model.getAttribute("moduleB");		
 	}
 	@SuppressWarnings("unchecked")
 	@PostMapping("/DelModule")
-	public ModuleB delModule(Model model, @ModelAttribute ModuleB module){
+	public List<ModuleB> delModule(Model model, @ModelAttribute ModuleB module){
 		/* Developer : 지수 */
 
 		model.addAttribute(module);
 		project.backController(4, model);
-		return (ModuleB)model.getAttribute("moduleB");
-		
+		return (List<ModuleB>)model.getAttribute("moduleB");		
 	}
 	@SuppressWarnings("unchecked")
 	@PostMapping("/UpdJobs")
-	public ModuleB updJobs(Model model, @ModelAttribute ModuleB module){
+	public List<ModuleB> updJobs(Model model, @ModelAttribute ModuleB module){
 		/* Developer : 지수 */
 
 		model.addAttribute(module);
 		project.backController(5, model);
-		return (ModuleB)model.getAttribute("moduleB");
-		
-	}
+		return (List<ModuleB>)model.getAttribute("moduleB");	}
 	@SuppressWarnings("unchecked")
 	@PostMapping("/DelJobs")
-	public ModuleB delJobs(Model model, @ModelAttribute ModuleB module){
+	public List<ModuleB> delJobs(Model model, @ModelAttribute ModuleB module){
 		/* Developer : 지수 */
 
 		model.addAttribute(module);
 		project.backController(7, model);
-		return (ModuleB)model.getAttribute("moduleB");
-
+		return (List<ModuleB>)model.getAttribute("moduleB");		
 	}
+	@SuppressWarnings("unchecked")
+	@PostMapping("/InsMJ")
+	public List<ModuleB> insMJ(Model model, @ModelAttribute ModuleB module){
+		/* Developer : 지수 */
+		model.addAttribute(module);
+		project.backController(8, model);
+		return (List<ModuleB>)model.getAttribute("moduleB");		
+	}
+	@SuppressWarnings("unchecked")
+	@PostMapping("/InsMet")
+	public List<ModuleB> insMet(Model model, @ModelAttribute ModuleB module){
+		/* Developer : 지수 */
+		model.addAttribute(module);
+		project.backController(9, model);
+		return (List<ModuleB>)model.getAttribute("moduleB");		
+	}
+	@SuppressWarnings("unchecked")
+	@PostMapping("/DelModuleJobs")
+	public List<ModuleB> delModuleJobs(Model model, @ModelAttribute ModuleB module){
+		/* Developer : 지수 */
+		model.addAttribute(module);
+		project.backController(10, model);
+		return (List<ModuleB>)model.getAttribute("moduleB");		
+	}
+	@SuppressWarnings("unchecked")
+	@PostMapping("/DelMethod")
+	public List<ModuleB> delMethod(Model model, @ModelAttribute ModuleB module){
+		/* Developer : 지수 */
+		model.addAttribute(module);
+		project.backController(11, model);
+		return (List<ModuleB>)model.getAttribute("moduleB");		
+	}
+	@SuppressWarnings("unchecked")
+	@PostMapping("/UpdModuleJobs")
+	public List<ModuleB> updModuleJobs(Model model, @ModelAttribute ModuleB module){
+		/* Developer : 지수 */
+		model.addAttribute(module);
+		project.backController(12, model);
+		return (List<ModuleB>)model.getAttribute("moduleB");		
+	}
+	@SuppressWarnings("unchecked")
+	@PostMapping("/UpdMethod")
+	public List<ModuleB> updMethod(Model model, @ModelAttribute ModuleB module){
+		/* Developer : 지수 */
+		model.addAttribute(module);
+		project.backController(13, model);
+		return (List<ModuleB>)model.getAttribute("moduleB");	}
 	/*
 	 * 	
 	@PostMapping("/ReSendEmail")

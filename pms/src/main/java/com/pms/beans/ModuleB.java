@@ -17,4 +17,5 @@ public class ModuleB {
 	private String pmbName;
 	private String mouName;
 	private String mouComments;
+	private String message;
 }

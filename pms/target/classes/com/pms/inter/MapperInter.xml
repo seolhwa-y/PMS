@@ -219,13 +219,14 @@
 	</select>
 	
 	<update id="updModuleJobs" parameterType = "com.pms.beans.ModuleB">
-	
+		UPDATE MJ SET MJ_PRMPMBCODE=#{pmbCode} WHERE MJ_PROCODE=#{proCode} AND MJ_MOUCODE=#{mouCode} AND MJ_JOSCODE=#{josCode}
 	</update>
 	<delete id="delModuleJobs" parameterType = "com.pms.beans.ModuleB">
-	
+		DELETE FROM MJ WHERE MJ_PROCODE =#{proCode} AND MJ_MOUCODE = #{mouCode} AND MJ_JOSCODE = #{josCode} AND MJ_PRMPMBCODE = #{pmbCode}
 	</delete>
 	<insert id="insModuleJobs" parameterType = "com.pms.beans.ModuleB">
-	
+		INSERT INTO MJ(MJ_PROCODE,MJ_MOUCODE,MJ_JOSCODE,MJ_PRMPMBCODE) 
+		VALUES(#{proCode},#{mouCode},#{josCode},#{pmbCode})
 	</insert>
 	<select id="getMJList" parameterType = "java.util.HashMap" resultType = "com.pms.beans.ModuleB">
 		SELECT  PROCODE,
@@ -235,7 +236,7 @@
 		        MOUNAME,
 		        JOSNAME,
 		        PMBNAME
-		FROM PROCESSINFO 
+		FROM MJINFO 
 		WHERE PROCODE = #{proCode}
 	</select>
 	<select id="getPmbInfo" parameterType = "java.util.HashMap" resultType="com.pms.beans.ModuleB">
@@ -245,13 +246,16 @@
 		WHERE PRM_PROCODE = ${proCode} AND PRM_ACCEPT ='AC'
 	</select>
 	<update id="updMethod" parameterType = "com.pms.beans.ModuleB">
-	
+		UPDATE MET 
+		SET MET_NAME= #{metName}, MET_MCCODE = #{mcCode} 
+		WHERE MET_MJPROCODE = #{proCode} AND MET_MJMOUCODE = #{mouCode} AND MET_MJJOSCODE = #{josCode} AND MET_CODE = #{metCode}
 	</update>
 	<delete id="delMethod" parameterType = "com.pms.beans.ModuleB">
-	
+		DELETE FROM MET WHERE MET_MJPROCODE = ${proCode} AND MET_MJMOUCODE = ${mouCode} AND MET_MJJOSCODE = ${josCode} AND MET_CODE = ${metCode} AND MET_MCCODE = '${mcCode}'
 	</delete>
 	<insert id="insMethod" parameterType = "com.pms.beans.ModuleB">
-	
+		INSERT INTO MET(MET_MJPROCODE, MET_MJMOUCODE, MET_MJJOSCODE, MET_CODE, MET_NAME, MET_MCCODE) 
+		VALUES(#{proCode},#{mouCode},#{josCode},#{metCode},#{metName},#{mcCode})
 	</insert>
 	<select id="getMethodList" parameterType = "java.util.HashMap" resultType = "com.pms.beans.ModuleB">
 		SELECT  PROCODE,
@@ -266,10 +270,47 @@
 		FROM PROCESSINFO 
 		WHERE PROCODE = #{proCode}
 	</select>
+	<select id="getMetCode" parameterType = "com.pms.beans.ModuleB" resultType = "string">
+		SELECT MAX(MET_CODE) AS METCODE
+        FROM MET
+        WHERE MET_MJPROCODE = #{proCode} AND MET_MJMOUCODE = #{mouCode}
+	</select>
 	<select id="getMcList" resultType = "com.pms.beans.ModuleB">
 		SELECT MCA_NAME AS MCNAME,
 			   MCA_CODE AS MCCODE
 		FROM MCA
+	</select>
+	<select id="getProName" parameterType = "java.util.HashMap" resultType="string">
+		SELECT PRO_NAME
+		FROM PRO
+		WHERE PRO_CODE = #{proCode}
+	</select>
+	<select id="getProInfo" parameterType = "java.util.HashMap" resultType = "com.pms.beans.ProgressMgrB">
+		SELECT PRO.PRO_NAME AS PRONAME,
+	       PRM.PRM_POSITION AS PRMPOSITION,
+	       PRM.PRM_PMBCODE AS PMBCODE,
+	       PMB.PMB_NAME AS PMBNAME,
+	       TO_CHAR(PRO.PRO_START, 'YYYY.MM.DD') AS PROSTART,
+	       TO_CHAR(PRO.PRO_END, 'YYYY.MM.DD') AS PROEND
+		FROM PRM INNER JOIN PRO ON PRO.PRO_CODE = PRM.PRM_PROCODE
+		         INNER JOIN PMB ON PMB_CODE = PRM.PRM_PMBCODE
+		WHERE PRO_CODE = #{proCode}
+	</select>
+	<select id="getModuleNum" parameterType = "java.util.HashMap" resultType = "string">
+		SELECT COUNT(*)
+		FROM MOU WHERE MOU_PROCODE = ${proCode}
+	</select>
+	<select id="getJobsNum" parameterType = "java.util.HashMap" resultType = "string">
+		SELECT COUNT(*)
+		FROM JOS WHERE JOS_PROCODE = ${proCode}
+	</select>
+	<select id="getModuleJobsNum" parameterType = "java.util.HashMap" resultType = "string">
+		SELECT COUNT(*)
+		FROM MJ WHERE MJ_PROCODE = ${proCode}
+	</select>
+	<select id="getMethodNum" parameterType = "java.util.HashMap" resultType = "string">
+		SELECT COUNT(*)
+		FROM MET WHERE MET_MJPROCODE = ${proCode}
 	</select>
 	<!-- <resultMap type="com.pms.beans.ProBean" id="getProjectInfo">
 		<id property="proCode" column="PRO_CODE"/>

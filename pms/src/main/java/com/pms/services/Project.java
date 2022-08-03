@@ -67,6 +67,9 @@ public class Project implements ServicesRule {
 				case 4:
 					this.newInviteMember(mav);
 					break;
+				case 5:
+					this.moveProgressMgr(mav);
+					break;
 				default:
 				}
 			} else {
@@ -75,6 +78,27 @@ public class Project implements ServicesRule {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	private void moveProgressMgr(ModelAndView mav) {
+		ProgressMgrB pb = (ProgressMgrB) mav.getModel().get("progressMgrB");
+		HashMap<String,String> map = new HashMap<String,String>();
+		map.put("proCode", pb.getProCode());
+		
+		//프로젝트이름 보내주기
+		mav.addObject("proName", this.session.selectOne("getProName",map));
+		//프로젝트 팀장,팀원,날짜 보내주기
+		mav.addObject("proInfo", this.makeProInfo(this.session.selectList("getProInfo",map)));
+		mav.setViewName("progress");
+		
+		//모듈갯수 가져오기
+		mav.addObject("moduleNum",this.session.selectOne("getModuleNum",map));
+		//잡갯수 가져오기
+		mav.addObject("jobsNum",this.session.selectOne("getJobsNum",map));
+		//모듈앤잡갯수 가져오기
+		mav.addObject("mjNum",this.session.selectOne("getModuleJobsNum",map));
+		//메서드갯수 가져오기
+		mav.addObject("methodNum",this.session.selectOne("getMethodNum",map));
 	}
 
 	private void newInviteMember(ModelAndView mav) {
@@ -145,8 +169,27 @@ public class Project implements ServicesRule {
 				case 7:
 					this.delJobs(model);
 					break;
+				case 8:
+					this.insMJ(model);
+					break;
+				case 9:
+					this.insMet(model);
+					break;
+				case 10:
+					this.delModuleJobs(model);
+					break;
+				case 11:
+					this.delMethod(model);
+					break;
+				case 12:
+					this.updModuleJobs(model);
+					break;
+				case 13:
+					this.updMethod(model);
+					break;
 				default:
 				}
+
 			} else {
 			}
 		} catch (Exception e) {
@@ -154,48 +197,153 @@ public class Project implements ServicesRule {
 		}
 	}
 	
-	private void delJobs(Model model) {
+
+	private void updMethod(Model model) {
+		HashMap<String,String> map = new HashMap<String,String>();
 		ModuleB module = (ModuleB) model.getAttribute("moduleB");
-		if(this.convertToBoolean(this.session.delete("delJobs", module))) {
-			System.out.println("만세~!~!~@~!");
+		map.put("proCode", module.getProCode());		if(this.convertToBoolean(this.session.update("updMethod", module))) { 
+
 		}
+		model.addAttribute("moduleB", this.session.selectList("getMethodList", map));
+
+	}
+
+	private void updModuleJobs(Model model) {
+		HashMap<String,String> map = new HashMap<String,String>();
+		ModuleB module = (ModuleB) model.getAttribute("moduleB");
+		map.put("proCode", module.getProCode());		if(this.convertToBoolean(this.session.update("updModuleJobs", module))) { 
+
+		}
+		model.addAttribute("moduleB", this.session.selectList("getMJList", map));
+
+	}
+
+	private void delMethod(Model model) {
+		HashMap<String,String> map = new HashMap<String,String>();
+		ModuleB module = (ModuleB) model.getAttribute("moduleB");
+		map.put("proCode", module.getProCode());
+		if(this.convertToBoolean(this.session.delete("delMethod", module))) {
+
+		}else {
+			module.setMessage("삭제 실패. 연관된 하위 항목을 먼저 삭제해주세요");
+			model.addAttribute("moduleB",module);
+		}
+		model.addAttribute("moduleB", this.session.selectList("getMethodList", map));
+
+	}
+
+	private void delModuleJobs(Model model) {
+		HashMap<String,String> map = new HashMap<String,String>();
+		ModuleB module = (ModuleB) model.getAttribute("moduleB");
+		map.put("proCode", module.getProCode());		
+		if(this.convertToBoolean(this.session.delete("delModuleJobs", module))) {
+
+		}else {
+			module.setMessage("삭제 실패. 연관된 하위 항목을 먼저 삭제해주세요");
+			model.addAttribute("moduleB",module);
+		}
+		model.addAttribute("moduleB", this.session.selectList("getMJList", map));
+
+	}
+
+	private void insMet(Model model) {
+		HashMap<String,String> map = new HashMap<String,String>();
+		ModuleB module = (ModuleB) model.getAttribute("moduleB");
+		map.put("proCode", module.getProCode());
+		String metCode = this.session.selectOne("getMetCode", module);
+		if( metCode == null) {
+			module.setMetCode(module.getMouCode()+"01");
+		}else{
+			int code = Integer.parseInt(metCode) + 1;
+			module.setMetCode(Integer.toString(code));
+		}
+		
+		if(this.convertToBoolean(this.session.insert("insMethod", module))) {
+
+		}
+		model.addAttribute("moduleB", this.session.selectList("getMethodList", map));
+
+	}
+
+	private void insMJ(Model model) {
+		HashMap<String,String> map = new HashMap<String,String>();
+		ModuleB module = (ModuleB) model.getAttribute("moduleB");
+		map.put("proCode", module.getProCode());		
+		if(this.convertToBoolean(this.session.insert("insModuleJobs", module))) {
+		}
+		model.addAttribute("moduleB", this.session.selectList("getMJList", map));
+
+	}
+
+	private void delJobs(Model model) {
+		HashMap<String,String> map = new HashMap<String,String>();
+		ModuleB module = (ModuleB) model.getAttribute("moduleB");
+		map.put("proCode", module.getProCode());		
+		if(this.convertToBoolean(this.session.delete("delJobs", module))) {
+
+		}else {
+			module.setMessage("삭제 실패. 연관된 하위 항목을 먼저 삭제해주세요");
+			model.addAttribute("moduleB",module);
+		}
+		model.addAttribute("moduleB", this.session.selectList("getJobsList", map));
+
 	}
 
 	private void updJobs(Model model) {
-		System.out.println("왔니?");
+		HashMap<String,String> map = new HashMap<String,String>();
 		ModuleB module = (ModuleB) model.getAttribute("moduleB");
-		if(this.convertToBoolean(this.session.update("updJobs", module))) { 
-			System.out.println("만세~!~!~@~!");
+		map.put("proCode", module.getProCode());		if(this.convertToBoolean(this.session.update("updJobs", module))) { 
+
 		}
+		model.addAttribute("moduleB", this.session.selectList("getJobsList", map));
+
 	}
 
 	private void delModule(Model model) {
+		HashMap<String,String> map = new HashMap<String,String>();
 		ModuleB module = (ModuleB) model.getAttribute("moduleB");
+		map.put("proCode", module.getProCode());
 		if(this.convertToBoolean(this.session.delete("delModule", module))) {
-			System.out.println("만세~!~!~@~!");
+		}else {
+			module.setMessage("삭제 실패. 연관된 하위 항목을 먼저 삭제해주세요");
+			model.addAttribute("moduleB",module);
 		}
+		model.addAttribute("moduleB",(this.session.selectList("getModuleList", map)));
+
 	}
 
 	private void insJobs(Model model) {
+		HashMap<String,String> map = new HashMap<String,String>();
 		ModuleB module = (ModuleB) model.getAttribute("moduleB");
+		map.put("proCode", module.getProCode());
 		if(this.convertToBoolean(this.session.insert("insJobs", module))) {
-			System.out.println("만세~!~!~@~!");
+		
 		}
+		model.addAttribute("moduleB", this.session.selectList("getJobsList", map));
+
 	}
 
 	private void insModule(Model model) {
+		HashMap<String,String> map = new HashMap<String,String>();
 		ModuleB module = (ModuleB) model.getAttribute("moduleB");
+		map.put("proCode", module.getProCode());
+		
 		if(this.convertToBoolean(this.session.insert("insModule", module))) {
-			System.out.println("만세~!~!~@~!");
+		
 		}
+		model.addAttribute("moduleB",this.session.selectList("getModuleList", map));
+		System.out.println(model.getAttribute("moduleB"));
 	}
 
 	private void updModule(Model model) {
+		HashMap<String,String> map = new HashMap<String,String>();
 		ModuleB module = (ModuleB) model.getAttribute("moduleB");
+		map.put("proCode", module.getProCode());
 		if(this.convertToBoolean(this.session.update("updModule", module))) {
-
 			
 		}
+		model.addAttribute("moduleB",(this.session.selectList("getModuleList", map)));
+
 	}
 
 	// ajax 메일재전송
@@ -264,6 +412,7 @@ public class Project implements ServicesRule {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+
 		model.addAttribute("MemberList", memberList);
 	}
 
@@ -317,8 +466,7 @@ public class Project implements ServicesRule {
 		HashMap<String,String> map = new HashMap<String,String>();
 		map.put("proCode", ((ModuleB) mav.getModel().get("moduleB")).getProCode());
 		ModuleB module = (ModuleB) mav.getModel().get("moduleB");
-		System.out.println(map);
-		System.out.println(this.session.selectList("getModuleList", module));
+		
 		/* ModuleList */
 		mav.addObject("ModuleList", this.test(this.session.selectList("getModuleList", map), 1));
 		//mav.addObject("updMouList", this.makeUpdSelect(this.session.selectList("getModuleList", map),1));
@@ -327,15 +475,78 @@ public class Project implements ServicesRule {
 		//mav.addObject("updJosList", this.makeUpdSelect(this.session.selectList("getJobsList", map),2));
 		/* ModuleJobList */
 		mav.addObject("ModuleJobList", this.test(this.session.selectList("getMJList", map), 3));
-		mav.addObject("updMJList", this.makeUpdSelect(this.session.selectList("getPmbInfo", map),3));
+		mav.addObject("insMJList", this.makeInsSelect(this.session.selectList("getModuleList", map),1)+this.makeInsSelect(this.session.selectList("getJobsList", map),2)+this.makeInsSelect(this.session.selectList("getPmbInfo", map),3));
+		mav.addObject("UpdModuleJobList", this.makeInsSelect(this.session.selectList("getPmbInfo", map),3));
 		/* MethodList */
 		mav.addObject("MethodList", this.test(this.session.selectList("getMethodList", map), 4));
-		mav.addObject("updMetList", this.makeUpdSelect(this.session.selectList("getMcList", map),4));
-						
+		mav.addObject("insMetList", this.makeInsSelect(this.session.selectList("getModuleList", map),1)+this.makeInsSelect(this.session.selectList("getJobsList", map),2)+this.makeInsSelect(this.session.selectList("getMcList"),4));				
 		mav.addObject("proCode", module.getProCode());
+		mav.addObject("UpdMethodList", this.makeInsSelect(this.session.selectList("getMcList"),4));
 		mav.setViewName("jobs");
 	}
 	
+
+	private String makeInsSelect(List<ModuleB> selectList, int num) {
+		StringBuffer sb = new StringBuffer();
+		
+		switch(num) {
+		case 1 : 
+			sb.append("<select name='mjMou' class='box'>");
+			sb.append("<option disabled selected> 모듈을 선택 하세요</option>");
+			if(selectList != null && selectList.size() > 0) {
+				for(ModuleB mb : selectList) {
+					sb.append("<option value='"+ mb.getMouCode() +"'>"+ mb.getMouName() +"</option>");
+				}
+			}else {
+				sb.append("<option disabled selected>선택하실 모듈이 없습니다</option>");
+			}
+			sb.append("</select>");
+			break;
+		case 2 :
+			sb.append("<select name='mjJos' class='box'>");
+			sb.append("<option disabled selected> 좝을 선택 하세요</option>");
+			if(selectList != null && selectList.size() > 0) {
+				for(ModuleB mb : selectList) {
+					sb.append("<option value='"+ mb.getJosCode() +"'>"+ mb.getJosName() +"</option>");
+					
+				}
+			}else {
+				sb.append("<option disabled selected>선택하실 잡이 없습니다</option>");
+			}
+			sb.append("</select>");
+			break;
+		case 3 :
+			sb.append("<select name='mjPmb' class='box'>");
+			sb.append("<option disabled selected> 담당자를 선택하세요</option>");
+			if(selectList != null && selectList.size() > 0) {
+				for(ModuleB mb : selectList) {
+					try {
+						mb.setPmbName(this.enc.aesDecode(mb.getPmbName(), mb.getPmbCode()));
+					} catch (InvalidKeyException | UnsupportedEncodingException | NoSuchAlgorithmException
+							| NoSuchPaddingException | InvalidAlgorithmParameterException
+							| IllegalBlockSizeException | BadPaddingException e) {e.printStackTrace();}
+					sb.append("<option value='"+ mb.getPmbCode() +"'>"+ mb.getPmbName() +"</option>");
+				}
+			}else {
+				sb.append("<option disabled selected>선택하실 멤버가 없습니다</option>");
+			}
+			sb.append("</select>");
+			break;
+		case 4 :
+			sb.append("<select name='mcInfo' class='box'>");
+			sb.append("<option disabled selected>메소드 카테고리를 선택하세요</option>");
+			if(selectList != null && selectList.size() > 0) {
+				for(ModuleB mb : selectList) {
+					sb.append("<option value='"+ mb.getMcCode() +"'>"+ mb.getMcName() + "</option>");
+				}
+			}else {
+				sb.append("<option disabled selected>선택하실 카테고리가 없습니다</option>");
+			}
+			break;
+			default:
+		}
+		return sb.toString();
+	}
 
 	private String makeUpdSelect(List<ModuleB> selectList, int num) {
 		StringBuffer sb = new StringBuffer();
@@ -379,11 +590,11 @@ public class Project implements ServicesRule {
 
 	private String test(List<ModuleB> list , int num) {
 		StringBuffer sb = new StringBuffer();
-		// 배열....이용....몰라....지송....스위치 쵝오
-			
+		
 		switch(num) {
 		
 		case 1 :
+			System.out.println("여기는 오니?");
 			int idx = 0;
 			for(ModuleB mb : list) {
 				sb.append("<div class = 'ModuleList' >");
@@ -392,11 +603,12 @@ public class Project implements ServicesRule {
 					sb.append("<div> 순번 : " + idx + "</div>");
 					sb.append("<div>MOUNAME = " + mb.getMouName() + "</div>");
 					sb.append("<div>MOUCOMMENTS = " + ((mb.getMouComments() == null)? "none" : mb.getMouComments()) + "</div>");
-					sb.append("<input type='button' value='수정' onclick=\"updModule(\'"+ mb.getProCode() +":"+ mb.getMouCode() +":"+ mb.getMouName() +":"+ mb.getMouComments()+"\')\"/>");
-					sb.append("<input type='button' value='삭제' onclick=\"delModule(\'"+ mb.getProCode() +':'+ mb.getMouCode() +":" +"\')\"/>");
-}
+					sb.append("<input type='button' class='box' value='수정' onclick=\"updModule(\'"+ mb.getProCode() +":"+ mb.getMouCode() +":"+ mb.getMouName() +":"+ mb.getMouComments()+"\')\"/>");
+					sb.append("<input type='button' class='box' value='삭제' onclick=\"delModule(\'"+ mb.getProCode() +':'+ mb.getMouCode() +":" +"\')\"/>");
+				}
 				sb.append("</div>");
 			}
+			System.out.println(sb);
 			break;
 			
 		case 2 : 
@@ -409,8 +621,8 @@ public class Project implements ServicesRule {
 					sb.append("<div> 순번 : " + idx + "</div>");
 					sb.append("<div>JOSNAME = " + mb.getJosName() + "</div>");
 					sb.append("<div>JOSCOMMENTS = " + ((mb.getJosComments() == null)? "none" : mb.getJosComments()) + "</div>");
-					sb.append("<input type='button' value='수정' onclick=\"window.updJobs(\'"+ mb.getProCode() +":"+ mb.getJosCode() +":"+ mb.getJosName() +":"+ mb.getJosComments()+"\')\" />");
-					sb.append("<input type='button' value='삭제' onclick=\"window.delJobs(\'"+ mb.getProCode() +":"+ mb.getJosCode()+"\')\" />");
+					sb.append("<input type='button' class='box' value='수정' onclick=\"window.updJobs(\'"+ mb.getProCode() +":"+ mb.getJosCode() +":"+ mb.getJosName() +":"+ mb.getJosComments()+"\')\" />");
+					sb.append("<input type='button' class='box' value='삭제' onclick=\"window.delJobs(\'"+ mb.getProCode() +":"+ mb.getJosCode()+"\')\" />");
 				
 				}
 				sb.append("</div>");
@@ -431,9 +643,9 @@ public class Project implements ServicesRule {
 						sb.append("<div>JOSNAME = " + mb.getJosName() + "</div>");
 						sb.append("<div>PMBNAME = " + mb.getPmbName() + "</div>");
 						sb.append("<input type='hidden' value='" + mb.getPmbCode() + "'/>");
-						sb.append("<input type='button' value='수정' onclick=\"window.updModuleJobs(\'"+ mb.getProCode() +":"+ mb.getMouCode()+":"+ mb.getJosCode()+":"+ mb.getPmbCode() +":"+ mb.getPmbName()+"\')\" />");
-						sb.append("<input type='button' value='삭제' onclick=\"window.delModuleJobs(\'"+ mb.getProCode() +":"+ mb.getMouCode()+":"+ mb.getJosCode()+":"+ mb.getPmbCode() +"\')\" />");
-					
+						sb.append("<input type='button' class='box' value='수정' onclick=\"window.updModuleJobs(\'"+ mb.getProCode() +":"+ mb.getMouCode()+":"+ mb.getJosCode()+":"+ mb.getPmbCode() +":"+ mb.getPmbName()+"\')\" />");
+						sb.append("<input type='button' class='box' value='삭제' onclick=\"window.delModuleJobs(\'"+ mb.getProCode() +":"+ mb.getMouCode()+":"+ mb.getJosCode()+":"+ mb.getPmbCode() +"\')\" />");
+						
 					} catch (InvalidKeyException | UnsupportedEncodingException | NoSuchAlgorithmException
 							| NoSuchPaddingException | InvalidAlgorithmParameterException | IllegalBlockSizeException
 							| BadPaddingException e) {e.printStackTrace();}
@@ -452,10 +664,9 @@ public class Project implements ServicesRule {
 					sb.append("<div>MOUNAME = " + mb.getMouName() + "</div>");
 					sb.append("<div>JOSNAME = " + mb.getJosName() + "</div>");
 					sb.append("<div>METNAME = " + mb.getMetName() + "</div>");
-					sb.append("<div>METNAME = " + mb.getMetName() + "</div>");
 					sb.append("<div>MCNAME = " + mb.getMcName() + "</div>");
-					sb.append("<input type='button' value='수정' onclick=\"window.updMethod(\'"+ mb.getProCode() +":"+ mb.getMouCode() +":"+ mb.getJosCode() +":"+ mb.getMetCode() +":"+ mb.getMcCode() +"\')\" />");
-					sb.append("<input type='button' value='삭제' onclick=\"window.delMethod(\'"+ mb.getProCode() +":"+ mb.getMouCode() +":"+ mb.getJosCode() +":"+ mb.getMetCode() +":"+ mb.getMcCode() +"\')\" />");
+					sb.append("<input type='button' class='box' value='수정' onclick=\"window.updMethod(\'"+ mb.getProCode() +":"+ mb.getMouCode() +":"+ mb.getJosCode() +":"+ mb.getMetCode() +":"+ mb.getMcCode() +"\')\" />");
+					sb.append("<input type='button' class='box' value='삭제' onclick=\"window.delMethod(\'"+ mb.getProCode() +":"+ mb.getMouCode() +":"+ mb.getJosCode() +":"+ mb.getMetCode() +":"+ mb.getMcCode() +"\')\" />");
 				
 				}
 				sb.append("</div>");
@@ -464,7 +675,6 @@ public class Project implements ServicesRule {
 			
 		default : 
 		}
-		
 		return sb.toString();
 	}
 	
@@ -650,5 +860,43 @@ public class Project implements ServicesRule {
 	private boolean convertToBoolean(int number) {
 		return number == 0 ? false : true;
 	}
+	
+	private String makeProInfo(List<ProgressMgrB> list) {
+		StringBuffer sb = new StringBuffer();
+		String TeamLeader = "";
+		String TeamMember = "";
+		
 
-}
+				//팀장만 TeamLeader에 set
+				try {
+					for(int idx=0;idx<list.size();idx++) {
+					if(list.get(idx).getPrmPosition().equals("MG")) {
+						TeamLeader += this.enc.aesDecode(list.get(idx).getPmbName(),list.get(idx).getPmbCode());
+						if(list.size() != idx-1) { //마지막만빼고 이름 사이사이에 공백 넣어주기
+							TeamLeader += " ";
+						
+							}
+						}else {
+							//팀원만 TeamMember에 set
+							TeamMember += this.enc.aesDecode(list.get(idx).getPmbName(),list.get(idx).getPmbCode());
+							if(list.size() != idx-1) {
+								TeamMember += " ";
+							}
+						}
+					}
+				} catch (InvalidKeyException | UnsupportedEncodingException | NoSuchAlgorithmException
+						| NoSuchPaddingException | InvalidAlgorithmParameterException | IllegalBlockSizeException
+						| BadPaddingException e) {
+					e.printStackTrace();
+				}
+				sb.append("<div class='proInfo'> 프로젝트 팀장 : "+TeamLeader+"</div>");
+				sb.append("<div class='proInfo'> 프로젝트 팀원 : "+TeamMember+"</div>");
+				sb.append("<div class='proInfo'> 프로젝트 기간 : "+list.get(0).getProStart()+"~"+list.get(0).getProEnd()+"</div>");
+				
+				return sb.toString();
+		}
+
+		
+		
+	}
+	
