@@ -52,7 +52,7 @@ function regProject(){
 	const dataName = ["proName", "proComment", "proStart", "proEnd", "proVisible"];
 	const formData = document.getElementsByName("proInfo");
 	let clientData = "";
-	
+	alert(formData[3].value);
 	for(idx=0;idx<formData.length;idx++){
 		clientData += (idx==0? "":"&");
 		clientData += (dataName[idx] + "=" + formData[idx].value);

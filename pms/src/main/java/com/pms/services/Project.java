@@ -876,7 +876,7 @@ public class Project implements ServicesRule {
 							TeamLeader += " ";
 						
 							}
-						}else {
+						}else if(list.get(idx).getPrmPosition().equals("MB")){
 							//팀원만 TeamMember에 set
 							TeamMember += this.enc.aesDecode(list.get(idx).getPmbName(),list.get(idx).getPmbCode());
 							if(list.size() != idx-1) {
@@ -889,9 +889,9 @@ public class Project implements ServicesRule {
 						| BadPaddingException e) {
 					e.printStackTrace();
 				}
-				sb.append("<div class='proInfo'> 프로젝트 팀장 : "+TeamLeader+"</div>");
-				sb.append("<div class='proInfo'> 프로젝트 팀원 : "+TeamMember+"</div>");
-				sb.append("<div class='proInfo'> 프로젝트 기간 : "+list.get(0).getProStart()+"~"+list.get(0).getProEnd()+"</div>");
+				sb.append("<div class='proInfo proLeader'> 프로젝트 팀장 : "+TeamLeader+"</div>");
+				sb.append("<div class='proInfo proMember'> 프로젝트 팀원 : "+TeamMember+"</div>");
+				sb.append("<div class='proInfo proPeriod'> 프로젝트 기간 : "+list.get(0).getProStart()+"~"+list.get(0).getProEnd()+"</div>");
 				
 				return sb.toString();
 		}

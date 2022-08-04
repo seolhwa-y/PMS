@@ -106,7 +106,7 @@ function getAjaxJson(jobCode, clientData, fn){
 /* AJAX :: POST */
 function postAjaxJson(jobCode, clientData, fn){
 	const ajax =  new XMLHttpRequest();
-	
+	alert(clientData);
 	ajax.onreadystatechange = function(){
 		if(ajax.readyState == 4 && ajax.status == 200){
 			window[fn](ajax.responseText);

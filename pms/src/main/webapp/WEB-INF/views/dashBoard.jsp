@@ -116,8 +116,8 @@ function progressCtl(){
 		</div>
 		<div id="content">
 			<div id="invitationInfo">
-				${RInvitation }
-				${SInvitation }
+				${RInvitation}
+				${SInvitation}
 			</div>
 			<div class="frame">
 				<div class="myProjects">

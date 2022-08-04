@@ -185,6 +185,15 @@ span.general{font-size:1.1rem;}
 		text-align:center; font-weight:900; color:rgba(255,255,255,1);}
 .menu:hover	{color:rgba(255,187,0,1); background-color:rgba(255,255,255,1);
 		cursor:pointer;}
+.1{width:90%;
+		}
+.proLeader,.proMember,.proPeriod{
+	text-align : center;
+	background-color : white;
+	border-radius : 25px;
+	width:23rem;
+}
+
 </style>
 </head>
 <body onLoad="" >
@@ -212,7 +221,7 @@ span.general{font-size:1.1rem;}
                 <!-- 프로젝트 상단창 -->
                 <div id = "1" class="1" style="top: 0; height: 30%; width: 95%; margin: 0 auto;">  
                     <div id = "2" class="1" style="top: 0; background-color: pink; height: 19%; width: 100%; margin: 0 auto;">
-                        <div id = "3" class="1"> ${proName}</div>
+                        <div id = "3" class="1" style="background-color : white; border-radius : 25px; width:100%; margin:0 auto; text-align : center;"> ${proName}</div>
                     </div>
                     <div style="bottom: 0; height: 80%; width: 100%; margin: 0 auto;">
                         <div id = "4" class="1" style="display: flex; justify-content: center; background-color: lightblue; float: left; height: 100%; width: 31%; margin: 0 auto;">
@@ -222,10 +231,10 @@ span.general{font-size:1.1rem;}
                         </div>
                         <div id = "6" class="1" style="float: right; height: 80%; width: 68%; margin: 0 auto;">
                             <div id = "7" class="1" style="display: flex; justify-content: space-evenly; align-items: center; background-color: lightgray; height: 75%;"> 
-                                <div>${moduleNum} MOU</div>
-                                <div>${jobsNum} JOS</div>
-                                <div>${mjNum} MJ</div>
-                                <div>${methodNum} MET</div>
+                                <div style="text-align : center;background-color : white;	border-radius : 25px;	width:12rem; height :3rem; line-height: 3rem; ">${moduleNum} MOU</div>
+                                <div style="text-align : center;background-color : white;	border-radius : 25px;	width:12rem; height :3rem; line-height: 3rem;">${jobsNum} JOS</div>
+                                <div style="text-align : center;background-color : white;	border-radius : 25px;	width:12rem; height :3rem; line-height: 3rem;">${mjNum} MJ</div>
+                                <div style="text-align : center;background-color : white;	border-radius : 25px;	width:12rem; height :3rem; line-height: 3rem;">${methodNum} MET</div>
                             </div>
                             <div id = "8" class="1" style="background-color: lightyellow; height: 50%;"> 프로젝트 진행률</div>
                         </div>
@@ -235,42 +244,34 @@ span.general{font-size:1.1rem;}
                 <div id = "9" class="1" style="bottom: 0; height: 65%; width: 95%; margin: 0 auto;">
                     <div id = "10" class="1" style="background-color: lightblue; float: left; height: 100%; width: 31%; margin: 0 auto;"> 
                         <div id = "11" class="1" style="display: flex; flex-direction: column; justify-content: space-evenly; align-items: center; height: 100%;">
-                            <div>ACTION</div>
-                            <div>ACTION</div>
-                            <div>ACTION</div>
-                            <div>ACTION</div>
-                            <div>ACTION</div>
-                            <div>ACTION</div>
-                            <div>ACTION</div>
-                            <div>ACTION</div>
-                            <div>ACTION</div>
-                            <div>ACTION</div>
+                            <div style="background-color : white; border-radius : 25px; width:7rem; text-align : center;" >ACTION</div>
                         </div>
                     </div>
                     <div id = "12" class="1" style="float: right; height: 100%; width: 68%; margin: 0 auto;">
                         <div id = "13" class="1" style="background-color: lightskyblue; float: left; height: 100%; width: 31%; margin: 0 auto;"> 
                             <div id = "14" class="1" style="display: flex; flex-direction: column; justify-content: space-evenly; align-items: center; height: 100%;">
-                                <div>컨트롤러</div>
-                                <div>뷰</div>
-                                <div>모델</div>
-                                <div>디에이오</div>
+                                <div id="controller" style="text-align : center;background-color : white;	border-radius : 25px;	width:12rem; height :3rem; line-height: 3rem; ">컨트롤러</div>
+                                <div id="view" style="text-align : center;background-color : white;	border-radius : 25px;	width:12rem; height :3rem; line-height: 3rem; ">뷰</div>
+                                <div id="service" style="text-align : center;background-color : white;	border-radius : 25px;	width:12rem; height :3rem; line-height: 3rem; ">서비스</div>
+                                <div id="dao" style="text-align : center;background-color : white;	border-radius : 25px;	width:12rem; height :3rem; line-height: 3rem; ">디에이오</div>
                             </div>
                         </div>
                         <div style="float: right; height: 100%; width: 68%;">
                             <div id = "15" class="1" style="background-color: lightgray; height: 32%; width: 100%; margin: 0 auto;"> 
                                 <div id = "16" class="1"style="display: flex; flex-wrap: wrap; flex-direction: row; justify-content: space-evenly; align-content: space-around; align-items: center; height: 100%; text-align: center;">
-                                    <div style="width: 25%;">메소드</div>
-                                    <div style="width: 25%;">메소드</div>
-                                    <div style="width: 25%;">메소드</div>
-                                    <div style="width: 25%;">메소드</div>
-                                    <div style="width: 25%;">메소드</div>
-                                    <div style="width: 25%;">메소드</div>
-                                    <div style="width: 25%;">메소드</div>
-                                    <div style="width: 25%;">메소드</div>
-                                    <div style="width: 25%;">메소드</div>
-                                    <div style="width: 25%;">메소드</div>
-                                    <div style="width: 25%;">메소드</div>
-                                    <div style="width: 25%;">메소드</div>
+                                    <div style="width: 10rem; background-color : white; border-radius : 25px;">메소드</div>
+                                    <div style="width: 10rem; background-color : white; border-radius : 25px;">메소드</div>
+                                    <div style="width: 10rem; background-color : white; border-radius : 25px;">메소드</div>
+                                    <div style="width: 10rem; background-color : white; border-radius : 25px;">메소드</div>
+                                    <div style="width: 10rem; background-color : white; border-radius : 25px;">메소드</div>
+                                    <div style="width: 10rem; background-color : white; border-radius : 25px;">메소드</div>
+                                    <div style="width: 10rem; background-color : white; border-radius : 25px;">메소드</div>
+                                    <div style="width: 10rem; background-color : white; border-radius : 25px;">메소드</div>
+                                    <div style="width: 10rem; background-color : white; border-radius : 25px;">메소드</div>
+                                    <div style="width: 10rem; background-color : white; border-radius : 25px;">메소드</div>
+                                    <div style="width: 10rem; background-color : white; border-radius : 25px;">메소드</div>
+                                    <div style="width: 10rem; background-color : white; border-radius : 25px;">메소드</div>
+                                    
                                 </div>
                             </div>
                             <div id = "17" class="1" style="background-color: lightyellow; height: 68%; width: 100%; margin: 0 auto;">
