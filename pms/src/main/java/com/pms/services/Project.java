@@ -68,7 +68,7 @@ public class Project implements ServicesRule {
 					this.newInviteMember(mav);
 					break;
 				case 5:
-					this.moveProgressMgr(mav);
+					this.moveResultMgr(mav);
 					break;
 				default:
 				}
@@ -80,7 +80,7 @@ public class Project implements ServicesRule {
 		}
 	}
 
-	private void moveProgressMgr(ModelAndView mav) {
+	private void moveResultMgr(ModelAndView mav) {
 		ProgressMgrB pb = (ProgressMgrB) mav.getModel().get("progressMgrB");
 		System.out.println(pb.getProCode());
 		HashMap<String,String> map = new HashMap<String,String>();
@@ -92,11 +92,25 @@ public class Project implements ServicesRule {
 			
 			//프로젝트이름 보내주기
 			mav.addObject("proName", this.makeSelectName(this.session.selectList("getProNameList", map),map));
+			
+			// MC별로 메서드 갯수 가져오기
+			map.put("mcCode", "CT");
+			mav.addObject("ctNum",this.session.selectOne("getMyMethodCount",map)+" / "+this.session.selectOne("getTotalMethodCount",map));
+			map.put("mcCode", "VI");
+			mav.addObject("viNum",this.session.selectOne("getMyMethodCount",map)+" / "+this.session.selectOne("getTotalMethodCount",map));
+			map.put("mcCode", "MO");
+			mav.addObject("moNum",this.session.selectOne("getMyMethodCount",map)+" / "+this.session.selectOne("getTotalMethodCount",map));
+			map.put("mcCode", "DA");
+			mav.addObject("daNum",this.session.selectOne("getMyMethodCount",map)+" / "+this.session.selectOne("getTotalMethodCount",map));
+			
+			// MJ NAME 가져오기
+			mav.addObject("mjName", this.makeMJList(this.session.selectList("getMJName",map)));
+
 		} catch (Exception e) {e.printStackTrace();	}
 		
 		//프로젝트 팀장,팀원,날짜 보내주기
 		mav.addObject("proInfo", this.makeProInfo(this.session.selectList("getProInfo",map)));
-		mav.setViewName("progress");
+		mav.setViewName("result");
 		
 		//모듈갯수 가져오기
 		mav.addObject("moduleNum",this.session.selectOne("getModuleNum",map));
@@ -107,22 +121,27 @@ public class Project implements ServicesRule {
 		//메서드갯수 가져오기
 		mav.addObject("methodNum",this.session.selectOne("getMethodNum",map));
 		
-		// MC별로 메서드 갯수 가져오기
-		map.put("mcCode", "CT");
-		mav.addObject("ctNum",this.session.selectOne("getMethodCount",map));
-		map.put("mcCode", "VI");
-		mav.addObject("viNum",this.session.selectOne("getMethodCount",map));
-		map.put("mcCode", "MO");
-		mav.addObject("moNum",this.session.selectOne("getMethodCount",map));
-		map.put("mcCode", "DA");
-		mav.addObject("daNum",this.session.selectOne("getMethodCount",map));
-	}
+
+			}
 	
 
-	private String makeSelectName(List<ProgressMgrB> selectList, HashMap map) {
+	private String makeMJList(List<ModuleB> selectList) {
+		StringBuffer sb = new StringBuffer();
+		for(ModuleB mb : selectList) {
+			sb.append("<div class = 'mjName' onclick='window.nextMc(\'"+mb.getProCode()+":"+mb.getMouCode()+":"+mb.getJosCode()+"\')\'>"+mb.getMjName()+"</div>");
+		}
+		
+		return sb.toString();
+	}
+
+	private String makeSelectName(List<ProgressMgrB> selectList, HashMap<String,String> map) {
 		StringBuffer sb = new StringBuffer();
 		
-		sb.append("<select name='projectName' class='box'>");
+		if(map.get("proCode").equals("N")) {
+			map.put("proCode",this.session.selectOne("getRecentProject",map));
+		}
+		
+		sb.append("<select name='projectName' class='selectBox'>");
 		if(selectList != null && selectList.size() > 0) {
 			for(ProgressMgrB pb : selectList) {
 				if(pb.getProCode().equals(map.get("proCode"))) {

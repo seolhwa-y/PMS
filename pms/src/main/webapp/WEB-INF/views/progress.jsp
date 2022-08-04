@@ -208,7 +208,9 @@ span.general{font-size:1.1rem;}
 				<div id="notice-icon"></div>
 				<div id="notice-article">공지사항</div>
 			</div>
-				<div id="my-info">
+				<div id="my-info">회원코드 : ${accessInfo.pmbCode} /
+		회원성명 : ${accessInfo.pmbName} /
+		회원등급 : ${accessInfo.pmbLevelName}
 		<input id="accessOutBtn" value="로그아웃" type="button" onclick="accessOut()" /></div>
 		</div>
 		</div>
@@ -250,10 +252,10 @@ span.general{font-size:1.1rem;}
                     <div id = "12" class="1" style="float: right; height: 100%; width: 68%; margin: 0 auto;">
                         <div id = "13" class="1" style="background-color: lightskyblue; float: left; height: 100%; width: 31%; margin: 0 auto;"> 
                             <div id = "14" class="1" style="display: flex; flex-direction: column; justify-content: space-evenly; align-items: center; height: 100%;">
-                                <div id="controller" style="text-align : center;background-color : white;	border-radius : 25px;	width:12rem; height :3rem; line-height: 3rem; ">컨트롤러(${ctNum})</div>
-                                <div id="view" style="text-align : center;background-color : white;	border-radius : 25px;	width:12rem; height :3rem; line-height: 3rem; ">뷰(${viNum})</div>
-                                <div id="service" style="text-align : center;background-color : white;	border-radius : 25px;	width:12rem; height :3rem; line-height: 3rem; ">서비스(${moNum})</div>
-                                <div id="dao" style="text-align : center;background-color : white;	border-radius : 25px;	width:12rem; height :3rem; line-height: 3rem; ">디에이오(${daNum})</div>
+                                <div id="controller" style="text-align : center;background-color : white;	border-radius : 25px;	width:12rem; height :3rem; line-height: 3rem; ">컨트롤러<br><h6>${ctNum}</h6></div>
+                                <div id="view" style="text-align : center;background-color : white;	border-radius : 25px;	width:12rem; height :3rem; line-height: 3rem; ">뷰<br><h6>${viNum}</h6></div>
+                                <div id="service" style="text-align : center;background-color : white;	border-radius : 25px;	width:12rem; height :3rem; line-height: 3rem; ">서비스<br><h6>${moNum}</h6></div>
+                                <div id="dao" style="text-align : center;background-color : white;	border-radius : 25px;	width:12rem; height :3rem; line-height: 3rem; ">디에이오<br><h6>${daNum}</h6></div>
                             </div>
                         </div>
                         <div style="float: right; height: 100%; width: 68%;">

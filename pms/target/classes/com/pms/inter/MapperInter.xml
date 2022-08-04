@@ -326,8 +326,24 @@
 		FROM PRO INNER JOIN PRM ON PRM_PROCODE=PRO_CODE
 		WHERE PRM_PMBCODE = #{pmbCode} AND PRM_ACCEPT ='AC'
 	</select>
-	<select id="getMethodCount" parameterType = "java.util.HashMap" resultType="string" >
-		SELECT COUNT(*) FROM MET WHERE MET_MCCODE = #{mcCode}
+	<select id="getTotalMethodCount" parameterType = "java.util.HashMap" resultType="string" >
+		SELECT COUNT(*) FROM PROCESSINFO WHERE PROCODE=#{proCode} AND MCCODE=#{mcCode}
+	</select>
+	<select id="getMyMethodCount" parameterType = "java.util.HashMap" resultType="string" >
+		SELECT COUNT(*) FROM PROCESSINFO WHERE PROCODE=#{proCode} AND MCCODE=#{mcCode} AND PMBCODE=#{pmbCode}
+	</select>
+	<select id="getRecentProject" parameterType = "java.util.HashMap" resultType="string">
+		SELECT MAX(PRO_CODE) AS PROCODE
+		FROM PRO INNER JOIN PRM ON PRM_PROCODE=PRO_CODE
+		WHERE PRM_PMBCODE = '20220701' AND PRM_ACCEPT ='AC'
+	</select>
+	<select id="getMJName" parameterType = "java.util.HashMap" resultType = "com.pms.beans.ModuleB">
+		SELECT (MOUNAME||'_'||JOSNAME) AS MJNAME,
+        	PROCODE,
+        	MOUCODE,
+        	JOSCODE
+		FROM   MJINFO
+		WHERE  PROCODE=#{proCode} AND PMBCODE=#{pmbCode}
 	</select>
 	<!-- <resultMap type="com.pms.beans.ProBean" id="getProjectInfo">
 		<id property="proCode" column="PRO_CODE"/>

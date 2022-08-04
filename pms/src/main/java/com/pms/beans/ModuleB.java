@@ -18,4 +18,5 @@ public class ModuleB {
 	private String mouName;
 	private String mouComments;
 	private String message;
+	private String mjName;
 }

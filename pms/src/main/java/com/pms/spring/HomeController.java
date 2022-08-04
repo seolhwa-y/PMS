@@ -144,7 +144,7 @@ public class HomeController {
 	}
 	
 	// Move Result mgr 페이지 이동
-	@RequestMapping(value="/MoveProgressMgr", method= RequestMethod.POST)
+	@RequestMapping(value="/MoveResultMgr", method= RequestMethod.POST)
 	public ModelAndView moveProgressMgr(ModelAndView mav, @ModelAttribute ProgressMgrB rb) {
 		mav.addObject(rb);
 
