@@ -10,4 +10,5 @@ public class EmailCerB {
 	private String proAcceptCode;
 	private String aulResultCode;
 	private String emailCode;
+	private String prmPosition;
 }

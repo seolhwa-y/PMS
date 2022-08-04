@@ -128,6 +128,13 @@
 		WHERE
 		PRM_PROCODE = #{emailCode} AND PRM_PMBCODE = #{receiver}
 	</update>
+	<update id="updPrmPosition"
+		parameterType="com.pms.beans.ProMemberB">
+		UPDATE PRM
+		SET PRM_POSITION = #{proPosition}
+		WHERE
+		PRM_PROCODE = #{proCode} AND PRM_PMBCODE = #{pmbCode}
+	</update>
 	<update id="updAuthLog" parameterType="com.pms.beans.EmailCerB">
 		UPDATE AUL
 		SET

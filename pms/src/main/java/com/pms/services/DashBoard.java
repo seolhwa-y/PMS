@@ -97,8 +97,15 @@ public class DashBoard implements ServicesRule {
 				ecb.setEmailCode(this.enc.aesDecode(ecb.getEmailCode(), cb.getPmbEmail()));
 				if (!this.convertToBoolean(this.session.update("updProjectMembers", ecb))) {
 					ecb.setAulResultCode("NN");
+					
 				}
 				this.session.update("updAuthLog", ecb);
+				ProMemberB pro = new ProMemberB();
+				pro.setProCode(ecb.getEmailCode());
+				pro.setPmbCode(cb.getPmbCode());
+				pro.setProPosition("MB");
+				this.session.update("updPrmPosition",pro);
+				
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
