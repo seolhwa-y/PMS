@@ -319,6 +319,16 @@
 		SELECT COUNT(*)
 		FROM MET WHERE MET_MJPROCODE = ${proCode}
 	</select>
+	<select id="getProNameList" parameterType = "java.util.HashMap" resultType = "com.pms.beans.ProgressMgrB" >
+		SELECT PRO_CODE AS PROCODE,
+        PRO_NAME AS PRONAME,
+        PRM_PMBCODE AS PMBCODE
+		FROM PRO INNER JOIN PRM ON PRM_PROCODE=PRO_CODE
+		WHERE PRM_PMBCODE = #{pmbCode} AND PRM_ACCEPT ='AC'
+	</select>
+	<select id="getMethodCount" parameterType = "java.util.HashMap" resultType="string" >
+		SELECT COUNT(*) FROM MET WHERE MET_MCCODE = #{mcCode}
+	</select>
 	<!-- <resultMap type="com.pms.beans.ProBean" id="getProjectInfo">
 		<id property="proCode" column="PRO_CODE"/>
 		<result property="proName" column="PRO_NAME"/>

@@ -82,11 +82,18 @@ public class Project implements ServicesRule {
 
 	private void moveProgressMgr(ModelAndView mav) {
 		ProgressMgrB pb = (ProgressMgrB) mav.getModel().get("progressMgrB");
+		System.out.println(pb.getProCode());
 		HashMap<String,String> map = new HashMap<String,String>();
 		map.put("proCode", pb.getProCode());
 		
-		//프로젝트이름 보내주기
-		mav.addObject("proName", this.session.selectOne("getProName",map));
+		try {
+			CerB cb =  (CerB)this.pu.getAttribute("accessInfo");
+			map.put("pmbCode", cb.getPmbCode());
+			
+			//프로젝트이름 보내주기
+			mav.addObject("proName", this.makeSelectName(this.session.selectList("getProNameList", map),map));
+		} catch (Exception e) {e.printStackTrace();	}
+		
 		//프로젝트 팀장,팀원,날짜 보내주기
 		mav.addObject("proInfo", this.makeProInfo(this.session.selectList("getProInfo",map)));
 		mav.setViewName("progress");
@@ -99,6 +106,37 @@ public class Project implements ServicesRule {
 		mav.addObject("mjNum",this.session.selectOne("getModuleJobsNum",map));
 		//메서드갯수 가져오기
 		mav.addObject("methodNum",this.session.selectOne("getMethodNum",map));
+		
+		// MC별로 메서드 갯수 가져오기
+		map.put("mcCode", "CT");
+		mav.addObject("ctNum",this.session.selectOne("getMethodCount",map));
+		map.put("mcCode", "VI");
+		mav.addObject("viNum",this.session.selectOne("getMethodCount",map));
+		map.put("mcCode", "MO");
+		mav.addObject("moNum",this.session.selectOne("getMethodCount",map));
+		map.put("mcCode", "DA");
+		mav.addObject("daNum",this.session.selectOne("getMethodCount",map));
+	}
+	
+
+	private String makeSelectName(List<ProgressMgrB> selectList, HashMap map) {
+		StringBuffer sb = new StringBuffer();
+		
+		sb.append("<select name='projectName' class='box'>");
+		if(selectList != null && selectList.size() > 0) {
+			for(ProgressMgrB pb : selectList) {
+				if(pb.getProCode().equals(map.get("proCode"))) {
+					sb.append("<option value='"+ pb.getProCode()+"' selected>"+pb.getProName()+ " </option>");
+				}else {
+					sb.append("<option value='"+ pb.getProCode() +"'>"+ pb.getProName() +"</option>");	
+				}
+			}
+		}else {
+			sb.append("<option disabled selected>선택하실 모듈이 없습니다</option>");
+		}
+		sb.append("</select>");
+		
+		return sb.toString();
 	}
 
 	private void newInviteMember(ModelAndView mav) {
@@ -865,16 +903,16 @@ public class Project implements ServicesRule {
 		StringBuffer sb = new StringBuffer();
 		String TeamLeader = "";
 		String TeamMember = "";
-		
+		System.out.println(list);
 
 				//팀장만 TeamLeader에 set
 				try {
 					for(int idx=0;idx<list.size();idx++) {
+						System.out.println("position은? "+list.get(idx).getPrmPosition());
 					if(list.get(idx).getPrmPosition().equals("MG")) {
 						TeamLeader += this.enc.aesDecode(list.get(idx).getPmbName(),list.get(idx).getPmbCode());
 						if(list.size() != idx-1) { //마지막만빼고 이름 사이사이에 공백 넣어주기
 							TeamLeader += " ";
-						
 							}
 						}else if(list.get(idx).getPrmPosition().equals("MB")){
 							//팀원만 TeamMember에 set
