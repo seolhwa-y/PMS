@@ -84,7 +84,13 @@ function makeMethodList(ajaxData){
 		div.addEventListener("click", function(){
 			workSpace(div.getAttribute("value"));
 		});
-
+		if(metList[idx].metState == "RD"){
+			div.setAttribute("class", "white");
+		}else if(metList[idx].metState == "IN"){
+			div.setAttribute("class", "blue");
+		}else if(metList[idx].metState == "CP"){
+			div.setAttribute("class", "gray");
+		}
 	}
 	//alert("확인"+metList[0].proCode);
 	//alert("확인"+metInfo);
@@ -327,7 +333,21 @@ span.general{font-size:1.1rem;}
     font-size: 1rem;
     color: black;
     transition: 0.5s;}
-
+.white{
+    background-color: white;
+    width: 10rem; 
+     border-radius : 25px;
+}
+.blue{
+    background-color: powderblue;
+        width: 10rem; 
+     border-radius : 25px;
+}
+.gray{
+    width: 10rem; 
+     border-radius : 25px;
+    background-color: gray;
+}
 </style>
 </head>
 <body onLoad="" >
@@ -395,7 +415,7 @@ span.general{font-size:1.1rem;}
                         <div style="float: right; height: 100%; width: 68%;">
                             <div id = "15" class="1" style="background-color: lightgray; height: 32%; width: 100%; margin: 0 auto;"> 
                                 <div id = "16" class="1"style="display: flex; flex-wrap: wrap; flex-direction: row; justify-content: space-evenly; align-content: space-around; align-items: center; height: 100%; text-align: center;">
-                                    <div style="width: 10rem; background-color : white; border-radius : 25px;">메소드</div>
+                                    <div style="width: 10rem; background-color : white; border-radius : 25px;"></div>
       									
                                 </div>
                             </div>
