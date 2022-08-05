@@ -82,5 +82,7 @@ public interface MapperInter {
 	public String getRecentProject(HashMap<String,String> map);
 	/* MJ NAME 가져오기*/
 	public List<ModuleB> getMJName(HashMap<String,String> map);
-	
+	/* MCA COUNT 가져오기 */
+	public List<ModuleB> getMcaCount(HashMap<String,String> map);
+
 }

@@ -1,5 +1,6 @@
 package com.pms.spring;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import com.pms.beans.CerB;
 import com.pms.beans.MemberMgrB;
 import com.pms.beans.ModuleB;
 import com.pms.beans.ProBean;
+import com.pms.beans.ProgressMgrB;
 import com.pms.services.Project;
 
 @RestController
@@ -141,6 +143,20 @@ public class APIController {
 		model.addAttribute(module);
 		project.backController(13, model);
 		return (List<ModuleB>)model.getAttribute("moduleB");	}
+	@SuppressWarnings("unchecked")
+	@PostMapping("/GetMcaList")
+	public HashMap<String,Object> getMcaList(Model model, @ModelAttribute ModuleB module){
+		/* Developer : 지수 */
+		model.addAttribute(module);
+		project.backController(14, model);
+		return (HashMap<String,Object>)model.getAttribute("map");}
+	@SuppressWarnings("unchecked")
+	@PostMapping("/GetMetList")
+	public HashMap<String,Object> getMetList(Model model, @ModelAttribute ModuleB module){
+		/* Developer : 지수 */
+		model.addAttribute(module);
+		project.backController(15, model);
+		return (HashMap<String,Object>)model.getAttribute("map");}
 
 	/*
 	 * 	

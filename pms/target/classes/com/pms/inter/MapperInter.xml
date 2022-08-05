@@ -292,17 +292,17 @@
 		FROM PRO
 		WHERE PRO_CODE = #{proCode}
 	</select>
-	<select id="getProInfo" parameterType = "java.util.HashMap" resultType = "com.pms.beans.ProgressMgrB">
-		SELECT PRO.PRO_NAME AS PRONAME,
-	       PRM.PRM_POSITION AS PRMPOSITION,
-	       PRM.PRM_PMBCODE AS PMBCODE,
-	       PMB.PMB_NAME AS PMBNAME,
-	       TO_CHAR(PRO.PRO_START, 'YYYY.MM.DD') AS PROSTART,
-	       TO_CHAR(PRO.PRO_END, 'YYYY.MM.DD') AS PROEND
-		FROM PRM INNER JOIN PRO ON PRO.PRO_CODE = PRM.PRM_PROCODE
-		         INNER JOIN PMB ON PMB_CODE = PRM.PRM_PMBCODE
-		WHERE PRO_CODE = #{proCode}
-	</select>
+   <select id="getProInfo" parameterType = "java.util.HashMap" resultType = "com.pms.beans.ProgressMgrB">
+      SELECT PRO.PRO_NAME AS PRONAME,
+          PRM.PRM_POSITION AS PRMPOSITION,
+          PRM.PRM_PMBCODE AS PMBCODE,
+          PMB.PMB_NAME AS PMBNAME,
+          TO_CHAR(PRO.PRO_START, 'YYYY.MM.DD') AS PROSTART,
+          TO_CHAR(PRO.PRO_END, 'YYYY.MM.DD') AS PROEND
+      FROM PRM INNER JOIN PRO ON PRO.PRO_CODE = PRM.PRM_PROCODE
+               INNER JOIN PMB ON PMB_CODE = PRM.PRM_PMBCODE
+      WHERE PRO_CODE = #{proCode} AND PRM_POSITION IS NOT NULL
+   </select>
 	<select id="getModuleNum" parameterType = "java.util.HashMap" resultType = "string">
 		SELECT COUNT(*)
 		FROM MOU WHERE MOU_PROCODE = ${proCode}
@@ -344,6 +344,14 @@
         	JOSCODE
 		FROM   MJINFO
 		WHERE  PROCODE=#{proCode} AND PMBCODE=#{pmbCode}
+	</select>
+	<select id="getMcaCount" parameterType = "java.util.HashMap" resultType="com.pms.beans.ModuleB" >
+		SELECT *FROM PROCESSINFO
+		WHERE PROCODE = #{proCode} AND MOUCODE =#{mouCode} AND JOSCODE=#{josCode} AND PMBCODE =#{pmbCode}
+	</select>
+		<select id="getMetList" parameterType = "java.util.HashMap" resultType="com.pms.beans.ModuleB" >
+		SELECT *FROM PROCESSINFO
+		WHERE PROCODE = #{proCode} AND MOUCODE =#{mouCode} AND JOSCODE=#{josCode} AND PMBCODE =#{pmbCode} AND MCCODE=#{mcCode}
 	</select>
 	<!-- <resultMap type="com.pms.beans.ProBean" id="getProjectInfo">
 		<id property="proCode" column="PRO_CODE"/>

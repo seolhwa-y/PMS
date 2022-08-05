@@ -19,4 +19,5 @@ public class ModuleB {
 	private String mouComments;
 	private String message;
 	private String mjName;
+	private String metState;
 }

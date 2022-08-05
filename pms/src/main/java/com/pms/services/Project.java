@@ -85,7 +85,7 @@ public class Project implements ServicesRule {
 		System.out.println(pb.getProCode());
 		HashMap<String,String> map = new HashMap<String,String>();
 		map.put("proCode", pb.getProCode());
-		
+
 		try {
 			CerB cb =  (CerB)this.pu.getAttribute("accessInfo");
 			map.put("pmbCode", cb.getPmbCode());
@@ -110,7 +110,6 @@ public class Project implements ServicesRule {
 		
 		//프로젝트 팀장,팀원,날짜 보내주기
 		mav.addObject("proInfo", this.makeProInfo(this.session.selectList("getProInfo",map)));
-		mav.setViewName("result");
 		
 		//모듈갯수 가져오기
 		mav.addObject("moduleNum",this.session.selectOne("getModuleNum",map));
@@ -121,6 +120,7 @@ public class Project implements ServicesRule {
 		//메서드갯수 가져오기
 		mav.addObject("methodNum",this.session.selectOne("getMethodNum",map));
 		
+		mav.setViewName("result");
 
 			}
 	
@@ -128,7 +128,7 @@ public class Project implements ServicesRule {
 	private String makeMJList(List<ModuleB> selectList) {
 		StringBuffer sb = new StringBuffer();
 		for(ModuleB mb : selectList) {
-			sb.append("<div class = 'mjName' onclick='window.nextMc(\'"+mb.getProCode()+":"+mb.getMouCode()+":"+mb.getJosCode()+"\')\'>"+mb.getMjName()+"</div>");
+			sb.append("<div class = 'mjName' onclick=\"window.nextMc(\'"+mb.getProCode()+":"+mb.getMouCode()+":"+mb.getJosCode()+"\')\">"+mb.getMjName()+"</div>");
 		}
 		
 		return sb.toString();
@@ -141,7 +141,7 @@ public class Project implements ServicesRule {
 			map.put("proCode",this.session.selectOne("getRecentProject",map));
 		}
 		
-		sb.append("<select name='projectName' class='selectBox'>");
+		sb.append("<select id='projectName' onchange='changePJ()' class='selectBox'>");
 		if(selectList != null && selectList.size() > 0) {
 			for(ProgressMgrB pb : selectList) {
 				if(pb.getProCode().equals(map.get("proCode"))) {
@@ -244,6 +244,12 @@ public class Project implements ServicesRule {
 				case 13:
 					this.updMethod(model);
 					break;
+				case 14:
+					this.getMcaList(model);
+					break;
+				case 15:
+					this.getMetList(model);
+					break;
 				default:
 				}
 
@@ -254,6 +260,114 @@ public class Project implements ServicesRule {
 		}
 	}
 	
+	// 메서드 리스트 가져오기
+	private void getMetList(Model model) {
+		ModuleB module =(ModuleB) model.getAttribute("moduleB");
+		HashMap<String,Object> map = new HashMap<String,Object>();
+		List<ModuleB> mcaList = new ArrayList<ModuleB>();
+		
+		try {
+			map.put("proCode", module.getProCode());
+			map.put("mouCode", module.getMouCode());
+			map.put("josCode", module.getJosCode());
+			map.put("mcCode", module.getMcCode());
+			map.put("pmbCode", ((CerB)this.pu.getAttribute("accessInfo")).getPmbCode());
+		} catch (Exception e) {e.printStackTrace();
+		}
+		mcaList = this.session.selectList("getMetList",map);
+		map.put("mcaList", mcaList);
+		model.addAttribute("map",map);
+	}
+
+	private void getMcaList(Model model) {
+		ModuleB module =(ModuleB) model.getAttribute("moduleB");
+		HashMap<String,Object> map = new HashMap<String,Object>();
+		List<ModuleB> mcaList = new ArrayList<ModuleB>();
+		
+		//{시작전,진행중,완료,내가맡은 모든 메서드 토탈}
+		int[][] methodCount = {{0,0,0,0},{0,0,0,0},{0,0,0,0},{0,0,0,0}};
+		String[] mcCode = {"CT","VI","MO","DA"};
+		System.out.println(module.getMouCode());
+		//map.put("CTrd", methodCount[0][0]);
+		map.put("mcCode", mcCode);
+		try {
+			map.put("proCode", module.getProCode());
+			map.put("mouCode", module.getMouCode());
+			map.put("josCode", module.getJosCode());
+			map.put("pmbCode", ((CerB)this.pu.getAttribute("accessInfo")).getPmbCode());
+		} catch (Exception e) {e.printStackTrace();
+		}
+		mcaList = this.session.selectList("getMcaCount",map);
+		for(int idx=0;idx<mcaList.size();idx++) {
+			switch(mcaList.get(idx).getMcCode()) {
+			case "CT" : 
+				methodCount[0][3]++;
+				switch(mcaList.get(idx).getMetState()) {
+				case "RD":
+					methodCount[0][0]++;
+					break;
+				case "IN":
+					methodCount[0][1]++;
+					break;
+				case "CP":
+					methodCount[0][2]++;
+					break;
+				default:
+				}
+				break;
+			case "VI" :
+				methodCount[1][3]++;
+				switch(mcaList.get(idx).getMetState()) {
+				case "RD":
+					methodCount[1][0]++;
+					break;
+				case "IN":
+					methodCount[1][1]++;
+					break;
+				case "CP":
+					methodCount[1][2]++;
+					break;
+				default:
+				}
+				break;
+			case "MO" :
+				methodCount[2][3]++;
+				switch(mcaList.get(idx).getMetState()) {
+				case "RD":
+					methodCount[2][0]++;
+					break;
+				case "IN":
+					methodCount[2][1]++;
+					break;
+				case "CP":
+					methodCount[2][2]++;
+					break;
+				default:
+				}
+				break;
+			case "DA" :
+				methodCount[3][3]++;
+				switch(mcaList.get(idx).getMetState()) {
+				case "RD":
+					methodCount[3][0]++;
+					break;
+				case "IN":
+					methodCount[3][1]++;
+					break;
+				case "CP":
+					methodCount[3][2]++;
+					break;
+				default:
+				}
+				break;
+			default:
+			}
+			
+		}
+		map.put("mcaCount", methodCount);
+		//위에서 맵에다 담았으니까 map을 model에 넣어줌
+		model.addAttribute("map",map);
+	}
 
 	private void updMethod(Model model) {
 		HashMap<String,String> map = new HashMap<String,String>();

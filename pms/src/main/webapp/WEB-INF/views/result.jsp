@@ -5,10 +5,128 @@
 <head>
 <meta charset="UTF-8">
 <title>::PMS Jobs::</title>
-<!-- <script src="resources/js/common.js" type=""></script> -->
+<script src="resources/js/common.js" type=""></script>
 <script>
 function initJobs(){
 	alert("Jobs");
+}
+function changePJ(){
+	let proCode = document.getElementById("projectName").value;
+	const form = document.getElementsByName("clientData")[0];
+	
+	form.action = "MoveResultMgr";
+	form.method = "post";
+	form.appendChild(createHidden("proCode", proCode));
+	
+	form.submit();
+}
+function nextMc(code){ // code= proCode:mouCode:josCode:mcCode
+
+	let info = code.split(":");
+	let clientData="proCode="+info[0]+"&mouCode="+info[1]+"&josCode="+info[2];
+	postAjaxJson("GetMcaList", clientData, "callBack");
+}
+function callBack(ajaxData){
+	const mcaList = JSON.parse(ajaxData);
+	
+	for(idx=0;idx<4;idx++){
+		let mcaDiv = document.getElementsByName("code")[idx];
+		mcaDiv.innerHTML = "";
+		mcaDiv.innerHTML = mcaList.mcaCount[idx][0]+
+							   ":"+mcaList.mcaCount[idx][1]+
+							   ":"+mcaList.mcaCount[idx][2]+
+							   "/"+mcaList.mcaCount[idx][3];
+		let code = mcaList.proCode+":"+mcaList.mouCode+":"+mcaList.josCode+":"+mcaList.mcCode[idx];
+							
+		mcaDiv.appendChild(createHidden("hiddenCode",code));
+	}
+
+}
+function getMetList(num){
+	 let code = "";
+	 let info = []; 
+	 let clientData = "";
+	 
+
+	switch(num){
+	case "1" : code += document.getElementsByName("hiddenCode")[0].value;
+			 info = code.split(":");
+			 clientData += "proCode="+info[0]+"&mouCode="+info[1]+"&josCode="+info[2]+"&mcCode="+info[3];
+
+			break;
+	case "2" :code += document.getElementsByName("hiddenCode")[1].value;
+			 info = code.split(":");
+			 clientData += "proCode="+info[0]+"&mouCode="+info[1]+"&josCode="+info[2]+"&mcCode="+info[3];
+
+			break;
+	case "3" : code += document.getElementsByName("hiddenCode")[2].value;
+			 info = code.split(":");
+			 clientData += "proCode="+info[0]+"&mouCode="+info[1]+"&josCode="+info[2]+"&mcCode="+info[3];
+			break;
+	case "4" : code += document.getElementsByName("hiddenCode")[3].value;
+			 info = code.split(":");
+			 clientData += "proCode="+info[0]+"&mouCode="+info[1]+"&josCode="+info[2]+"&mcCode="+info[3];
+			break;
+			default:
+	}
+	postAjaxJson("GetMetList", clientData, "makeMethodList");
+}
+function makeMethodList(ajaxData){
+	const metInfo = JSON.parse(ajaxData);
+	const metList = metInfo.mcaList;
+	let methodSpace = document.getElementById("16");
+	methodSpace.innerHTML = "";
+	let code ="";
+	for(idx=0;idx<metList.length;idx++){
+		code = metList[idx].proCode+":"+metList[idx].mouCode+":"+metList[idx].josCode+":"+metList[idx].pmbCode+":"+metList[idx].mcCode+":"+metList[idx].metCode+":"+metList[idx].metState;
+		methodSpace.appendChild(createDiv("10"+idx,"", code, metList[idx].metName))
+		let div = document.getElementById("10"+idx);
+		div.addEventListener("click", function(){
+			workSpace(div.getAttribute("value"));
+		});
+
+	}
+	//alert("확인"+metList[0].proCode);
+	//alert("확인"+metInfo);
+	
+}
+function workSpace(code){
+	//alert(code);
+	let info = code.split(":");
+	//info[6] = State
+	//alert(info[6]);
+	
+	clear();
+	switch(info[6]){
+	case "RD" :alert("RD");	
+	document.getElementById("22").style.display = "flex"; // 작업시작 버튼 보여주기
+		break;
+	case "IN" : alert("IN");
+	document.getElementById("18").style.display = "flex"; // 파일추가 버튼 보여주기
+	//document.getElementById("19").style.display = "flex"; // 파일삭제
+	document.getElementById("20").style.display = "flex"; // 파일등록
+	document.getElementById("21").style.display = "flex"; // 작업완료 버튼 보여주기
+		break;
+	case "CP" : alert("CP");
+	document.getElementById("23").style.display = "flex"; // 서버전송 버튼 보여주기
+		break;
+		default:
+	}
+	
+}
+function clear(){
+	let a = document.getElementById("18");
+	a.style.display = "none"; // 파일추가 버튼 감추기
+	//let b = document.getElementById("19");
+	//b.style.display = "none"; // 파일삭제
+	let c = document.getElementById("20");
+	c.style.display = "none"; // 파일등록
+	let d = document.getElementById("21");
+	d.style.display = "none"; // 작업완료 버튼 감추기
+	let e = document.getElementById("22");
+	e.style.display = "none"; // 작업시작 버튼 감추기
+	let f = document.getElementById("23");
+	f.style.display = "none"; // 서버전송 버튼 감추기 
 }
 </script>
 <style>
@@ -268,45 +386,40 @@ span.general{font-size:1.1rem;}
                     <div id = "12" class="1" style="float: right; height: 100%; width: 68%; margin: 0 auto;">
                         <div id = "13" class="1" style="background-color: lightskyblue; float: left; height: 100%; width: 31%; margin: 0 auto;"> 
                             <div id = "14" class="1" style="display: flex; flex-direction: column; justify-content: space-evenly; align-items: center; height: 100%;">
-                                <div id="controller" style="text-align : center;background-color : white;	border-radius : 25px;	width:12rem; height :3rem;  ">컨트롤러<br>${ctNum}<div></div></div>
-                                <div id="view" style="text-align : center;background-color : white;	border-radius : 25px;	width:12rem; height :3rem; ">뷰<br>${viNum}</div>
-                                <div id="service" style="text-align : center;background-color : white;	border-radius : 25px;	width:12rem; height :3rem; ">서비스<br>${moNum}</div>
-                                <div id="dao" style="text-align : center;background-color : white;	border-radius : 25px;	width:12rem; height :3rem; ">디에이오<br>${daNum}</div>
+                                <div id="controller" onclick="getMetList('1')" style="text-align : center;background-color : white;	border-radius : 25px;	width:12rem; height :3rem;  ">컨트롤러<br><div name="code">${ctNum}</div></div>
+                                <div id="view" onclick="getMetList('2')" style="text-align : center;background-color : white;	border-radius : 25px;	width:12rem; height :3rem; ">뷰<br><div name="code">${viNum}</div></div>
+                                <div id="service" onclick="getMetList('3')" style="text-align : center;background-color : white;	border-radius : 25px;	width:12rem; height :3rem; ">서비스<br><div name="code">${moNum}</div></div>
+                                <div id="dao" onclick="getMetList('4')" style="text-align : center;background-color : white;	border-radius : 25px;	width:12rem; height :3rem; ">디에이오<br><div name="code">${daNum}</div></div>
                             </div>
                         </div>
                         <div style="float: right; height: 100%; width: 68%;">
                             <div id = "15" class="1" style="background-color: lightgray; height: 32%; width: 100%; margin: 0 auto;"> 
                                 <div id = "16" class="1"style="display: flex; flex-wrap: wrap; flex-direction: row; justify-content: space-evenly; align-content: space-around; align-items: center; height: 100%; text-align: center;">
                                     <div style="width: 10rem; background-color : white; border-radius : 25px;">메소드</div>
-                                    <div style="width: 10rem; background-color : white; border-radius : 25px;">메소드</div>
-                                    <div style="width: 10rem; background-color : white; border-radius : 25px;">메소드</div>
-                                    <div style="width: 10rem; background-color : white; border-radius : 25px;">메소드</div>
-                                    <div style="width: 10rem; background-color : white; border-radius : 25px;">메소드</div>
-                                    <div style="width: 10rem; background-color : white; border-radius : 25px;">메소드</div>
-                                    <div style="width: 10rem; background-color : white; border-radius : 25px;">메소드</div>
-                                    <div style="width: 10rem; background-color : white; border-radius : 25px;">메소드</div>
-                                    <div style="width: 10rem; background-color : white; border-radius : 25px;">메소드</div>
-                                    <div style="width: 10rem; background-color : white; border-radius : 25px;">메소드</div>
-                                    <div style="width: 10rem; background-color : white; border-radius : 25px;">메소드</div>
-                                    <div style="width: 10rem; background-color : white; border-radius : 25px;">메소드</div>
-                                    
+      									
                                 </div>
                             </div>
                             <div id = "17" class="1" style="background-color: lightyellow; height: 68%; width: 100%; margin: 0 auto;">
-                                <div style="float: left; width: 65%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: space-evenly;">
+                            	<!-- 18번~23번까지 display : none;처리 -->
+                                <div id = "18"  style="float: left; width: 65%; height: 100%; display: none; flex-direction: column; align-items: center; justify-content: space-evenly;">
                                     <input type="file" value="파일찾기" style="width: 80%; background-color: purple; color: white; border: none;">
                                     <input type="file" value="파일찾기" style="width: 80%; background-color: purple; color: white; border: none;">
                                     <input type="file" value="파일찾기" style="width: 80%; background-color: purple; color: white; border: none;">
                                 </div>
-                                <div style="display: flex; flex-direction: column; justify-content: space-around; float: right; width: 25%; height: 100%;">
-                                    <div style="display: flex; flex-direction: column; justify-content: space-around; height: 65%;">
+                                <div id = "19"style="display: flex; flex-direction: column; justify-content: space-around; float: right; width: 25%; height: 100%;">
+                                    <div id = "20"style="display: none; flex-direction: column; justify-content: space-around; height: 65%;">
                                         <input type="button" value="파일추가" style="background-color: purple; color: white; border: none;">
                                         <input type="button" value="항목삭제" style="background-color: purple; color: white; border: none;">
                                         <input type="button" value="파일등록" style="background-color: purple; color: white; border: none;">
                                     </div>
-                                    <div style="display: flex; flex-direction: column; justify-content: space-around; height: 35%;">
+                                    <div id = "21" style="display: none; flex-direction: column; justify-content: space-around; height: 11%;">
                                         <input type="button" value="작업완료" style="background-color: black; color: white; border: none;">
+                                     </div>
+                                     <div id = "22" style="display: none; flex-direction: column; justify-content: space-around; height: 11%;">
                                         <input type="button" value="작업시작" style="background-color: black; color: white; border: none;">
+                                    </div>
+                                    <div id = "23" style="display: none; flex-direction: column; justify-content: space-around; height: 11%;">
+                                        <input type="button" value="서버전송" style="background-color: black; color: white; border: none;">
                                     </div>
                                 </div>
                             </div>
